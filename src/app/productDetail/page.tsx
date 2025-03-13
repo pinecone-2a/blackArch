@@ -1,18 +1,19 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Footer from '../_components/homeFooter';
 
 export default function ProductDetail() {
     return (
         <div className='p-4 max-w-7xl mx-auto'>
-  
+
             <div className='flex items-center text-gray-500 text-2xl'>
                 Home <ChevronRight size={16} /> Shop <ChevronRight size={16} /> Men <ChevronRight size={16} />
                 <span className='text-black'>T-Shirts</span>
             </div>
 
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6'>
-             
+
                 <div>
                     <div className='bg-gray-300 rounded-2xl p-2'>
                         <img src='t-shirt.png' alt='Product' className='w-full rounded-xl' />
@@ -24,7 +25,7 @@ export default function ProductDetail() {
                     </div>
                 </div>
 
-         
+
                 <div>
                     <h1 className='text-5xl font-bold'>ONE LIFE GRAPHIC T-SHIRT</h1>
                     <div className='flex items-center mt-2 text-3xl'>
@@ -40,7 +41,7 @@ export default function ProductDetail() {
                         This graphic t-shirt is perfect for any occasion. Crafted from a soft and breathable fabric,
                         it offers superior comfort and style.
                     </p>
-                    
+
                     <p className='text-lg font-bold mt-4 text-end'>Select Colors</p>
                     <div className='flex gap-2 mt-2'>
                         <button className='w-10 h-10 rounded-full bg-green-700'></button>
@@ -93,6 +94,9 @@ export default function ProductDetail() {
                     </div>
                     <div className='mt-2 text-xl font-bold'>$145</div>
                 </div>
+            </div>
+            <div className='pt-10'>
+                <Footer />
             </div>
         </div>
     );
