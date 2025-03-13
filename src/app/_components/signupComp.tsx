@@ -16,11 +16,11 @@ export default function SignupComp() {
       <div className="mb-4">
         <Image src="/reallogo.jpg" width={80} height={80} alt="logo" />
       </div>
-      <Link href="/">
-        <button className="text-black absolute top-4 left-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-100">
-          <ChevronLeft />
-        </button>
-      </Link>
+      <TransitionLink href="/">
+            <Button className=" bg-white text-black border absolute items-center top-4 flex left-4 rounded-2xl duration-200 hover:bg-gray-100">
+        <ChevronLeft/>  Back 
+        </Button>
+            </TransitionLink>
       <TransitionLink href="/login">
         <button className="bg-black absolute top-4 right-4 rounded-2xl text-white text-sm py-2 px-4 hover:bg-gray-900">
           Login
