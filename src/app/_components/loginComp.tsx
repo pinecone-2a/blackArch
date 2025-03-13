@@ -22,9 +22,9 @@ export default function LoginComp() {
                 </button>
             </Link>
             <TransitionLink href="/signup">
-                <button className="bg-white absolute top-4 right-4 rounded-2xl text-black text-sm py-2 px-4 hover:bg-[#f2f0f1]">
-                    Sign Up
-                </button>
+            <button className="bg-black absolute top-4 right-4 rounded-2xl text-white text-sm py-2 px-4 hover:bg-gray-900">
+          Sign up
+        </button>
             </TransitionLink>
 
             <div className="text-center mb-6">
