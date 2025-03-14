@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import Template from "./_components/template";
 
