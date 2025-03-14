@@ -7,41 +7,40 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import TransitionLink from "./TransitionLink";
 import { Toaster, toast } from "sonner";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
-export default function LoginComp() {
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+export default function ForgotPasswordComp() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{
-    email?: boolean;
-    password?: boolean;
-  }>({});
-
-
-  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<{ email?: boolean }>({});
+  const [isDialogOpen, setIsDialogOpen] = useState(false); 
 
   const validate = () => {
-    let newErrors: {
-      email?: boolean;
-      password?: boolean;
-    } = {};
+    let newErrors: { email?: boolean } = {};
 
- 
     if (!email.trim()) {
       newErrors.email = true;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       newErrors.email = true;
     }
 
- 
-    if (!password.trim() || password.length < 6) {
-      newErrors.password = true;
-    }
-
     setErrors(newErrors);
 
-
     if (Object.keys(newErrors).length > 0) {
-      toast.error("We couldn’t find an account matching the email and password you entered. Please check your email and password and try again.");
+      toast.error("Please enter a valid email address.");
       return false;
     }
 
@@ -51,8 +50,9 @@ export default function LoginComp() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      console.log("Login successful!");
-      toast.success("Login successful!");
+      console.log("Password reset email sent!");
+      toast.success("Password reset instructions sent!");
+      setIsDialogOpen(true); 
     }
   };
 
@@ -60,25 +60,18 @@ export default function LoginComp() {
     <div className="bg-white text-black w-full h-screen flex flex-col items-center justify-center px-4">
       <Image src="/reallogo.jpg" width={80} height={80} alt="logo" className="mb-4" />
 
-      <TransitionLink href="/">
+      <TransitionLink href="/login">
         <Button className="bg-white text-black border absolute top-4 left-4 rounded-2xl duration-200 hover:bg-gray-100">
           <ChevronLeft /> Back
         </Button>
       </TransitionLink>
 
-      <TransitionLink href="/signup">
-        <Button className="bg-black text-white absolute top-4 right-4 rounded-2xl py-2 px-4 hover:bg-gray-900">
-          Sign up
-        </Button>
-      </TransitionLink>
-
       <div className="text-center mb-6">
         <h1 className="text-2xl md:text-3xl">PineShop</h1>
-        <p className="text-base md:text-lg text-gray-600">Enjoy your special time with your specials.</p>
+        <p className="text-base md:text-lg text-gray-600">Reset your password</p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6 w-full max-w-xs">
-    
         <Input
           className={`w-full rounded-2xl p-3 bg-gray-100 border-2 ${errors.email ? "border-red-500" : "border-transparent"}`}
           placeholder="Email"
@@ -86,41 +79,40 @@ export default function LoginComp() {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-
-        <div className="relative w-full">
-          <Input
-            type={showPassword ? "text" : "password"}
-            className={`w-full rounded-2xl p-3 bg-gray-100 border-2 ${errors.password ? "border-red-500" : "border-transparent"}`}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button
-            type="button"
-            className="absolute right-3 top-3 text-gray-500"
-            onClick={() => setShowPassword((prev) => !prev)}
-          >
-            {showPassword ? "Hide" : "Show"}
-          </button>
-        </div>
-
-
-        <TransitionLink href="/forgotpassword">
-          <div className="text-sm text-gray-600 hover:underline">
-            Forgot password?
-          </div>
-        </TransitionLink>
-
-
         <Button
           type="submit"
           className="w-full text-xl rounded-2xl bg-black text-white py-3 flex items-center justify-center gap-2 hover:bg-gray-800"
         >
-          Continue <ChevronRight />
+          Send OTP code <ChevronRight />
         </Button>
       </form>
 
       <Toaster position="top-center" />
+      <Dialog  open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="rounded-3xl">
+          <DialogHeader>
+            <DialogTitle>Please check your email indox</DialogTitle>
+            <DialogDescription>
+              We sent an OTP code to your email with 6 characters.
+            </DialogDescription>
+          </DialogHeader>
+          <div className=" mt-5 mx-auto "> 
+          <InputOTP maxLength={6}>
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+            </InputOTPGroup>
+            <InputOTPSeparator />
+            <InputOTPGroup>
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+              <InputOTPSlot index={5} />
+            </InputOTPGroup>
+          </InputOTP></div>
+          <Button className="text-xl rounded-2xl 2xl:w-[70%] 2xl:mx-auto xl:w-[70%] xl:mx-auto lg:w-[70%] lg:mx-auto mt-5">Confirm</Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
