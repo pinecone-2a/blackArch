@@ -1,7 +1,7 @@
 import gsap from "gsap";
 // Animation for page exit
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-
+import { NextRouter } from "next/router"; // Import NextRouters
 // Create banner elements if they don't exist
 const ensureBannerElements = () => {
   const bannerIds = ["banner-1", "banner-2", "banner-3", "banner-4"];
@@ -75,7 +75,7 @@ export const animatePageIn = () => {
 };
 
 
-export const animatePageOut = (href: string, router: AppRouterInstance) => {
+export const animatePageOut = (href: string, router: NextRouter) => {
   const bannerElements = ensureBannerElements();
   
   // Animate content out first
