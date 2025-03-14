@@ -3,7 +3,7 @@
 import HomeHeader from "../_components/homeHeader";
 import { Star } from "lucide-react";
 
-export default function Page() {
+export default function HomePage() {
   return (
     <div>
       <HomeHeader />
