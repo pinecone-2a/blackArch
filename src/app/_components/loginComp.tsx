@@ -104,13 +104,11 @@ export default function LoginComp() {
           </button>
         </div>
 
-
         <TransitionLink href="/forgotpassword">
           <div className="text-sm text-gray-600 hover:underline">
             Forgot password?
           </div>
         </TransitionLink>
-
 
         <Button
           type="submit"
