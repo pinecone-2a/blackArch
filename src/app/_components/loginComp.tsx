@@ -104,12 +104,20 @@ export default function LoginComp() {
           </button>
         </div>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
         <TransitionLink href="/forgotpassword">
           <div className="text-sm text-gray-600 hover:underline">
             Forgot password?
           </div>
         </TransitionLink>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
         <Button
           type="submit"
           className="w-full text-xl rounded-2xl bg-black text-white py-3 flex items-center justify-center gap-2 hover:bg-gray-800"

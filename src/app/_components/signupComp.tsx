@@ -57,8 +57,13 @@ export default function SignupComp() {
 
 
     if (Object.keys(newErrors).length > 0) {
+<<<<<<< HEAD
       toast.error("Please fill in all fields correctly, and ensure passwords are more than 6 characters long and match.");
 
+=======
+
+      toast.error("Please fill in all fields correctly, and ensure passwords are more than 6 characters long and match.");
+>>>>>>> main
       return false;
     }
 
