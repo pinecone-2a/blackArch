@@ -1,7 +1,7 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import { animatePageOut } from "./animations";
-import { ReactNode, useEffect } from "react";
+import { ReactNode} from "react";
 
 interface Props {
   href: string;

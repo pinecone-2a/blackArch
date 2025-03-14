@@ -38,11 +38,11 @@ export default function AdminProductsComp() {
         <div className="bg-white my-5 w-[77%] mx-auto rounded-3xl p-6 relative">
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button className="absolute top-6 right-6 h-12 w-32 rounded-2xl text-md flex items-center justify-center">
+                    <Button className="absolute top-6 right-6 h-12 w-32 rounded-3xl text-md flex items-center justify-center">
                         <Plus className="mr-2 w-5 h-5" /> Add Item
                     </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="rounded-3xl">
                     <DialogHeader>
                         <DialogTitle>Add Your Product</DialogTitle>
                     </DialogHeader>
@@ -61,11 +61,11 @@ export default function AdminProductsComp() {
                         </div>
 
                         <div className="flex gap-3"> 
-                            <Input className="rounded-2xl p-3 bg-gray-100 border-2" placeholder="Product Name" />
-                            <Input className="rounded-2xl p-3 bg-gray-100 border-2" placeholder="Enter Price" type="number" />
+                            <Input className="rounded-2xl p-3 h-12 bg-gray-100 border-2" placeholder="Product Name" />
+                            <Input className="rounded-2xl p-3 h-12 bg-gray-100 border-2" placeholder="Enter Price" type="number" />
                         </div>
                         <Select>
-                            <SelectTrigger className="w-full rounded-2xl p-3 bg-gray-100 border-2">
+                            <SelectTrigger className="w-full rounded-2xl p-3  bg-gray-100 border-2">
                                 <SelectValue placeholder="Select Category" />
                             </SelectTrigger>
                             <SelectContent>
@@ -74,7 +74,7 @@ export default function AdminProductsComp() {
                                 <SelectItem value="sport">Sport</SelectItem>
                             </SelectContent>
                         </Select>
-                        <Button className="w-full">Submit</Button>
+                        <Button className="w-full rounded-2xl text-md">Submit</Button>
                     </div>
                 </DialogContent>
             </Dialog>
@@ -91,11 +91,11 @@ export default function AdminProductsComp() {
                 <h1 className="text-lg font-semibold mt-3 text-gray-800">Black Podolk</h1>
                 <p className="text-md font-medium text-gray-600 mt-1">$5000</p>
                 <div className="flex gap-3 mt-4">
-                    <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100">
+                    <Button variant="outline" className="border-gray-300 rounded-2xl text-gray-700 hover:bg-gray-100">
                         <Pen className="mr-1 w-4 h-4" /> Edit
                     </Button>
-                    <Button variant="destructive" className="bg-red-500 hover:bg-red-600">
-                        <Trash className="mr-1 w-4 h-4" /> Delete
+                    <Button variant="destructive" className="bg-red-500 rounded-2xl hover:bg-red-600">
+                        <Trash className="mr-1 w-4 h-4 " /> Delete
                     </Button>
                 </div>
             </div>

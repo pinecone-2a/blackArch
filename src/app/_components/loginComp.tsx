@@ -112,7 +112,7 @@ export default function LoginComp() {
 
         <Button
           type="submit"
-          className="w-full text-xl rounded-2xl bg-black text-white py-3 flex items-center justify-center gap-2 hover:bg-gray-800"
+          className="w-full text-xl rounded-2xl  bg-black text-white py-3 flex items-center justify-center gap-2 hover:bg-gray-800"
         >
           Continue <ChevronRight />
         </Button>
