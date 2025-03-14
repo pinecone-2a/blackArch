@@ -1,9 +1,7 @@
 import gsap from "gsap";
 // Animation for page exit
-import * as R from 'next/navigation'
-
-
-
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { NextRouter } from "next/router"; // Import NextRouters
 // Create banner elements if they don't exist
 const ensureBannerElements = () => {
   const bannerIds = ["banner-1", "banner-2", "banner-3", "banner-4"];
