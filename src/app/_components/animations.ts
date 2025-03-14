@@ -75,7 +75,7 @@ export const animatePageIn = () => {
 };
 
 
-export const animatePageOut = (href: string, router: NextRouter) => {
+export const animatePageOut = (href: string, router: any) => {
   const bannerElements = ensureBannerElements();
   
   // Animate content out first
