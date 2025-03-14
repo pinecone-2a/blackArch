@@ -3,8 +3,12 @@ import { NextResponse } from "next/server";
 
 export const GET = async () => {
   try {
-    const products = await prisma.product.findMany();
-    return NextResponse.json({ message: products, status: 200 });
+    const categories = await prisma.category.findMany({
+        include: {
+          products: true, 
+        },
+      });
+    return NextResponse.json({ message: categories, status: 200 });
   } catch (error) {
     console.error("Error fetching products:", error);
     return NextResponse.json({ error: "Internal Server Error", status: 500 });
@@ -14,13 +18,10 @@ export const GET = async () => {
 
 export const POST = async () => {
   try {
-    const products = await prisma.product.create({
+    const products = await prisma.category.create({
       data: {
-        name: "tshirt",
-        description: "dddd",
-        price: 100,
-        quantity: 2,
-        categoryId: "67d3d47753b2b00786614ad6"
+        name: "Modern Yurts",
+        description: "Yurts with contemporary designs and premium insulation.",
 
       },
     });

@@ -15,15 +15,59 @@ datasource db {
 
 
 
-
+model User {
+ id        String   @id @default(auto()) @map("_id") @db.ObjectId
+ username String
+ email String
+ password String
+ address Address?
+ role String
+ createdAt DateTime @default(now())
+ Orders Order[]
+}
 
 
 model Product {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
   description String?
-  price Int
-  quantity Int
+  price       Int
+  quantity    Int
+  rating      Int
+  image       String
+  color       String[]
+  size        String[]
+  category    Category?   @relation(fields: [categoryId], references: [id])
+  categoryId  String? @db.ObjectId
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Order {
+    id         String   @id @default(auto()) @map("_id") @db.ObjectId
+    userId     String @db.ObjectId
+    status       String @default("pending")
+    totalPrice   Int
+    shippingAddress Address
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    user        User     @relation(fields: [userId], references: [id])
+
+}
+
+model Category {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String  @unique
+  description String?
+  products    Product[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
+type Address {
+  street String
+  city String
+  state String
+  zip String
 }
