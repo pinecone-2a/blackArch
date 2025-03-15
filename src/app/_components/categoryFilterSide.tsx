@@ -17,15 +17,31 @@ export default function CategoryFilterSide() {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
+  const baseHeight = 400;
+  const sectionHeights = {
+    type: openSections.type ? 120 : 0,
+    price: openSections.price ? 120 : 0,
+    colors: openSections.colors ? 90 : 0,
+    dressStyle: openSections.dressStyle ? 100 : 0,
+  };
+
+  const totalHeight =
+    baseHeight +
+    sectionHeights.type +
+    sectionHeights.price +
+    sectionHeights.colors +
+    sectionHeights.dressStyle;
+
   return (
-    <div className="w-[375px] h-auto border-2 rounded-3xl mx-10 my-6 p-5">
+    <div
+      className="w-[375px] border-2 rounded-3xl mx-20 my-6 p-5 transition-all duration-300 ease-in-out overflow-hidden"
+      style={{ height: `${totalHeight}px`, maxHeight: "770px" }}>
       <div className="flex items-center justify-between mb-4">
         <h1 className="font-bold text-2xl">Filters</h1>
         <SlidersHorizontal />
       </div>
       <div className="w-full h-[1px] bg-gray-400" />
 
-      {/* Type Filter */}
       <div className="mt-4">
         <div
           className="flex items-center justify-between cursor-pointer"
@@ -45,8 +61,6 @@ export default function CategoryFilterSide() {
         )}
       </div>
       <div className="w-full h-[1px] bg-gray-400 my-4" />
-
-      {/* Price Filter */}
       <div>
         <div
           className="flex items-center justify-between cursor-pointer"
@@ -68,8 +82,6 @@ export default function CategoryFilterSide() {
         )}
       </div>
       <div className="w-full h-[1px] bg-gray-400 my-4" />
-
-      {/* Colors Filter */}
       <div>
         <div
           className="flex items-center my-5 justify-between cursor-pointer"
@@ -97,8 +109,6 @@ export default function CategoryFilterSide() {
         )}
       </div>
       <div className="w-full h-[1px] bg-gray-400 my-4" />
-
-      {/* Dress Style Filter */}
       <div>
         <div
           className="flex items-center justify-between cursor-pointer"
