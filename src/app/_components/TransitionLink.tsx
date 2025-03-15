@@ -1,7 +1,8 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/router";  // Correct import from 'next/router'
 import { animatePageOut } from "./animations";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 
 interface Props {
   href: string;
@@ -11,7 +12,7 @@ interface Props {
 }
 
 const TransitionLink = ({ href, label, children, className = "" }: Props) => {
-  const router = useRouter();
+  const router = useRouter();  // This is the NextRouter type now
   const pathname = usePathname();
   
   const handleClick = (e: React.MouseEvent) => {
@@ -23,7 +24,7 @@ const TransitionLink = ({ href, label, children, className = "" }: Props) => {
       
       // Small delay before animation starts to allow for visual feedback
       setTimeout(() => {
-        animatePageOut(href, router);
+        animatePageOut(href, router);  // This should work correctly with NextRouter
       }, 50);
     }
   };

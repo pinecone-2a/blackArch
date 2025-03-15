@@ -1,7 +1,14 @@
+"use client";
 import Image from "next/image";
+import Template from "./_components/template";
+import HomePage from "./home/page";
 
 export default function Home() {
   return (
-  <div>Home page</div>
+    <div>
+      <Template>
+        <HomePage />
+      </Template>
+    </div>
   );
 }
