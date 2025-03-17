@@ -20,7 +20,7 @@ export const POST = async () => {
   try {
     const products = await prisma.category.create({
       data: {
-        name: "Modern Yurts",
+        name: "TestCategory",
         description: "Yurts with contemporary designs and premium insulation.",
 
       },

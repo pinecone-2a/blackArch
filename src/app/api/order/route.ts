@@ -11,20 +11,18 @@ export const GET = async () => {
     }
   };
 
-  export const POST = async () => {
+  export const POST = async (req: Request) => {
+    const body = await req.json();
+
+    const { userId, totalPrice, shippingAddress, } = body;
+    
     try {
       const order = await prisma.order.create({
         data: {
-            userId: "67d3e44eedfa44219a2e8e83",
+            userId,
             status: "pending",
-            totalPrice: 20000,
-            shippingAddress: {
-              street: "123 Yurt St.",
-              city: "Ulaanbaatar",
-              state: "Ulaanbaatar",
-              zip: "14192",
-            },
-  
+            totalPrice,
+            shippingAddress
         },
       });
       return NextResponse.json({ message: order, status: 200 });
