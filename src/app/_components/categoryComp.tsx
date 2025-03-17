@@ -23,7 +23,7 @@ export default function CategoryComp() {
                   <Star key={i} size={18} />
                 ))}
               </div>
-              <div className="mt-2 text-lg font-bold text-gray-700">$120</div>
+              <div className="mt-2 text-lg font-bold text-gray-700">$130</div>
           <Button className="w-[70%] text-md rounded-2xl">Add to Cart</Button>
             </div>
           ))}
