@@ -8,9 +8,10 @@ export default function AdminHome() {
     ];
 
     return (
-        <div className="mt-10 w-[70%] mx-auto">
-            <h1 className="text-2xl font-semibold mb-6">Dashboard Overview</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className=" bg-white my-5 w-[77%] mx-auto rounded-3xl ">
+           
+            <h1 className="text-2xl font-semibold mb-6 mx-5 mt-6">Dashboard Overview</h1>
+            <div className="grid mx-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {stats.map((stat, index) => (
                     <div key={index} className="bg-white p-4 rounded-lg border flex items-center space-x-4">
                         <div className={`w-12 h-12 flex items-center justify-center rounded-full ${stat.color} text-2xl`}>
@@ -23,7 +24,7 @@ export default function AdminHome() {
                     </div>
                 ))}
             </div>
-        <div className='mt-10'>
+        <div className='mt-10 mx-5'>
             <h1 className="text-xl font-semibold mb-4">Recent Orders</h1>
             <div className="overflow-x-auto rounded-tl-xl rounded-tr-xl overflow-hidden">
             <table className="w-full border-collapse">
@@ -55,6 +56,7 @@ export default function AdminHome() {
                 </table>
             </div>
         </div>
+        
         </div>
     );
 }

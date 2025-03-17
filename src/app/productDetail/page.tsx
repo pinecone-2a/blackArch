@@ -18,11 +18,12 @@ export default function ProductDetail() {
                     <div className='bg-gray-300 rounded-2xl p-2'>
                         <img src='t-shirt.png' alt='Product' className='w-full rounded-xl' />
                     </div>
-                    <div className='flex gap-3 mt-4'>
-                        <img src='t-shirt.png' className='w-24 h-24 bg-gray-300 rounded-xl p-1' />
-                        <img src='t-shirt.png' className='w-24 h-24 bg-gray-300 rounded-xl p-1' />
-                        <img src='t-shirt.png' className='w-24 h-24 bg-gray-300 rounded-xl p-1' />
+                    <div className='grid grid-cols-3 md:grid-cols-6 gap-3 mt-4'>
+                        <img src='t-shirt.png' className='w-full bg-gray-300 rounded-xl p-1' />
+                        <img src='t-shirt.png' className='w-full bg-gray-300 rounded-xl p-1' />
+                        <img src='t-shirt.png' className='w-full bg-gray-300 rounded-xl p-1' />
                     </div>
+
                 </div>
 
 

@@ -1,44 +1,90 @@
-"use client";
-
-import { Facebook, Instagram, Twitter, Github } from "lucide-react";
+import { MdOutlineEmail } from "react-icons/md";
+import { FaXTwitter } from "react-icons/fa6";
+import { FaFacebook } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 p-6 text-center text-sm md:text-base">
-      <h2 className="text-xl md:text-2xl font-bold">SHOP.CO</h2>
-      <p className="text-gray-600 mt-2 max-w-xs mx-auto">
-        We have clothes that suit your style and which you’re proud to wear.
-        From women to men.
-      </p>
-      <div className="flex justify-center space-x-4 mt-4">
-        <Twitter className="w-5 h-5 md:w-6 md:h-6" />
-        <Facebook className="w-5 h-5 md:w-6 md:h-6" />
-        <Instagram className="w-5 h-5 md:w-6 md:h-6" />
-        <Github className="w-5 h-5 md:w-6 md:h-6" />
-      </div>
-      <div className="flex flex-row md:flex-row justify-around mt-6 text-xs md:text-sm space-y-4 md:space-y-0">
-        <div>
-          <h3 className="font-bold">FAQ</h3>
-          <ul className="text-gray-600 space-y-1">
-            <li className="hover:text-black">Account</li>
-            <li className="hover:text-black">Manage Deliveries</li>
-            <li className="hover:text-black">Orders</li>
-            <li className="hover:text-black">Payment</li>
-          </ul>
+    <div className="mainMargin 2xl:mx-20 my-5 xl:mx-10 lg:mx-5 md:mx-2 sm:mx-1">
+      <div className="flex flex-wrap justify-between items-center p-10 bg-black mt-10 rounded-3xl">
+        <div className="bolded text-3xl xsm:text-4xl text-white mb-10 max-w-[600px]">
+          STAY UPTO DATE ABOUT OUR LATEST OFFERS
         </div>
-        <div>
-          <h3 className="font-bold">HELP</h3>
-          <ul className="text-gray-600 space-y-1">
-            <li className="hover:text-black">Customer Support</li>
-            <li className="hover:text-black">Delivery Details</li>
-            <li className="hover:text-black">Terms & Conditions</li>
-            <li className="hover:text-black">Privacy Policy</li>
-          </ul>
-        </div>
+        <form className="flex flex-col gap-5 flex-grow" action="">
+          <div className="rounded-3xl bg-white p-2 flex w-full">
+            <MdOutlineEmail size={25} />
+            <input
+              className=" text-black outline-none ml-2 w-full"
+              placeholder="Enter your email address"
+            />
+          </div>
+          <button
+            type="submit"
+            className="rounded-3xl bg-white p-2 text-black text-center">
+            Subscribe to Newsletter
+          </button>
+        </form>
       </div>
-      <p className="text-gray-500 text-xs md:text-sm mt-6">
-        Shop.co © 2000-2023, All Rights Reserved
-      </p>
-    </footer>
+      <footer>
+        <div className="flex flex-wrap justify-between mt-10 gap-10">
+          <div className="flex-grow flex flex-col mx-5 gap-10">
+            <h1 className="font-bold text-3xl">PINESHOP</h1>
+            <p className="max-w-72">
+              We have clothes that suits your style and which you’re proud to
+              wear. From women to men.
+            </p>
+            <div className="flex gap-5">
+              <FaXTwitter size={25} />
+              <FaFacebook size={25} />
+              <FaInstagram size={25} />
+              <FaGithub size={25} />
+            </div>
+          </div>
+          <div className="flex-grow flex gap-5 flex-col justify-center items-center">
+            <h1 className="font-semibold -ml-20">Company</h1>
+            <ul className="flex flex-col gap-5">
+              <li className="Links">About</li>
+              <li className="Links">Features of SHOP.CO</li>
+              <li className="Links">Works</li>
+              <li className="Links">Career</li>
+            </ul>
+          </div>
+          <div className="flex-grow flex gap-5 flex-col justify-center items-center">
+            <h1 className="font-semibold -ml-24">Help</h1>
+            <ul className="flex flex-col gap-5">
+              <li className="Links">Customer Support</li>
+              <li className="Links">Delivery Details</li>
+              <li className="Links">Terms & Conditions</li>
+              <li className="Links">Privacy Policy</li>
+            </ul>
+          </div>
+          <div className="flex-grow flex gap-5 flex-col justify-center items-center">
+            <h1 className="font-semibold -ml-24">FAQ</h1>
+            <ul className="flex flex-col gap-5">
+              <li className="Links">Account</li>
+              <li className="Links">Manage Deliveries</li>
+              <li className="Links">Orders</li>
+              <li className="Links">Payments</li>
+            </ul>
+          </div>
+          <div className="flex-grow flex gap-5 flex-col justify-center items-center">
+            <h1 className="font-semibold -ml-20">Resources</h1>
+            <ul className="flex flex-col gap-5">
+              <li className="Links">Free eBooks</li>
+              <li className="Links">Development Tutorial</li>
+              <li className="Links">How to - Blog</li>
+              <li className="Links">Youtube Playlist</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex justify-center mt-10 gap-y-5 border-t-4 items-center flex-wrap">
+          <div className="flex-grow text-center md:text-left">
+            Shop.co © 2000-2024, All Rights Reserved
+          </div>
+          <div className="w-fit"></div>
+        </div>
+      </footer>
+    </div>
   );
 }
