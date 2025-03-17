@@ -1,21 +1,32 @@
 import HomeHeader from "./homeHeader";
 import Footer from "./homeFooter";
 import Image from "next/image";
+import { Star } from "lucide-react";
 import CategoryFilterSide from "./categoryFilterSide";
-export default function categoryComp() {
+import { Button } from "@/components/ui/button";
+export default function CategoryComp() {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-gray-100 ">
       <HomeHeader />
-      <div className="flex">
+      <div className="flex flex-col md:flex-row p-4 mx-5">
         <CategoryFilterSide />
-        <div className="w-[70%] h-[1200px] bg-white rounded-3xl border">
-          <div className="w-[280px] h-[360px] m-6  border shadow-sm  ">
-            <Image src={"/t-shirt.png"} width={280} height={280} alt="item" />
-            <div className="bg-blue-400 p-3 ">
-              <p className="font-bold text-xl">Tolbotoi podwolk</p>
-              <p className="font-medium  text-md">120$</p>
+        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+          {[...Array(8)].map((_, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-xl border shadow-md p-4 flex flex-col items-center"
+            >
+              <div className="w-48 h-48 bg-[url(/podolk.png)] bg-cover bg-center rounded-xl"></div>
+              <p className="mt-4 text-center font-semibold">T-shirt with Tape Details</p>
+              <div className="flex gap-1 mt-2 text-yellow-500">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={18} />
+                ))}
+              </div>
+              <div className="mt-2 text-lg font-bold text-gray-700">$120</div>
+          <Button className="w-[70%] text-md rounded-2xl">Add to Cart</Button>
             </div>
-          </div>
+          ))}
         </div>
       </div>
       <Footer />
