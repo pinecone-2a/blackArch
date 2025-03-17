@@ -2,7 +2,6 @@
 "use client"
 
 import { Product } from "@prisma/client";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type ProductType = {
@@ -15,7 +14,7 @@ type ProductType = {
   updatedAt: Date;
 }
 
-"use client";
+
 import Image from "next/image";
 import Template from "./_components/template";
 import HomePage from "./home/page";
