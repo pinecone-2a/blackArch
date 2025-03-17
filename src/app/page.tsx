@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Product } from "@prisma/client";
@@ -13,6 +14,12 @@ type ProductType = {
   createdAt: Date;
   updatedAt: Date;
 }
+
+"use client";
+import Image from "next/image";
+import Template from "./_components/template";
+import HomePage from "./home/page";
+
 
 export default function Home() {
   const [data, setData] = useState<ProductType | null>(null);
@@ -34,6 +41,12 @@ export default function Home() {
 
 
   return (
-  <div className="text-black">{data?.name}</div>
+
+    <div>
+      <Template>
+        <HomePage />
+      </Template>
+    </div>
+
   );
 }
