@@ -27,8 +27,8 @@ export const POST = async (req: Request) => {
         categoryId,
         rating,
         image,
-        color,  // Assuming it's an array, make sure Prisma model defines this field as an array
-        size,    // Same for size, ensure it's an array if you plan to store it that way
+        color,  
+        size,    
       },
     });
 
