@@ -1,5 +1,5 @@
-"use client"; // ✅ Ensure this is at the top for client-side components
-import { useRouter } from "next/navigation"; // ✅ Correct import
+"use client";
+import { useRouter } from "next/navigation";
 import { animatePageOut } from "./animations";
 import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
@@ -12,7 +12,7 @@ interface Props {
 }
 
 const TransitionLink = ({ href, label, children, className = "" }: Props) => {
-  const router = useRouter(); // ✅ Now using next/navigation
+  const router = useRouter();
   const pathname = usePathname();
 
   const handleClick = (e: React.MouseEvent) => {
