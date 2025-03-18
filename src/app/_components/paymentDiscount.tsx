@@ -27,7 +27,9 @@ export default function Discount() {
             <Input type="text" className="w-80" placeholder="Байр" />
             <p className="text-[14px] font-bold">Дэлгэрэнгүй хаяг</p>
             <textarea
+
               className="w-80 border rounded-md resize-none text-[14px] "
+
               placeholder="Дэлгэрэнгүй хаягаа бичнэ үү"
             ></textarea>
           </CardContent>
