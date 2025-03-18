@@ -7,7 +7,9 @@ export default function categoryComp() {
       <HomeHeader />
       <div className="flex">
         <CategoryFilterSide />
-        <div className="w-[80%] h-[1200px] bg-gray-600">erkhme 12</div>
+        <div className="w-[80%] h-[1200px] bg-gray-600">
+          
+        </div>
       </div>
       <Footer />
     </div>
