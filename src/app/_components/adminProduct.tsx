@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Pen, Trash, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import AdminCategoryComp from "./adminCategory";
 import {
     Dialog,
     DialogContent,
@@ -36,9 +37,12 @@ export default function AdminProductsComp() {
 
     return (
         <div className="bg-white my-5 w-[77%] mx-auto rounded-3xl p-6 relative">
+            <AdminCategoryComp/>
+            <div className="flex justify-between"> 
+            <h1 className="text-2xl font-bold">Our Products</h1> 
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button className="absolute top-6 right-6 h-12 w-32 rounded-3xl text-md flex items-center justify-center">
+                    <Button className=" top-[330px]  w-32 rounded-3xl text-md flex items-center justify-center">
                         <Plus className="mr-2 w-5 h-5" /> Add Item
                     </Button>
                 </DialogTrigger>
@@ -79,7 +83,8 @@ export default function AdminProductsComp() {
                 </DialogContent>
             </Dialog>
             
-            <h1 className="text-2xl font-bold">Our Products</h1>
+           
+            </div>
             <div className="w-[260px] h-auto rounded-2xl p-5 flex flex-col items-center border mt-6 border-gray-200">
                 <Image
                     src="/podolk.png"

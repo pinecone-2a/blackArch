@@ -10,7 +10,7 @@ export default function AdminSideBar() {
   const menuItems = [
     { name: "Home", icon: Store, href: "/admin" },
     { name: "Products", icon: ShoppingBag, href: "/admin/products" },
-    { name: "Category", icon: ChartBarStacked, href: "/admin/category" },
+   
   ];
 
   return (
