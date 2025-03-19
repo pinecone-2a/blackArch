@@ -11,7 +11,6 @@ export default function CategoryComp() {
       <HomeHeader />
       <div className="flex flex-col md:flex-row p-4 2xl:mx-20 xl:mx-0 lg:mx-0 md:mx-0 sm:mx-0">
         <CategoryFilterSide />
-
         <div className="flex flex-wrap justify-center md:grid md:grid-cols-3 lg:grid-cols-4 2xl:mx-20 xl:mx-0 lg:mx-0 md:mx-0 sm:mx-0 gap-4 p-4 w-full">
           <div className="group bg-white w-[300px] h-[250px] rounded-xl border shadow-md p-3 flex flex-col items-center relative overflow-hidden transition-all duration-300 ease-in-out hover:h-[300px]">
             <Image src="/t-shirt.png" width={150} height={150} alt="T-shirt" />
@@ -25,7 +24,6 @@ export default function CategoryComp() {
               </Button>
             </div>
           </div>
-
         </div>
       </div>
       <Footer />
