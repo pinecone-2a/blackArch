@@ -44,37 +44,37 @@ export default function Footer() {
           <div className="flex-grow flex gap-5 flex-col justify-center items-center">
             <h1 className="font-semibold -ml-20">Company</h1>
             <ul className="flex flex-col gap-5">
-              <li className="Links">About</li>
-              <li className="Links">Features of SHOP.CO</li>
-              <li className="Links">Works</li>
-              <li className="Links">Career</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">About</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Features of SHOP.CO</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Works</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Career</li>
             </ul>
           </div>
           <div className="flex-grow flex gap-5 flex-col justify-center items-center">
             <h1 className="font-semibold -ml-24">Help</h1>
             <ul className="flex flex-col gap-5">
-              <li className="Links">Customer Support</li>
-              <li className="Links">Delivery Details</li>
-              <li className="Links">Terms & Conditions</li>
-              <li className="Links">Privacy Policy</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Customer Support</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Delivery Details</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Terms & Conditions</li>
+              <li className="hover:underline underline-offset-4 cursor-pointerks">Privacy Policy</li>
             </ul>
           </div>
           <div className="flex-grow flex gap-5 flex-col justify-center items-center">
             <h1 className="font-semibold -ml-24">FAQ</h1>
             <ul className="flex flex-col gap-5">
-              <li className="Links">Account</li>
-              <li className="Links">Manage Deliveries</li>
-              <li className="Links">Orders</li>
-              <li className="Links">Payments</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Account</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Manage Deliveries</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Orders</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Payments</li>
             </ul>
           </div>
           <div className="flex-grow flex gap-5 flex-col justify-center items-center">
             <h1 className="font-semibold -ml-20">Resources</h1>
             <ul className="flex flex-col gap-5">
-              <li className="Links">Free eBooks</li>
-              <li className="Links">Development Tutorial</li>
-              <li className="Links">How to - Blog</li>
-              <li className="Links">Youtube Playlist</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Free eBooks</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Development Tutorial</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">How to - Blog</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Youtube Playlist</li>
             </ul>
           </div>
         </div>
