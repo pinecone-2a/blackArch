@@ -12,10 +12,10 @@ export default function Footer() {
           STAY UPTO DATE ABOUT OUR LATEST OFFERS
         </div>
         <form className="flex flex-col gap-5 flex-grow" action="">
-          <div className="rounded-3xl bg-white p-2 flex w-full">
+          <div className="rounded-3xl bg-white p-2 flex w-[300px]">
             <MdOutlineEmail size={25} />
             <input
-              className=" text-black outline-none ml-2 w-full"
+              className=" text-black outline-none ml-2 w-[300px]"
               placeholder="Enter your email address"
             />
           </div>
