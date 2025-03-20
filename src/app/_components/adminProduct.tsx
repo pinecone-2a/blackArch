@@ -93,12 +93,12 @@ export default function AdminProductsComp() {
     <div className="my-1 text-lg font-bold text-gray-700">$130</div>
     <div className="w-full p-0 flex justify-between">
     <button
-        className="w-[50%] border-t border-black h-[50px] duration-200 rounded-bl-xl rounded-t-none hover:bg-gray-100 text-gray-700 px-4 py-2"
+        className="w-[50%] border-t border h-[50px] duration-200 rounded-bl-xl rounded-t-none hover:bg-gray-100 text-gray-700 px-4 py-2"
     >
         Edit
     </button>
     <button
-        className="w-[50%] border-t border-black duration-200 h-[50px] rounded-br-xl rounded-t-none bg-red-500 hover:bg-red-600 px-4 py-2"
+        className="w-[50%] border-t border duration-200 h-[50px] rounded-br-xl rounded-t-none bg-red-500 hover:bg-red-600 px-4 py-2"
     >
         Delete
     </button>
