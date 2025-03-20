@@ -9,7 +9,6 @@
     "lint": "next lint",
     "type": "module"
   },
- 
   "dependencies": {
     "@auth/core": "^0.38.0",
     "@prisma/client": "^6.5.0",
