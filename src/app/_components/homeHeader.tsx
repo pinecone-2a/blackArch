@@ -1,14 +1,16 @@
+"use client";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
+import TransitionLink from "./TransitionLink";
 
-export default function Navbar() {
+export default function HomeHeader() {
   return (
     <div className='sticky  w-full mx-auto flex px-10 top-0 bg-white z-20 pb-4'>
-      <nav className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
+      <div className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
         <span>
           <Link href={"/"} className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-extrabold">
             PINESHOP
@@ -18,27 +20,28 @@ export default function Navbar() {
         <div className="my-1.5 hidden lg:block">
           <div className="flex text-lg gap-5">
             <p className="hover:underline">
-              <Link href={"/category"}>Shop</Link>
+              <TransitionLink href={"/category"}>Shop</TransitionLink>
             </p>
             <p className="hover:underline">
-              <Link href={"/category"}>New Arrivals</Link>
+              <TransitionLink href={"/category"}>New Arrivals</TransitionLink>
             </p>
             <p className="hover:underline">
-              <Link href={"/category"}>Top Selling</Link>
+              <TransitionLink href={"/category"}>Top Selling</TransitionLink>
             </p>
             <p className="hover:underline">
-              <Link href={"/category"}>On Sale</Link>
+              <TransitionLink href={"/category"}>On Sale</TransitionLink>
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2">
-          <motion.input
-            type="text"
-            className="w-full h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0"
-            placeholder="Search..."
-            whileFocus={{ scale: 1.07 }}
-          />
+          <motion.div whileFocus={{ scale: 1.07 }}>
+            <Input
+              type="text"
+              className="w-full h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0"
+              placeholder="Search..."
+            />
+          </motion.div>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -57,7 +60,7 @@ export default function Navbar() {
             <Menu/>
           </div>
         </div>
-      </nav>
+      </div>
     </div>
   );
 }
