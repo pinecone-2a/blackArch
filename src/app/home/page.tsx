@@ -17,7 +17,6 @@ import { useContext } from "react";
 import { UserContext } from "@/lib/userContext";
 
 
-
 export type Product = {
   id: string,
   name:string,
