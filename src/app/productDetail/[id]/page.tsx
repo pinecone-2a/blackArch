@@ -39,7 +39,7 @@ type Product = {
 
 const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
     const {id} = use(params)
-    const {data, loading} = useFetchData<Product>(`/products/${id}`);
+    const {data, loading} = useFetchData<Product>(`/products/id?id=${id}`);
     const [selectedColor, setSelectedColor] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
     const [quantity, setQuantity] = useState(1);
