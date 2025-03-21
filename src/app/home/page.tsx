@@ -10,6 +10,7 @@ import Reavel from "../_components/Reavel";
 import { Button } from "@/components/ui/button";
 import {motion } from "framer-motion"
 import Image from "next/image";
+import BrandsBar from "../_components/BrandBar";
 export default function HomePage() {
 
 
@@ -37,7 +38,7 @@ export default function HomePage() {
   return (
     <div>
       <HomeHeader />
-      <div className="pt-1 bg-[#F2F0F1] flex flex-wrap  2xl:w-[90%] mx-auto justify-between items-end px-6 lg:px-20">
+      <div className="pt-1 bg-[#F2F0F1] flex flex-wrap  2xl:w-[80%] mx-auto justify-between items-end px-6 lg:px-20">
       <div className="w-full lg:w-1/2 flex flex-col flex-grow">
       <h1 className="font-extrabold text-3xl sm:text-6xl mb-10 max-w-[550px]">
             <Reavel>ӨӨРТ ТОХИРСОН</Reavel> <Reavel>ХЭВ ЗАГВАРЫН</Reavel> <Reavel>ХУВЦАСЫГ ОЛООРОЙ</Reavel>
@@ -56,7 +57,7 @@ export default function HomePage() {
 </div>
 
 
-        <div className="mt-2 flex flex-wrap gap-10">
+        <div className="my-5 flex flex-wrap gap-10">
           <div className="flex-grow flex flex-col justify-center items-center">
             <h1 className="font-bold text-3xl">200+</h1>
             <p className="text-gray-600">  Олон Улсын Бренд</p>
@@ -90,7 +91,7 @@ export default function HomePage() {
         </motion.div>
       </div>
     </div>
-
+<div><BrandsBar/></div>
 
       <div className="bg-[#ffffff] w-full my-24 flex items-center justify-center">
         <div className="flex flex-col w-full max-w-7xl px-4 items-center">
