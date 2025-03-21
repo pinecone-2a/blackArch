@@ -3,7 +3,7 @@ import { ShoppingCart } from "lucide-react";
 import { Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 export default function Navbar() {
   return (
@@ -48,9 +48,13 @@ export default function Navbar() {
           </motion.button>
         </div>
 
+
         <div className="flex gap-3 xsm:mt-3">
           <div className='relative'>
             <Link href={"/cart"}>
+
+              <ShoppingCart />
+
             </Link>
           </div>
           <div className="hidden">
