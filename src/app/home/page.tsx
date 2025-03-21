@@ -11,7 +11,10 @@ import { Button } from "@/components/ui/button";
 import {motion } from "framer-motion"
 import Image from "next/image";
 import BrandsBar from "../_components/BrandBar";
-export default function HomePage() {
+import Link from "next/link";
+import ProductDetail from "../productDetail/[id]/page";
+
+
 
 
 type Product = {
@@ -30,7 +33,6 @@ export default function HomePage() {
     if (Array.isArray(data)) {
       setNewArrival(data); 
     } else {
-      console.error("Fetched data is not an array or is undefined");
     }
   }, [data]);
   
@@ -38,7 +40,10 @@ export default function HomePage() {
   return (
     <div>
       <HomeHeader />
+
       <div className="pt-1 bg-[#F2F0F1] flex flex-wrap  2xl:w-[80%] mx-auto justify-between items-end px-6 lg:px-20">
+
+
       <div className="w-full lg:w-1/2 flex flex-col flex-grow">
       <h1 className="font-extrabold text-3xl sm:text-6xl mb-10 max-w-[550px]">
             <Reavel>ӨӨРТ ТОХИРСОН</Reavel> <Reavel>ХЭВ ЗАГВАРЫН</Reavel> <Reavel>ХУВЦАСЫГ ОЛООРОЙ</Reavel>
@@ -55,6 +60,7 @@ export default function HomePage() {
     </Button>
   </TransitionLink>
 </div>
+
 
 
         <div className="my-5 flex flex-wrap gap-10">
@@ -91,7 +97,9 @@ export default function HomePage() {
         </motion.div>
       </div>
     </div>
+
 <div><BrandsBar/></div>
+
 
       <div className="bg-[#ffffff] w-full my-24 flex items-center justify-center">
         <div className="flex flex-col w-full max-w-7xl px-4 items-center">
@@ -103,11 +111,15 @@ export default function HomePage() {
 
           <div className="w-full overflow-x-auto">
             <div className="flex gap-6  mt-6 pl-4">
+
+
           { newArrival.map((product: any) => (  
+          <Link href={`/productDetail/${product.id}`}>
                 <div
                   key={product.id}
                   className="flex flex-col min-w-[220px] sm:min-w-[250px]"
                 >
+
                   <div style={{backgroundImage: `url(${product.image})`}}
                   className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl"></div>
                   <p className="text-base sm:text-lg font-semibold mt-2">
@@ -117,8 +129,9 @@ export default function HomePage() {
                     <div className="flex gap-1 text-yellow-500">★★★★</div>
                     <div className="text-sm sm:text-base">5/{product.rating}</div>
                   </div>
-                  <div className="text-sm sm:text-lg font-bold">${product.price}</div>
+                  <div className="text-sm sm:text-lg font-bold">₮{product.price}</div>
                 </div>
+                </Link>
        ))   }
             </div>
           </div>

@@ -6,8 +6,13 @@ import { FaGithub } from "react-icons/fa";
 
 export default function Footer() {
   return (
+
     <div className="2xl:w-[80%] w-full mx-auto my-5 xl:px-5 lg:px-5 md:px-2 sm:px-1">
       {/* <div className="flex flex-wrap justify-between items-center p-10 bg-black mt-10 rounded-3xl">
+
+    <div className="2xl:w-[90%] w-full mx-auto my-5 xl:px-5 lg:px-5 md:px-2 sm:px-1">
+      <div className="flex flex-wrap justify-between items-center p-10 bg-black mt-10 rounded-3xl">
+
         <div className="bolded text-3xl xsm:text-4xl text-white mb-10 max-w-[600px]">
           STAY UPTO DATE ABOUT OUR LATEST OFFERS
         </div>
