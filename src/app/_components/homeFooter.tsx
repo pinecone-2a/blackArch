@@ -6,16 +6,16 @@ import { FaGithub } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <div className="mainMargin mx-5 my-5 xl:mx-5 lg:mx-5 md:mx-2 sm:mx-1">
+    <div className="2xl:w-[90%] w-full mx-auto my-5 xl:px-5 lg:px-5 md:px-2 sm:px-1">
       <div className="flex flex-wrap justify-between items-center p-10 bg-black mt-10 rounded-3xl">
         <div className="bolded text-3xl xsm:text-4xl text-white mb-10 max-w-[600px]">
           STAY UPTO DATE ABOUT OUR LATEST OFFERS
         </div>
         <form className="flex flex-col gap-5 flex-grow" action="">
-          <div className="rounded-3xl bg-white p-2 flex w-full">
+          <div className="rounded-3xl bg-white p-2 flex w-[300px]">
             <MdOutlineEmail size={25} />
             <input
-              className=" text-black outline-none ml-2 w-full"
+              className=" text-black outline-none ml-2 w-[300px]"
               placeholder="Enter your email address"
             />
           </div>
