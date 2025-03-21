@@ -11,7 +11,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import Link from 'next/link';
+
 import { useState } from 'react';
 
 
@@ -53,7 +53,7 @@ export default function ProductDetail() {
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                        <BreadcrumbLink className='hover:underline' href="/components">Shop</BreadcrumbLink>
+                        <BreadcrumbLink className='hover:underline' href="/category">Shop</BreadcrumbLink>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
@@ -125,7 +125,7 @@ export default function ProductDetail() {
                             onClick={() => handleSizeClick('Small')}>Small</button>
                         <button className='px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300'
                             onClick={() => handleSizeClick('Medium')}>Medium</button>
-                        <button className='px-4 py-2 border rounded-lg bg-black text-white hover:bg-gray-800 transition duration-300'
+                        <button className='px-4 py-2 border rounded-lg  hover:bg-gray-200 transition duration-300'
                             onClick={() => handleSizeClick('Large')}>Large</button>
                         <button className='px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300'
                             onClick={() => handleSizeClick('X-Large')}>X-Large</button>
@@ -157,28 +157,24 @@ export default function ProductDetail() {
             </div>
 
             <h2 className='text-2xl font-bold text-center mt-10'>YOU MIGHT ALSO LIKE</h2>
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-6 mt-6'>
-                <div className='bg-gray-100 p-4 rounded-lg'>
-                    <img src='t-shirt.png' className='w-full rounded-lg' />
-                    <h3 className='text-lg font-semibold mt-4'>Polo with Contrast Trims</h3>
-                    <div className='flex items-center mt-2'>
-                        <span className='text-yellow-500'>★★★★☆</span>
-                        <span className='ml-2 text-gray-500 text-sm'>4.0/5</span>
-                    </div>
-                    <div className='flex items-center mt-2'>
-                        <span className='text-xl font-bold'>$212</span>
-                        <span className='ml-2 line-through text-gray-400'>$242</span>
-                        <span className='ml-2 text-red-500'>-20%</span>
-                    </div>
-                </div>
-                <div className='bg-gray-100 p-4 rounded-lg'>
-                    <img src='t-shirt.png' className='w-full rounded-lg' />
-                    <h3 className='text-lg font-semibold mt-4'>Gradient Graphic T-shirt</h3>
-                    <div className='flex items-center mt-2'>
-                        <span className='text-yellow-500'>★★★☆☆</span>
-                        <span className='ml-2 text-gray-500 text-sm'>3.5/5</span>
-                    </div>
-                    <div className='mt-2 text-xl font-bold'>$145</div>
+            <div className="w-full overflow-x-auto">
+                <div className="flex gap-6  mt-6 pl-4">
+                    {[1, 2, 3, 4, 5].map((_, i) => (
+                        <div
+                            key={i}
+                            className="flex flex-col min-w-[220px] sm:min-w-[250px]"
+                        >
+                            <div className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-[url(/podolk.png)] bg-cover bg-center rounded-xl"></div>
+                            <p className="text-base sm:text-lg font-semibold mt-2">
+                                T-shirt with Tape Details
+                            </p>
+                            <div className="flex items-center gap-1 mt-1">
+                                <div className="flex gap-1 text-yellow-500">★★★★☆</div>
+                                <div className="text-sm sm:text-base">4/5</div>
+                            </div>
+                            <div className="text-sm sm:text-lg font-bold">$10</div>
+                        </div>
+                    ))}
                 </div>
             </div>
             <div className='pt-10'>
