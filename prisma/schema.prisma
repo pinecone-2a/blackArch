@@ -48,6 +48,7 @@ model Order {
     userId     String @db.ObjectId
     status       String @default("pending")
     totalPrice   Int
+    items          String[]
     shippingAddress Address
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt

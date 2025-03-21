@@ -1,15 +1,15 @@
+"use client";
+import dynamic from "next/dynamic";
+import Template from "../_components/template";
 
-import SignUpComp from "../_components/signupComp"
+const SignUpComp = dynamic(() => import("../_components/signupComp"), { ssr: false });
 
-import Template from "../_components/template"
-export default function SignUp(){
-    return (
-       <div>
-              
-            
-               <Template>   <SignUpComp /> </Template> 
-                
-               
-             </div>
-    )
+export default function SignUp() {
+  return (
+    <div>
+      <Template>
+        <SignUpComp />
+      </Template>
+    </div>
+  );
 }
