@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { Menu } from "lucide-react";
