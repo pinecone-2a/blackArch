@@ -1,10 +1,33 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import useFetchData from "@/lib/customHooks/useFetch";
 import Footer from "../_components/homeFooter";
 import HomeHeader from "../_components/homeHeader";
 import { Star } from "lucide-react";
 
+type Product = {
+  id: string,
+  name:string,
+  
+  
+}
+
 export default function HomePage() {
+
+  const [newArrival, setNewArrival] = useState<Product[]>([])
+  const {data, loading} = useFetchData("products/new")
+  console.log(data)
+
+  useEffect(() => {
+    if (Array.isArray(data)) {
+      setNewArrival(data); 
+    } else {
+      console.error("Fetched data is not an array or is undefined");
+    }
+  }, [data]);
+  
+
   return (
     <div>
       <HomeHeader />
@@ -12,7 +35,7 @@ export default function HomePage() {
         <div className="flex flex-col items-center md:w-[50%]">
           <div className="w-[90%]">
             <p className="text-[#000000] text-[24px] font-bold sm:text-[48px] lg:text-[58px] ">
-              FIND CLOTHES THAT MATCHES YOUR STYLE
+              ӨӨРТ ТОХИРСОН ХЭВ ЗАГВАРЫН ХУВЦАСЫГ ОЛООРОЙ
             </p>
           </div>
           <div className="w-[90%]">
@@ -20,6 +43,7 @@ export default function HomePage() {
               Browse through our diverse range of meticulously crafted garments,
               designed to bring out your individuality and cater to your sense
               of style.
+              
             </p>
           </div>
           <div className="w-[90%] bg-[#000000] rounded-[62px] h-[40px] flex items-center justify-center mt-6  sm:w-[300px] ">
@@ -29,21 +53,21 @@ export default function HomePage() {
             <div>
               <p className="text-[22px] sm:text-4xl lg:text-5xl">200+</p>
               <p className="text-[10px] sm:text-[12px] lg:text-[18px] text-[#00000099]">
-                International Brands
+                Олон Улсын Бренд
               </p>
             </div>
             <div className="h-12 w-[2px] bg-[#000000] opacity-[10%] md:bg-muted "></div>
             <div>
               <p className="text-[22px] sm:text-4xl lg:text-5xl">2000+</p>
               <p className="text-[10px] sm:text-[12px] lg:text-[18px] text-[#00000099]">
-                High-Quality Products
+                Сайн Чанарын Бүтээгдэхүүн
               </p>
             </div>
           </div>
           <div className="mt-2">
             <p className="text-[22px] sm:text-4xl lg:text-5xl">30,000+</p>
             <p className="text-[10px] sm:text-[12px] lg:text-[18px] text-[#00000099]">
-              Happy Customers
+              Идэвхтэй Үйлчлүүлэгчид
             </p>
           </div>
         </div>
@@ -81,28 +105,28 @@ export default function HomePage() {
         <div className="flex flex-col w-full max-w-7xl px-4 items-center">
           <div className="mt-6">
             <p className="text-[#000000] text-[32px] sm:text-6xl font-bold text-center">
-              NEW ARRIVALS
+              ШИНЭЭР ИРСЭН
             </p>
           </div>
 
           <div className="w-full overflow-x-auto">
             <div className="flex gap-6  mt-6 pl-4">
-              {[1, 2, 3, 4, 5].map((_, i) => (
+          { newArrival.map((product: any) => (  
                 <div
-                  key={i}
+                  key={product.id}
                   className="flex flex-col min-w-[220px] sm:min-w-[250px]"
                 >
                   <div className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-[url(/podolk.png)] bg-cover bg-center rounded-xl"></div>
                   <p className="text-base sm:text-lg font-semibold mt-2">
-                    T-shirt with Tape Details
+                   {product.name}
                   </p>
                   <div className="flex items-center gap-1 mt-1">
                     <div className="flex gap-1 text-yellow-500">★★★★</div>
-                    <div className="text-sm sm:text-base">4.5/5</div>
+                    <div className="text-sm sm:text-base">4.5/{product.rating}</div>
                   </div>
-                  <div className="text-sm sm:text-lg font-bold">$120</div>
+                  <div className="text-sm sm:text-lg font-bold">${product.price}</div>
                 </div>
-              ))}
+       ))   }
             </div>
           </div>
           <div className="rounded-2xl bg-white h-12 w-full sm:w-[70%] md:w-[50%] border flex items-center justify-center mt-8 cursor-pointer text-lg font-semibold hover:bg-gray-100 transition">
@@ -110,7 +134,7 @@ export default function HomePage() {
           </div>
           <div className="w-full bg-[#F0F0F0] flex flex-col items-center mt-14 rounded-2xl p-8">
             <p className="text-[30px] sm:text-[36px] font-semibold text-center">
-              BROWSE BY DRESS STYLE
+              ХЭВ ЗАГВАРААР ХАЙХ
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mt-6">
