@@ -6,26 +6,31 @@ import { FaGithub } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <div className="mainMargin mx-5 my-5 xl:mx-5 lg:mx-5 md:mx-2 sm:mx-1">
+
+    <div className="2xl:w-[80%] w-full mx-auto my-5 xl:px-5 lg:px-5 md:px-2 sm:px-1">
+      {/* <div className="flex flex-wrap justify-between items-center p-10 bg-black mt-10 rounded-3xl">
+
+    <div className="2xl:w-[90%] w-full mx-auto my-5 xl:px-5 lg:px-5 md:px-2 sm:px-1">
       <div className="flex flex-wrap justify-between items-center p-10 bg-black mt-10 rounded-3xl">
+
         <div className="bolded text-3xl xsm:text-4xl text-white mb-10 max-w-[600px]">
           STAY UPTO DATE ABOUT OUR LATEST OFFERS
         </div>
         <form className="flex flex-col gap-5 flex-grow" action="">
-          <div className="rounded-3xl bg-white p-2 flex w-full">
+          <div className="rounded-3xl bg-white p-2 flex w-[300px]">
             <MdOutlineEmail size={25} />
             <input
-              className=" text-black outline-none ml-2 w-full"
+              className=" text-black outline-none ml-2 w-[300px]"
               placeholder="Enter your email address"
             />
           </div>
           <button
             type="submit"
-            className="rounded-3xl bg-white p-2 text-black text-center">
+            className="rounded-3xl bg-white w-[300px] p-2 text-black text-center">
             Subscribe to Newsletter
           </button>
         </form>
-      </div>
+      </div> */}
       <footer>
         <div className="flex flex-wrap justify-between mt-10 gap-10">
           <div className="flex-grow flex flex-col mx-5 gap-10">
@@ -45,7 +50,7 @@ export default function Footer() {
             <h1 className="font-semibold -ml-20">Company</h1>
             <ul className="flex flex-col gap-5">
               <li className="hover:underline underline-offset-4 cursor-pointer">About</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">Features of SHOP.CO</li>
+              <li className="hover:underline underline-offset-4 cursor-pointer">Features</li>
               <li className="hover:underline underline-offset-4 cursor-pointer">Works</li>
               <li className="hover:underline underline-offset-4 cursor-pointer">Career</li>
             </ul>
@@ -80,7 +85,7 @@ export default function Footer() {
         </div>
         <div className="flex justify-center mt-10 gap-y-5 border-t-4 items-center flex-wrap">
           <div className="flex-grow text-center md:text-left">
-            Shop.co © 2000-2025, All Rights Reserved
+            Pineshop © 2000-2025, All Rights Reserved
           </div>
           <div className="w-fit"></div>
         </div>

@@ -20,13 +20,15 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 
 export default function ForgotPasswordComp() {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<{ email?: boolean }>({});
-  const [isDialogOpen, setIsDialogOpen] = useState(false); 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isOtpDialogOpen, setIsOtpDialogOpen] = useState(false); // Track OTP dialog state
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]); // OTP state
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false); // Track password dialog state
 
   const validate = () => {
     let newErrors: { email?: boolean } = {};
@@ -52,8 +54,21 @@ export default function ForgotPasswordComp() {
     if (validate()) {
       console.log("Password reset email sent!");
       toast.success("Password reset instructions sent!");
-      setIsDialogOpen(true); 
+      setIsOtpDialogOpen(true); // Open OTP dialog after email validation
     }
+  };
+
+  const handleOtpSubmit = () => {
+    // Logic for validating OTP can be added here
+    console.log("OTP validated!");
+    setIsOtpDialogOpen(false); // Close OTP dialog
+    setIsPasswordDialogOpen(true); // Open Password dialog
+  };
+
+  const handleOtpChange = (index: number, value: string) => {
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
   };
 
   return (
@@ -88,29 +103,47 @@ export default function ForgotPasswordComp() {
       </form>
 
       <Toaster position="top-center" />
-      <Dialog  open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+
+      {/* OTP Dialog */}
+      <Dialog open={isOtpDialogOpen} onOpenChange={setIsOtpDialogOpen}>
         <DialogContent className="rounded-3xl">
           <DialogHeader>
-            <DialogTitle>Please check your email indox</DialogTitle>
+            <DialogTitle>Please check your email inbox</DialogTitle>
             <DialogDescription>
               We sent an OTP code to your email with 6 characters.
             </DialogDescription>
           </DialogHeader>
-          <div className=" mt-5 mx-auto "> 
-          <InputOTP maxLength={6}>
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-            </InputOTPGroup>
-            <InputOTPSeparator />
-            <InputOTPGroup>
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP></div>
-          <Button className="text-xl rounded-2xl 2xl:w-[70%] 2xl:mx-auto xl:w-[70%] xl:mx-auto lg:w-[70%] lg:mx-auto mt-5">Confirm</Button>
+          <div className="mt-5 mx-auto">
+            <InputOTP maxLength={6}>
+              <InputOTPGroup className="mx-auto">
+                {otp.map((otpChar, index) => (
+                  <InputOTPSlot
+                    key={index}
+                    index={index}
+                    onChange={(e) => handleOtpChange(index, (e.target as HTMLInputElement).value)}
+                  />
+                ))}
+              </InputOTPGroup>
+            </InputOTP>
+            <Button className="text-xl w-[300px] rounded-2xl mx-auto mt-5" onClick={handleOtpSubmit}>
+              Continue
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create New Password Dialog */}
+      <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+        <DialogContent className="rounded-3xl">
+          <DialogHeader>
+            <DialogTitle>Create new password</DialogTitle>
+            <DialogDescription>
+              Please enter your new password and confirm it.
+            </DialogDescription>
+          </DialogHeader>
+          <Input type="password" className="w-[80%] mx-auto rounded-2xl p-3 bg-gray-100 border-2" placeholder="Enter your new password" />
+          <Input type="password" className="w-[80%] mx-auto rounded-2xl p-3 bg-gray-100 border-2" placeholder="Confirm your new password" />
+          <Button className="text-xl rounded-2xl w-[70%] mx-auto mt-5">Confirm</Button>
         </DialogContent>
       </Dialog>
     </div>

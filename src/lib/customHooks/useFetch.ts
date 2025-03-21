@@ -1,8 +1,8 @@
 import { data } from "motion/react-client";
 import { useState, useEffect } from "react";
 
-const useFetchData = (path: string) => {
-    const [data, setData] = useState<string | null>(null);
+export function useFetchData<T>(path: string) {
+  const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
   
   

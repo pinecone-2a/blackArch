@@ -1,8 +1,40 @@
+"use client"
+import {FC} from "react"
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useParams } from 'next/navigation'
+import useFetchData from "@/lib/customHooks/useFetch";
+import { use } from "react";
 
-export default function ProductDetail() {
+
+type ProductDetailProps = {
+    params: Promise<{ id: string }>;
+  }
+
+type Product = {
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+    size: Array<string>;
+    color: string;
+    category: string,
+    rating: string,
+    description: string
+
+}
+
+ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
+    const { id } = use(params);  
+    console.log(id)
+    const {data, loading} = useFetchData<Product>(`products/${id}`)
+   
+
+
+
+
+
     return (
         <div className='p-4 max-w-7xl mx-auto'>
   
@@ -15,30 +47,29 @@ export default function ProductDetail() {
              
                 <div>
                     <div className='bg-gray-300 rounded-2xl p-2'>
-                        <img src='t-shirt.png' alt='Product' className='w-full rounded-xl' />
+                        <img src={data?.image} alt='Product' className='w-full rounded-xl' />
                     </div>
                     <div className='flex gap-3 mt-4'>
-                        <img src='t-shirt.png' className='w-24 h-24 bg-gray-300 rounded-xl p-1' />
-                        <img src='t-shirt.png' className='w-24 h-24 bg-gray-300 rounded-xl p-1' />
-                        <img src='t-shirt.png' className='w-24 h-24 bg-gray-300 rounded-xl p-1' />
+                        <img src={data?.image} className='w-24 h-24 bg-gray-300 rounded-xl p-1' />
+                        <img src={data?.image} className='w-24 h-24 bg-gray-300 rounded-xl p-1' />
+                        <img src={data?.image} className='w-24 h-24 bg-gray-300 rounded-xl p-1' />
                     </div>
                 </div>
 
          
                 <div>
-                    <h1 className='text-5xl font-bold'>ONE LIFE GRAPHIC T-SHIRT</h1>
+                    <h1 className='text-5xl font-bold'>{data?.name}</h1>
                     <div className='flex items-center mt-2 text-3xl'>
                         <span className='text-yellow-500'>★★★★☆</span>
-                        <span className='ml-2 text-gray-500 text-sm'>4.5/5</span>
+                        <span className='ml-2 text-gray-500 text-sm'>{data?.rating}/5</span>
                     </div>
                     <div className='flex items-center gap-2 mt-3 text-4xl'>
-                        <h2 className='font-bold'>$260</h2>
-                        <h2 className='text-gray-400 line-through'>$300</h2>
-                        <h2 className='text-red-500 font-semibold'>-40%</h2>
+                        <h2 className='font-bold'>{data?.price}</h2>
+                        {/* <h2 className='text-gray-400 line-through'>$300</h2> */}
+                        {/* <h2 className='text-red-500 font-semibold'>-40%</h2> */}
                     </div>
                     <p className='mt-3 text-gray-700 text-xl'>
-                        This graphic t-shirt is perfect for any occasion. Crafted from a soft and breathable fabric,
-                        it offers superior comfort and style.
+                        {data?.description}
                     </p>
                     
                     <p className='text-lg font-bold mt-4 text-end'>Select Colors</p>
@@ -54,6 +85,7 @@ export default function ProductDetail() {
 
                     <p className='text-lg font-bold mt-4 text-end'>Choose Size</p>
                     <div className='flex gap-5 mt-2 rounded-full '>
+                        {/* {data?.size.map} */}
                         <button className='px-4 py-2 border rounded-lg'>Small</button>
                         <button className='px-4 py-2 border rounded-lg'>Medium</button>
                         <button className='px-4 py-2 border rounded-lg bg-black text-white'>Large</button>
@@ -97,3 +129,4 @@ export default function ProductDetail() {
         </div>
     );
 }
+export default ProductDetail
