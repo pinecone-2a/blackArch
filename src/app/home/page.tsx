@@ -107,13 +107,14 @@ export default function HomePage() {
                   key={product.id}
                   className="flex flex-col min-w-[220px] sm:min-w-[250px]"
                 >
-                  <div className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-[url(/podolk.png)] bg-cover bg-center rounded-xl"></div>
+                  <div style={{backgroundImage: `url(${product.image})`}}
+                  className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl"></div>
                   <p className="text-base sm:text-lg font-semibold mt-2">
                    {product.name}
                   </p>
                   <div className="flex items-center gap-1 mt-1">
                     <div className="flex gap-1 text-yellow-500">★★★★</div>
-                    <div className="text-sm sm:text-base">4.5/{product.rating}</div>
+                    <div className="text-sm sm:text-base">5/{product.rating}</div>
                   </div>
                   <div className="text-sm sm:text-lg font-bold">${product.price}</div>
                 </div>
