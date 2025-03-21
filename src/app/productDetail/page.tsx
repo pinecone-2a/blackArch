@@ -11,9 +11,21 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import axios from 'axios';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import HomeHeader from '../_components/homeHeader';
 
+type Product = {
+    id: string,
+    name: string,
+    price: number,
+    discount: number,
+    rating: number,
+    image: string,
+    colors: string[],
+    sizes: string[],
+}
 
 export default function ProductDetail() {
 
@@ -39,12 +51,37 @@ export default function ProductDetail() {
         }
     };
 
-    const handleAddToCart = () => {
-        console.log(`Added to cart: Size: ${selectedSize}, Quantity: ${quantity}`);
-    };
 
+    const [product, setProduct] = useState<Product | null>(null);
+    useEffect(() => {
+        axios.get("http://localhost:") // API URL
+            .then(response => {
+                setProduct(response.data);
+            })
+            .catch(error => console.error("Error:", error));
+    }, []);
+
+    if (!product) {
+        return <div>Loading...</div>;
+    }
+
+
+
+    const handleAddToCart = () => {
+        axios.post("http://localhost:", { // API URL &  ADD CART
+            productId: product.id,
+            size: selectedSize,
+            quantity
+        }).then(response => {
+            alert("Сагсанд амжилттай нэмэгдлээ!");
+        }).catch(error => console.error("Error:", error));
+    };
+    
+  
     return (
+
         <div className='p-4 max-w-7xl mx-auto'>
+            <HomeHeader />
 
             <Breadcrumb>
                 <BreadcrumbList className='text-2xl flex text-gray-300 items-center'>

@@ -23,7 +23,7 @@ export default function HomePage() {
     if (Array.isArray(data)) {
       setNewArrival(data); 
     } else {
-      console.error("Fetched data is not an array or is undefined");
+
     }
   }, [data]);
   
