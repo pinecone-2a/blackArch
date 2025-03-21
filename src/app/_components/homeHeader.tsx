@@ -3,6 +3,7 @@ import { ShoppingCart } from "lucide-react";
 import { Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import {motion} from "framer-motion"
 
 
 export default function Navbar() {
