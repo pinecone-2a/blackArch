@@ -46,7 +46,7 @@ export default function HomePage() {
 
       <div className="w-full lg:w-1/2 flex flex-col flex-grow">
       <h1 className="font-extrabold text-3xl sm:text-6xl mb-10 max-w-[550px]">
-            <Reavel>ӨӨРТ ТОХИРСОН</Reavel> <Reavel>ХЭВ ЗАГВАРЫН</Reavel> <Reavel>ХУВЦАСЫГ ОЛООРОЙ</Reavel>
+            <Reavel>ӨӨРТ ТОХИРСОН</Reavel> <Reavel>ЗАГВАРЫН</Reavel> <Reavel>ХУВЦАСЫГ ОЛООРОЙ</Reavel>
             </h1>
         
         <p className="max-w-[550px] text-lg text-gray-600">
@@ -114,7 +114,7 @@ export default function HomePage() {
 
 
           { newArrival.map((product: any) => (  
-          <Link href={`/productDetail/${product.id}`}>
+          <Link key={product.id} href={`/productDetail/${product.id}`}>
                 <div
                   key={product.id}
                   className="flex flex-col min-w-[220px] sm:min-w-[250px]"
