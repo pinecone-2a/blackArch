@@ -1,5 +1,7 @@
 "use client";
+
 import TransitionLink from "../_components/TransitionLink";
+import { useState, useEffect } from "react";
 import useFetchData from "@/lib/customHooks/useFetch";
 import Footer from "../_components/homeFooter";
 import HomeHeader from "../_components/homeHeader";
@@ -11,8 +13,26 @@ import Image from "next/image";
 export default function HomePage() {
 
 
-  const {data, loading} = useFetchData("products")
+type Product = {
+  id: string,
+  name:string,
+}
+
+
+export default function HomePage() {
+
+  const [newArrival, setNewArrival] = useState<Product[]>([])
+  const {data, loading} = useFetchData("products/new")
   console.log(data)
+
+  useEffect(() => {
+    if (Array.isArray(data)) {
+      setNewArrival(data); 
+    } else {
+      console.error("Fetched data is not an array or is undefined");
+    }
+  }, [data]);
+  
 
   return (
     <div>
@@ -82,22 +102,22 @@ export default function HomePage() {
 
           <div className="w-full overflow-x-auto">
             <div className="flex gap-6  mt-6 pl-4">
-              {[1, 2, 3, 4, 5].map((_, i) => (
+          { newArrival.map((product: any) => (  
                 <div
-                  key={i}
+                  key={product.id}
                   className="flex flex-col min-w-[220px] sm:min-w-[250px]"
                 >
                   <div className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-[url(/podolk.png)] bg-cover bg-center rounded-xl"></div>
                   <p className="text-base sm:text-lg font-semibold mt-2">
-                    T-shirt with Tape Details
+                   {product.name}
                   </p>
                   <div className="flex items-center gap-1 mt-1">
                     <div className="flex gap-1 text-yellow-500">★★★★</div>
-                    <div className="text-sm sm:text-base">4.5/5</div>
+                    <div className="text-sm sm:text-base">4.5/{product.rating}</div>
                   </div>
-                  <div className="text-sm sm:text-lg font-bold">$120</div>
+                  <div className="text-sm sm:text-lg font-bold">${product.price}</div>
                 </div>
-              ))}
+       ))   }
             </div>
           </div>
           <div className="rounded-2xl bg-white h-12 w-full sm:w-[70%] md:w-[50%] border flex items-center justify-center mt-8 cursor-pointer text-lg font-semibold hover:bg-gray-100 transition">

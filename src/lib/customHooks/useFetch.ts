@@ -20,7 +20,7 @@ const useFetchData = (path: string) => {
             return;
           }
   
-         setData(data)
+         setData(data.message)
         } catch (error) {
           console.error(" error:", error);
      
