@@ -17,10 +17,6 @@ type Product = {
   id: string,
   name:string,
 }
-
-
-export default function HomePage() {
-
   const [newArrival, setNewArrival] = useState<Product[]>([])
   const {data, loading} = useFetchData("products/new")
   console.log(data)
