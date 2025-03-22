@@ -17,7 +17,7 @@ import ProductDetail from "../productDetail/[id]/page";
 
 
 
-type Product = {
+export type Product = {
   id: string,
   name:string,
 }

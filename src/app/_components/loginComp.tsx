@@ -7,10 +7,17 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import TransitionLink from "./TransitionLink";
 import { Toaster, toast } from "sonner";
+import usePostData from "@/lib/customHooks/usePostData";
  
 export default function LoginComp() {
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const  [data, setData] = useState({
+    email: password,
+    password: email,
+  });
+  
   const [errors, setErrors] = useState<{
     email?: boolean;
     password?: boolean;
@@ -51,7 +58,7 @@ export default function LoginComp() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      console.log("Login successful!");
+      console.log(data);
       toast.success("Login successful!");
     }
   };
