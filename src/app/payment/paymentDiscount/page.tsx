@@ -135,7 +135,7 @@ export default function Discount() {
           <CardContent className="flex flex-col gap-4">
             <p className="text-[14px] font-bold">Хот</p>
             <select
-              className="w-80 border p-2 rounded-md"
+              className="w-80 border p-2 rounded-md max-h-60 overflow-auto"
               value={formData.city}
               onChange={(e) =>
                 setFormData({ ...formData, city: e.target.value, district: "" })

@@ -1,16 +1,16 @@
-"use client";
+"use client"
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { motion } from 'framer-motion';
-import TransitionLink from "./TransitionLink";
+import {motion} from "framer-motion"
 
-export default function HomeHeader() {
+
+export default function Navbar() {
   return (
     <div className='sticky  w-full mx-auto flex px-10 top-0 bg-white z-20 pb-4'>
-      <div className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
+      <nav className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
         <span>
           <Link href={"/"} className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-extrabold">
             PINESHOP
@@ -20,28 +20,27 @@ export default function HomeHeader() {
         <div className="my-1.5 hidden lg:block">
           <div className="flex text-lg gap-5">
             <p className="hover:underline">
-              <TransitionLink href={"/category"}>Shop</TransitionLink>
+              <Link href={"/category"}>Shop</Link>
             </p>
             <p className="hover:underline">
-              <TransitionLink href={"/category"}>New Arrivals</TransitionLink>
+              <Link href={"/category"}>New Arrivals</Link>
             </p>
             <p className="hover:underline">
-              <TransitionLink href={"/category"}>Top Selling</TransitionLink>
+              <Link href={"/category"}>Top Selling</Link>
             </p>
             <p className="hover:underline">
-              <TransitionLink href={"/category"}>On Sale</TransitionLink>
+              <Link href={"/category"}>On Sale</Link>
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2">
-          <motion.div whileFocus={{ scale: 1.07 }}>
-            <Input
-              type="text"
-              className="w-full h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0"
-              placeholder="Search..."
-            />
-          </motion.div>
+          <motion.input
+            type="text"
+            className="w-full h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0"
+            placeholder="Search..."
+            whileFocus={{ scale: 1.07 }}
+          />
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -51,16 +50,20 @@ export default function HomeHeader() {
           </motion.button>
         </div>
 
+
         <div className="flex gap-3 xsm:mt-3">
           <div className='relative'>
             <Link href={"/cart"}>
+
+              <ShoppingCart />
+
             </Link>
           </div>
           <div className="hidden">
             <Menu/>
           </div>
         </div>
-      </div>
+      </nav>
     </div>
   );
 }
