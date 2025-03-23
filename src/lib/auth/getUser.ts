@@ -10,9 +10,11 @@ export const getUserFromToken = (req: NextRequest) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as { id: string; email: string };
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as { userId: string; email: string; role: string};
     return decoded;
   } catch (error) {
+    console.error("Invalid token:", error);
+
     return null;
   }
 };

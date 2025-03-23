@@ -20,7 +20,7 @@ export const POST = async (req: Request) => {
             email,
             password: hashedPassword,
             username,
-            role: "User"
+            phoneNumber:  95565349
 
         }
     })
