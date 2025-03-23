@@ -2,6 +2,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import { UserProvider } from "@/lib/userContext";
 
 type ProductType = {
   name: string;
@@ -23,12 +24,13 @@ export default function Home() {
 
 
   return (
-
+    <UserProvider> 
     <div>
       <Template>
         <HomePage />
       </Template>
     </div>
+     </UserProvider>
 
   );
 }

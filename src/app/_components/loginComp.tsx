@@ -7,16 +7,27 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import TransitionLink from "./TransitionLink";
 import { Toaster, toast } from "sonner";
-import usePostData from "@/lib/customHooks/usePostData";
+
  
 export default function LoginComp() {
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const  [data, setData] = useState({
-    email: password,
-    password: email,
-  });
+  const handleLogin = async () => {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+    if (data) {
+      console.log(data)
+      alert(data.error);
+    } else {
+      alert("Invalid credentials");
+    }
+  };
   
   const [errors, setErrors] = useState<{
     email?: boolean;
@@ -58,7 +69,8 @@ export default function LoginComp() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      console.log(data);
+      handleLogin()
+  
       toast.success("Login successful!");
     }
   };

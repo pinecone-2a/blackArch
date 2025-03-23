@@ -12,7 +12,7 @@ export const POST = async (req: Request) => {
   try {
     const cookieStore = await cookies()
     const bcrypt = require("bcrypt")
-    const user = await prisma.user.findFirst({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email } });
     if(!user) {
         return NextResponse.json({ error: "Хэрэглэгч олдсонгүй."})
     }

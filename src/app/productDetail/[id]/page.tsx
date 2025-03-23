@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { useParams } from 'next/navigation'
 import useFetchData from "@/lib/customHooks/useFetch";
 import { use } from "react";
-
+import { useContext } from "react";
+import { UserContext } from "@/lib/userContext";
 
 type ProductDetailProps = {
     params: Promise<{ id: string }>;
@@ -29,7 +30,8 @@ type Product = {
     const { id } = use(params);  
     console.log(id)
     const {data, loading} = useFetchData<Product>(`products/${id}`)
-   
+    const user = useContext(UserContext)
+    console.log("hereglegch", user)
 
 
 
@@ -40,7 +42,7 @@ type Product = {
   
             <div className='flex items-center text-gray-500 text-2xl'>
                 Home <ChevronRight size={16} /> Shop <ChevronRight size={16} /> Men <ChevronRight size={16} />
-                <span className='text-black'>T-Shirts</span>
+                <span className='text-black'>T-Shirts{}</span>
             </div>
 
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6'>
