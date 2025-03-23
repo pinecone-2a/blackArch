@@ -10,7 +10,7 @@ export default function BrandsBar() {
         transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
         className="flex flex-shrink-0"
       >
-        {[...Array(10)].map((_, index) => (
+        {[...Array(9)].map((_, index) => (
           <div key={index} className='flex gap-5'>
                 <svg
       className='scale-75 xsm:scale-100 flex-grow' width="167" height="34" viewBox="0 0 167 34" fill="none" xmlns="http://www.w3.org/2000/svg">
