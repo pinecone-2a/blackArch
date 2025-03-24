@@ -25,9 +25,9 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",
+    "src/app/**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/forgotpassword"
+    "src/app/forgotpassword",
   ],
   "exclude": ["node_modules"]
 }

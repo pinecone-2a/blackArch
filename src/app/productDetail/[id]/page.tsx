@@ -78,15 +78,15 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
 
 
-    const handleAddToCart = () => {
-        axios.post("http://localhost:", { // API URL &  ADD CART
-            productId: data?.id,
-            size: selectedSize,
-            quantity
-        }).then(response => {
-            alert("Сагсанд амжилттай нэмэгдлээ!");
-        }).catch(error => console.error("Error:", error));
-    };
+    // const handleAddToCart = () => {
+    //     axios.post("http://localhost:", { // API URL &  ADD CART
+    //         productId: data?.id,
+    //         size: selectedSize,
+    //         quantity
+    //     }).then(response => {
+    //         alert("Сагсанд амжилттай нэмэгдлээ!");
+    //     }).catch(error => console.error("Error:", error));
+    // };
     
   
     return (
@@ -195,7 +195,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                         </button>
                         <button
                             className='bg-black text-white p-3 rounded-full ml-auto'
-                            onClick={handleAddToCart}
+                            // onClick={handleAddToCart}
                         >
                             Add to Cart
                         </button>
