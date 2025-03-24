@@ -13,7 +13,8 @@ import Image from "next/image";
 import BrandsBar from "../_components/BrandBar";
 import Link from "next/link";
 import ProductDetail from "../productDetail/[id]/page";
-
+import { useContext } from "react";
+import { UserContext } from "@/lib/userContext";
 
 
 
@@ -24,7 +25,8 @@ export type Product = {
 
 
 export default function HomePage() {
-
+  const user = useContext(UserContext)
+  console.log("hereglegch", user)
   const [newArrival, setNewArrival] = useState<Product[]>([])
   const {data, loading} = useFetchData("products/new")
   console.log(data)

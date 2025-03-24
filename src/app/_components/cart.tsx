@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Trash, Minus, Plus } from "lucide-react";
+import { useContext } from "react";
+import { UserContext } from "@/lib/userContext";
 
 const initialCart = [
   {
@@ -39,6 +41,8 @@ export default function Cart() {
   const [cart, setCart] = useState(initialCart);
   const discountRate = 0.2;
   const deliveryFee = 15;
+  const user = useContext(UserContext);
+  console.log("hereglegch",user)
 
   interface CartItem {
     id: number;

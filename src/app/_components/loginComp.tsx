@@ -7,16 +7,30 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import TransitionLink from "./TransitionLink";
 import { Toaster, toast } from "sonner";
-import usePostData from "@/lib/customHooks/usePostData";
+import { useRouter } from "next/navigation";
+
  
 export default function LoginComp() {
-  
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const  [data, setData] = useState({
-    email: password,
-    password: email,
-  });
+  
+  const handleLogin = async () => {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({  email, password }),
+      });
+      const data = await res.json();
+      console.log(data)
+      return data;
+  
+    } catch (error) {
+      console.error("Error during registration:", error);
+      return { error: "An error occurred during registration." };
+    }
+  };
   
   const [errors, setErrors] = useState<{
     email?: boolean;
@@ -55,11 +69,17 @@ export default function LoginComp() {
     return true;
   };
  
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
+      const data = await handleLogin();
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(data.message);
+        router.push("/")
+      }
       console.log(data);
-      toast.success("Login successful!");
     }
   };
  
