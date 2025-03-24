@@ -1,14 +1,12 @@
 import prisma from "@/lib/connect";
 import { NextResponse } from "next/server";
 
-interface Context {
-  params: { id: string };
-}
-
-export async function GET(request: NextRequest, context: Context) {
+export const GET = async (
+  req: Request,
+  { params }: { params: { id: string } }
+) => {
   try {
-    const { id } = context.params; // ✅ Extract params from context
-
+    const { id } = params;
     const product = await prisma.product.findUnique({
       where: { id: id },
     });
@@ -25,4 +23,4 @@ export async function GET(request: NextRequest, context: Context) {
       { status: 500 }
     );
   }
-}
+};
