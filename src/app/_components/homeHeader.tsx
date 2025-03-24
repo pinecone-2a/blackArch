@@ -5,7 +5,13 @@ import { Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import {motion} from "framer-motion"
-
+import Autocomplete from "@/components/algolia/AutoComplete";
+import NextInstantSearch from "@/components/algolia/NextInstantSearch";
+import { searchClient } from "@/lib/algolia/searchClient";
+import { INSTANT_SEARCH_INDEX_NAME } from "@/lib/constants/types";
+import { Configure, } from "react-instantsearch";
+import { Hits } from "react-instantsearch";
+import SearchAlgolia from "@/components/algolia/Search";
 
 export default function Navbar() {
   return (
@@ -34,6 +40,9 @@ export default function Navbar() {
           </div>
         </div>
 
+  
+
+
         <div className="flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2">
           <motion.input
             type="text"
@@ -48,8 +57,9 @@ export default function Navbar() {
           >
             <Search className="w-5 h-5 text-gray-700" />
           </motion.button>
-        </div>
 
+        </div>
+    
 
         <div className="flex gap-3 xsm:mt-3">
           <div className='relative'>

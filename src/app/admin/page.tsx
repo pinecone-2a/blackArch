@@ -8,27 +8,12 @@ import { useRouter } from "next/navigation";
 import type { User } from "@/lib/constants/types";
 
 export default function Admin() {
-    const [userData, setUserData] = useState<User | null>(null);
-    const user = useContext(UserContext) as UserContextType;
+
+  const user = useContext(UserContext) as UserContextType;
   const router = useRouter();
-  console.log(userData?.role);
-
-  
-  useEffect(() => {
-    if (user?.userData && typeof user.userData !== 'string') {
-      setUserData(user.userData as User);
-    }    
-
-  }, [user]); // Update when `user` changes
 
 
-    useEffect(() => {
-        if ( userData?.role == "admin") {
-        console.log(userData.role)
-        } else {
-            router.push("/")
-        }
-    }, [userData]);
+
 
 
   return (
