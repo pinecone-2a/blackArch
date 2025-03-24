@@ -1,16 +1,15 @@
 import prisma from "@/lib/connect";
 import { NextRequest, NextResponse } from "next/server";
 
-interface Context {
-  params: { id: string };
-}
-
-export async function GET(request: NextRequest, context: Context) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } } // ✅ Correct inline type
+) {
   try {
-    const { id } = context.params; // ✅ Extract params from context
+    const { id } = params; // Extract `id` correctly
 
     const product = await prisma.product.findUnique({
-      where: { id: id },
+      where: { id },
     });
 
     if (!product) {
