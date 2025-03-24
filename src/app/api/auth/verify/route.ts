@@ -1,19 +1,23 @@
 import { verifyToken } from "@/lib/auth/verifyToken";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const token = req.cookies.accessToken;
+export async function GET(req: NextRequest) {
+  const token = req.cookies.get("accessToken")?.value;
 
   if (!token) {
-    return res.status(401).json({ message: "No token provided" });
+    return NextResponse.json({ message: "No token provided" }, { status: 401 });
   }
 
   try {
-  
     const decoded = verifyToken(token);
-    
-    res.status(200).json({ message: "Protected data", user: decoded });
+    return NextResponse.json(
+      { message: "Protected data", user: decoded },
+      { status: 200 }
+    );
   } catch (error) {
-    res.status(400).json({ message: "Invalid or expired token" });
+    return NextResponse.json(
+      { message: "Invalid or expired token" },
+      { status: 400 }
+    );
   }
 }
