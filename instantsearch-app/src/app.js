@@ -4,7 +4,7 @@ const searchClient = algoliasearch('YUWLMDFM73', '759f34eb01934535c841f508bc5ffb
 
 const search = instantsearch({
   indexName: 'd',
-  searchClient,
+  searchClient: algoliasearch(process.env.NEXT.PUBLIC.ALGOLIA_ADMIN_KEY, process.env.NEXT.PUBLIC.ALGOLIA_APP_ID),
   future: { preserveSharedStateOnUnmount: true },
   
 });

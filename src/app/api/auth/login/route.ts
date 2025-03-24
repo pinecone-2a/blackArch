@@ -12,26 +12,27 @@ export const POST = async (req: Request) => {
   try {
     const cookieStore = await cookies()
     const bcrypt = require("bcrypt")
-    const user = await prisma.user.findFirst({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email } });
     if(!user) {
-        return NextResponse.json({ error: "Хэрэглэгч олдсонгүй."})
+        return NextResponse.json({ error: "Та нууц үг болон имайлээ дахин шалгана уу!."})
     }
     if(user?.password) {
         const isMatch = bcrypt.compareSync(password, user.password)
         if(!isMatch) {
+          return NextResponse.json({ error: "Та нууц үг болон имайлээ дахин шалгана уу!."})
         } else {
-            const userId = await prisma.user.findFirst({
+            const userData = await prisma.user.findFirst({
                 where: {email: email },
-                select: {id: true}
+                select: {id: true, email: true, role: true}
             });
             const refreshToken = jwt.sign(
-                {userId},
+                {userData},
                 process.env.REFRESH_TOKEN_SECRET!,
                 { expiresIn: "7d" }
 
             );
             const accessToken = jwt.sign(
-                {userId},
+                {userData},
                 process.env.ACCESS_TOKEN_SECRET!,
                 {expiresIn: "1h"}
             );
@@ -48,7 +49,7 @@ export const POST = async (req: Request) => {
 
 
             return NextResponse.json({
-                message: "Хэрэглэгч амжилттай нэвтэрлээ",
+                message: "Хэрэглэгч амжилттай нэвтэрлээ.",
                 user: {
                   id: user.id,
                   email: user.email

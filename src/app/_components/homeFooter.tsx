@@ -8,6 +8,7 @@ export default function Footer() {
   return (
 
     <div className="2xl:w-[80%] w-full mx-auto my-5 xl:px-5 lg:px-5 md:px-2 sm:px-1">
+
       {/* <div className="flex flex-wrap justify-between items-center p-10 bg-black mt-10 rounded-3xl">
 
     <div className="2xl:w-[90%] w-full mx-auto my-5 xl:px-5 lg:px-5 md:px-2 sm:px-1">
@@ -31,6 +32,7 @@ export default function Footer() {
           </button>
         </form>
       </div> */}
+
       <footer>
         <div className="flex flex-wrap justify-between mt-10 gap-10">
           <div className="flex-grow flex flex-col mx-5 gap-10">
