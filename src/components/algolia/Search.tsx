@@ -3,13 +3,20 @@
 import { searchClient } from "@/lib/algolia/searchClient";
 import { INSTANT_SEARCH_INDEX_NAME } from "@/lib/constants/types";
 import React from "react";
-import { Configure, } from "react-instantsearch";
+import { Configure } from "react-instantsearch";
 import { Hits } from "react-instantsearch";
 import Autocomplete from "./AutoComplete";
 import HitComponent from "@/components/algolia/HitComponent";
 import CustomPagination from "./CustomPagination";
 import PopularSearches from "./PopularSearches";
 import NextInstantSearch from "./NextInstantSearch";
+
+interface HitType {
+  objectID: string;
+  [key: string]: any;
+  title: string;
+  description: string;
+}
 
 export default function SearchAlgolia() {
   return (
@@ -45,7 +52,7 @@ export default function SearchAlgolia() {
 
       <div className="mt-8 flex items-center gap-4 flex-col ">
         {/* the hits or the data */}
-        <Hits hitComponent={({ hit }) => <HitComponent hit={hit} />} />
+        <Hits<HitType> hitComponent={({ hit }) => <HitComponent hit={hit} />} />
         {/* the pagination */}
         <CustomPagination />
       </div>

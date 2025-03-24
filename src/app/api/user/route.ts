@@ -1,13 +1,13 @@
 import { getUserFromToken } from "@/lib/auth/getUser";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, _context: { params: {} }) {
+export async function GET(req: NextRequest) {
   const user = getUserFromToken(req);
 
   if (!user) {
     return NextResponse.json(
-      { error: "Unauthorized Server Error" },
-      { status: 500 }
+      { error: "Unauthorized" },
+      { status: 401 } // Use 401 for unauthorized errors
     );
   }
 
