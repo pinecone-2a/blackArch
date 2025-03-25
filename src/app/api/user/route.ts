@@ -1,7 +1,10 @@
 import { getUserFromToken } from "@/lib/auth/getUser";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, _context: { params: {} }) {
+export async function GET(
+  req: NextRequest,
+  context: { params: Record<string, string> }
+) {
   const user = getUserFromToken(req);
 
   if (!user) {
