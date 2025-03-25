@@ -106,8 +106,4 @@ export {
   BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> main

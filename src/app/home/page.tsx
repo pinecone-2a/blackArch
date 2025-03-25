@@ -34,10 +34,6 @@ export default function HomePage() {
     if (Array.isArray(data)) {
       setNewArrival(data); 
     } else {
-<<<<<<< HEAD
-
-=======
->>>>>>> main
     }
   }, [data]);
   
