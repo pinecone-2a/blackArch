@@ -9,7 +9,7 @@ import {motion} from "framer-motion"
 
 export default function Navbar() {
   return (
-    <div className='sticky  w-full mx-auto flex px-10 top-0 bg-white z-20 pb-4'>
+    <div className='sticky  w-full mx-auto flex px-10 top-0 bg-white  pb-4'>
       <nav className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
         <span>
           <Link href={"/"} className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-extrabold">
