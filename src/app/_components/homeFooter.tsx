@@ -1,88 +1,91 @@
 import { MdOutlineEmail } from "react-icons/md";
-import { FaXTwitter } from "react-icons/fa6";
-import { FaFacebook } from "react-icons/fa";
-import { FaInstagram } from "react-icons/fa";
-import { FaGithub } from "react-icons/fa";
+import Image from "next/image";
+import { MapPin, Phone } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  Linkedin,
+  Youtube,
+  Rss,
+} from "lucide-react";
 
 export default function Footer() {
   return (
-    <div className="mainMargin mx-5 my-5 xl:mx-5 lg:mx-5 md:mx-2 sm:mx-1">
-      <div className="flex flex-wrap justify-between items-center p-10 bg-black mt-10 rounded-3xl">
-        <div className="bolded text-3xl xsm:text-4xl text-white mb-10 max-w-[600px]">
-          STAY UPTO DATE ABOUT OUR LATEST OFFERS
-        </div>
-        <form className="flex flex-col gap-5 flex-grow" action="">
-          <div className="rounded-3xl bg-white p-2 flex w-full">
-            <MdOutlineEmail size={25} />
-            <input
-              className=" text-black outline-none ml-2 w-full"
-              placeholder="Enter your email address"
+    <div className="w-full px-5 py-10 0">
+      {" "}
+      <hr className="border-t w-[80%] mx-auto border-black mb-8" />
+      <footer className="max-w-7xl mx-auto">
+        {/* Main Footer Content */}
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-10 text-center md:text-left">
+          {/* Logo */}
+          <div className="flex items-center justify-center md:justify-start">
+            <Image
+              src="/reallogo.jpg"
+              width={130}
+              height={130}
+              alt="logo"
+              className="rounded-lg"
             />
           </div>
-          <button
-            type="submit"
-            className="rounded-3xl bg-white p-2 text-black text-center">
-            Subscribe to Newsletter
-          </button>
-        </form>
-      </div>
-      <footer>
-        <div className="flex flex-wrap justify-between mt-10 gap-10">
-          <div className="flex-grow flex flex-col mx-5 gap-10">
-            <h1 className="font-bold text-3xl">PINESHOP</h1>
-            <p className="max-w-72">
-              We have clothes that suits your style and which you’re proud to
-              wear. From women to men.
-            </p>
-            <div className="flex gap-5">
-              <FaXTwitter size={25} />
-              <FaFacebook size={25} />
-              <FaInstagram size={25} />
-              <FaGithub size={25} />
+
+          {/* Contact Information */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 justify-center md:justify-start">
+              <MapPin size={20} className="flex-shrink-0 text-gray-600" />
+              <p className="text-gray-700">Sukhbaatariin talbain hajuuhand</p>
+            </div>
+            <div className="flex items-center gap-2 justify-center md:justify-start">
+              <Phone size={20} className="flex-shrink-0 text-gray-600" />
+              <p className="text-gray-700">9949 8619</p>
+            </div>
+            <div className="mt-2">
+              <p className="font-semibold">Follow us:</p>
+              <div className="flex gap-4 justify-center md:justify-start mt-2">
+                <Facebook
+                  size={24}
+                  className="cursor-pointer hover:text-blue-600 transition"
+                />
+                <Twitter
+                  size={24}
+                  className="cursor-pointer hover:text-blue-400 transition"
+                />
+                <Linkedin
+                  size={24}
+                  className="cursor-pointer hover:text-blue-800 transition"
+                />
+                <Youtube
+                  size={24}
+                  className="cursor-pointer hover:text-red-600 transition"
+                />
+                <Instagram
+                  size={24}
+                  className="cursor-pointer hover:text-pink-600 transition"
+                />
+                <Rss
+                  size={24}
+                  className="cursor-pointer hover:text-orange-500 transition"
+                />
+              </div>
             </div>
           </div>
-          <div className="flex-grow flex gap-5 flex-col justify-center items-center">
-            <h1 className="font-semibold -ml-20">Company</h1>
-            <ul className="flex flex-col gap-5">
-              <li className="hover:underline underline-offset-4 cursor-pointer">About</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">Features of SHOP.CO</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">Works</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">Career</li>
-            </ul>
-          </div>
-          <div className="flex-grow flex gap-5 flex-col justify-center items-center">
-            <h1 className="font-semibold -ml-24">Help</h1>
-            <ul className="flex flex-col gap-5">
-              <li className="hover:underline underline-offset-4 cursor-pointer">Customer Support</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">Delivery Details</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">Terms & Conditions</li>
-              <li className="hover:underline underline-offset-4 cursor-pointerks">Privacy Policy</li>
-            </ul>
-          </div>
-          <div className="flex-grow flex gap-5 flex-col justify-center items-center">
-            <h1 className="font-semibold -ml-24">FAQ</h1>
-            <ul className="flex flex-col gap-5">
-              <li className="hover:underline underline-offset-4 cursor-pointer">Account</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">Manage Deliveries</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">Orders</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">Payments</li>
-            </ul>
-          </div>
-          <div className="flex-grow flex gap-5 flex-col justify-center items-center">
-            <h1 className="font-semibold -ml-20">Resources</h1>
-            <ul className="flex flex-col gap-5">
-              <li className="hover:underline underline-offset-4 cursor-pointer">Free eBooks</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">Development Tutorial</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">How to - Blog</li>
-              <li className="hover:underline underline-offset-4 cursor-pointer">Youtube Playlist</li>
-            </ul>
-          </div>
         </div>
-        <div className="flex justify-center mt-10 gap-y-5 border-t-4 items-center flex-wrap">
-          <div className="flex-grow text-center md:text-left">
-            Shop.co © 2000-2025, All Rights Reserved
+
+        {/* Footer Links */}
+        <hr className="border-t my-10 w-full mx-auto border mb-8" />
+        <div className=" pt-5">
+          <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-5 text-gray-700">
+            <div className="flex flex-wrap gap-5 text-sm sm:text-base justify-center">
+              <p className="cursor-pointer hover:underline">ABOUT US</p>
+              <p className="cursor-pointer hover:underline">CONTACT US</p>
+              <p className="cursor-pointer hover:underline">HELP</p>
+              <p className="cursor-pointer hover:underline">PRIVACY POLICY</p>
+              <p className="cursor-pointer hover:underline">DISCLAIMER</p>
+            </div>
+            <div className="text-gray-500 text-sm">
+              Copyright © {new Date().getFullYear()} • PineShop
+            </div>
           </div>
-          <div className="w-fit"></div>
         </div>
       </footer>
     </div>

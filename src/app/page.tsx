@@ -1,7 +1,7 @@
-
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
+import { UserProvider } from "@/lib/userContext";
 
 type ProductType = {
   name: string;
@@ -11,24 +11,21 @@ type ProductType = {
   quantity: number;
   createdAt: Date;
   updatedAt: Date;
-}
-
+};
 
 import Image from "next/image";
 import Template from "./_components/template";
 import HomePage from "./home/page";
 
-
-export default function Home() {  
-
-
+export default function Home() {
   return (
-
-    <div>
-      <Template>
-        <HomePage />
-      </Template>
-    </div>
-
+    <UserProvider>
+      <div>
+        <Template>
+          <HomePage />
+        </Template>
+      </div>
+      \
+    </UserProvider>
   );
 }

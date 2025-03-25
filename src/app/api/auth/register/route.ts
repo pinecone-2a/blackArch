@@ -1,5 +1,6 @@
 import prisma from "@/lib/connect";
 import { NextResponse } from "next/server";
+
 import bcrypt from "bcrypt"; 
 
 export const POST = async (req: Request) => {
@@ -8,7 +9,7 @@ export const POST = async (req: Request) => {
 
 
   try {
-    const existingUser = await prisma.user.findFirst({ where: { email } });
+    const existingUser = await prisma.user.findUnique({ where: { email } });
     if(existingUser) {
         return NextResponse.json({ error: "Бүртгэлтэй Email байна."})
     }
@@ -19,7 +20,7 @@ export const POST = async (req: Request) => {
             email,
             password: hashedPassword,
             username,
-            role: "User"
+            phoneNumber:  95565349
 
         }
     })
