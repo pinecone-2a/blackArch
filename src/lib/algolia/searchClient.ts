@@ -1,6 +1,6 @@
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
-import dotenv from 'dotenv';
-require('dotenv').config()
+
+
 
 
 const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
