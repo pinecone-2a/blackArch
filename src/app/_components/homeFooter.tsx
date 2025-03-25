@@ -1,93 +1,53 @@
-import { MdOutlineEmail } from "react-icons/md";
+import { Github, Twitter, Linkedin, Slack } from "lucide-react";
 import Image from "next/image";
-import { MapPin, Phone } from "lucide-react";
-import {
-  Facebook,
-  Instagram,
-  Twitter,
-  Linkedin,
-  Youtube,
-  Rss,
-} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function Footer() {
   return (
-    <div className="w-full px-5 py-10 0">
-      {" "}
-      <hr className="border-t w-[80%] mx-auto border-black mb-8" />
-      <footer className="max-w-7xl mx-auto">
-        {/* Main Footer Content */}
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-10 text-center md:text-left">
-          {/* Logo */}
-          <div className="flex items-center justify-center md:justify-start">
-            <Image
-              src="/reallogo.jpg"
-              width={130}
-              height={130}
-              alt="logo"
-              className="rounded-lg"
-            />
+    <div className="w-full bg-black text-white py-10">
+      <footer className="w-[90%] mx-auto max-w-[1200px]">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Image src="/blacklogo.png" width={40} height={40} alt="logo" />
+              <p className="text-2xl font-bold">Transparent</p>
+            </div>
+            <div className="flex gap-3">
+              {[Github, Twitter, Linkedin, Slack].map((Icon, index) => (
+                <div
+                  key={index}
+                  className="flex justify-center items-center w-10 h-10 rounded-md border bg-[#303030]"
+                >
+                  <Icon size={20} />
+                </div>
+              ))}
+            </div>
           </div>
-
-          {/* Contact Information */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 justify-center md:justify-start">
-              <MapPin size={20} className="flex-shrink-0 text-gray-600" />
-              <p className="text-gray-700">Sukhbaatariin talbain hajuuhand</p>
-            </div>
-            <div className="flex items-center gap-2 justify-center md:justify-start">
-              <Phone size={20} className="flex-shrink-0 text-gray-600" />
-              <p className="text-gray-700">9949 8619</p>
-            </div>
-            <div className="mt-2">
-              <p className="font-semibold">Follow us:</p>
-              <div className="flex gap-4 justify-center md:justify-start mt-2">
-                <Facebook
-                  size={24}
-                  className="cursor-pointer hover:text-blue-600 transition"
-                />
-                <Twitter
-                  size={24}
-                  className="cursor-pointer hover:text-blue-400 transition"
-                />
-                <Linkedin
-                  size={24}
-                  className="cursor-pointer hover:text-blue-800 transition"
-                />
-                <Youtube
-                  size={24}
-                  className="cursor-pointer hover:text-red-600 transition"
-                />
-                <Instagram
-                  size={24}
-                  className="cursor-pointer hover:text-pink-600 transition"
-                />
-                <Rss
-                  size={24}
-                  className="cursor-pointer hover:text-orange-500 transition"
-                />
-              </div>
+          <div className="mt-6 md:mt-0 bg-[#262626] border p-6 rounded-2xl max-w-[500px] w-full">
+            <p className="text-sm">Sign up for our newsletter and join the Transparent community.</p>
+            <div className="flex items-center gap-3 mt-4">
+              <Input
+                className="bg-[#1f1f1f] rounded-2xl text-white p-3 w-full"
+                placeholder="Input Email Address..."
+              />
+              <Button className="rounded-2xl bg-white text-black hover:bg-gray-200 duration-300">
+                Subscribe
+              </Button>
             </div>
           </div>
         </div>
-
-        {/* Footer Links */}
-        <hr className="border-t my-10 w-full mx-auto border mb-8" />
-        <div className=" pt-5">
-          <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-5 text-gray-700">
-            <div className="flex flex-wrap gap-5 text-sm sm:text-base justify-center">
-              <p className="cursor-pointer hover:underline">ABOUT US</p>
-              <p className="cursor-pointer hover:underline">CONTACT US</p>
-              <p className="cursor-pointer hover:underline">HELP</p>
-              <p className="cursor-pointer hover:underline">PRIVACY POLICY</p>
-              <p className="cursor-pointer hover:underline">DISCLAIMER</p>
-            </div>
-            <div className="text-gray-500 text-sm">
-              Copyright © {new Date().getFullYear()} • PineShop
-            </div>
+        <div className="border-t border-gray-600 my-6"></div>
+        <div className="flex flex-col md:flex-row justify-between text-gray-400 text-sm">
+          <div className="flex gap-3">
+            <p>© 2025 pineshop</p>
+            <p>Terms of Service</p>
+            <p>Privacy & Cookies Policy</p>
           </div>
+          <p className="mt-4 md:mt-0">hello@pineshop</p>
         </div>
       </footer>
     </div>
   );
 }
+
