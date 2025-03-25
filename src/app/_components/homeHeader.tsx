@@ -1,18 +1,28 @@
-"use client"
+"use client";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import {motion} from "framer-motion"
-
+import { motion } from "framer-motion";
+import Autocomplete from "@/components/algolia/AutoComplete";
+import NextInstantSearch from "@/components/algolia/NextInstantSearch";
+import { searchClient } from "@/lib/algolia/searchClient";
+import { INSTANT_SEARCH_INDEX_NAME } from "@/lib/constants/types";
+import { Configure } from "react-instantsearch";
+import { Hits } from "react-instantsearch";
+import SearchAlgolia from "@/components/algolia/Search";
 
 export default function Navbar() {
   return (
+
     <div className='sticky  w-full mx-auto flex px-10 top-0 bg-white  pb-4'>
       <nav className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
         <span>
-          <Link href={"/"} className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-extrabold">
+          <Link
+            href={"/"}
+            className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-extrabold"
+          >
             PINESHOP
           </Link>
         </span>
@@ -50,17 +60,14 @@ export default function Navbar() {
           </motion.button>
         </div>
 
-
         <div className="flex gap-3 xsm:mt-3">
-          <div className='relative'>
+          <div className="relative">
             <Link href={"/cart"}>
-
               <ShoppingCart />
-
             </Link>
           </div>
           <div className="hidden">
-            <Menu/>
+            <Menu />
           </div>
         </div>
       </nav>
