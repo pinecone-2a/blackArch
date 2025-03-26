@@ -12,6 +12,10 @@ import { INSTANT_SEARCH_INDEX_NAME } from "@/lib/constants/types";
 import SearchAlgolia from "@/components/algolia/Search";
 
 export default function Navbar() {
+
+
+
+  const cartCount = 2;
   return (
     <div className="sticky  w-full mx-auto flex px-10 top-0 bg-white  pb-4">
       <nav className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
@@ -59,9 +63,14 @@ export default function Navbar() {
 
         <div className="flex gap-3 xsm:mt-3">
           <div className="relative">
-            <Link href={"/cart"}>
-              <ShoppingCart />
-            </Link>
+          <Link href="/cart" className="relative">
+      <ShoppingCart className="w-6 h-6" />
+      {cartCount > 0 && (
+        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+          {cartCount}
+        </span>
+      )}
+    </Link>
           </div>
           <div className="hidden">
             <Menu />
