@@ -38,13 +38,14 @@ type Product = {
 }
 
 const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
+
     const {id} = use(params)
-    const {data, loading} = useFetchData<Product>(`/products/id?id=${id}`);
     const [selectedColor, setSelectedColor] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
     const [quantity, setQuantity] = useState(1);
     const user = useContext(UserContext)
-    console.log(data)
+
+
 
     const handleColorClick = (color: any) => {
         setSelectedColor(color);
@@ -67,7 +68,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
     const [product, setProduct] = useState<Product | null>(null);
     useEffect(() => {
-        axios.get("http://localhost:") // API URL
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}products/id?id=${id}`) // API URL
             .then(response => {
                 setProduct(response.data);
             })
@@ -78,16 +79,33 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
 
 
-    // const handleAddToCart = () => {
-    //     axios.post("http://localhost:", { // API URL &  ADD CART
-    //         productId: data?.id,
-    //         size: selectedSize,
-    //         quantity
-    //     }).then(response => {
-    //         alert("Сагсанд амжилттай нэмэгдлээ!");
-    //     }).catch(error => console.error("Error:", error));
-    // };
+    const handleAddToCart = () => {
+        axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}products/id?id=${id}`, { // API URL &  ADD CART
+            productId: product?.id,
+            size: selectedSize,
+            quantity: quantity,
+        }).then(response => {
+            alert("Сагсанд амжилттай нэмэгдлээ!");
+        }).catch(error => console.error("Error:", error));
+    };
     
+const handleSumbit = () => {
+    if(user) {
+        handleAddToCart()
+    } else {
+      
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.push({
+                productId: product?.id,
+                size: selectedSize,
+                quantity: quantity,
+
+            });
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Сагсанд амжилттай нэмэгдлээ!");
+
+        }
+    }
   
     return (
 
@@ -115,7 +133,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
                 <div>
                     <div className='bg-gray-300 rounded-2xl p-2'>
-                        <img src={data?.image} alt='Product' className='w-full rounded-xl' />
+                        <img src={product?.image} alt='Product' className='w-full rounded-xl' />
                     </div>
                     <div className='grid grid-cols-3 md:grid-cols-6 gap-3 mt-4'>
                         <img src='t-shirt.png' className='w-full bg-gray-300 rounded-xl p-1' />
@@ -127,18 +145,18 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
 
                 <div>
-                    <h1 className='text-5xl font-bold'>{data?.name}</h1>
+                    <h1 className='text-5xl font-bold'>{product?.name}</h1>
                     <div className='flex items-center mt-2 text-3xl'>
                         <span className='text-yellow-500'>★★★★☆</span>
                         <span className='ml-2 text-gray-500 text-sm'>4.5/5</span>
                     </div>
                     <div className='flex items-center gap-2 mt-3 text-4xl'>
-                        <h2 className='font-bold'>{data?.price}</h2>
+                        <h2 className='font-bold'>{product?.price}</h2>
                         <h2 className='text-gray-400 line-through'>$300</h2>
                         <h2 className='text-red-500 font-semibold'>-40%</h2>
                     </div>
                     <p className='mt-3 text-gray-700 text-xl'>
-                    {data?.description}
+                    {product?.description}
                     </p>
 
                     <p className='text-lg font-bold mt-4 text-end'>Select Colors</p>
@@ -195,7 +213,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                         </button>
                         <button
                             className='bg-black text-white p-3 rounded-full ml-auto'
-                            // onClick={handleAddToCart}
+                            onClick={handleSumbit}
                         >
                             Add to Cart
                         </button>

@@ -5,9 +5,9 @@ import { INSTANT_SEARCH_INDEX_NAME } from "@/lib/constants/types";
 import dotenv from 'dotenv';
 require('dotenv').config()
 
-console.log(INSTANT_SEARCH_INDEX_NAME);
-const client = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env);
-const index = client.initIndex(INSTANT_SEARCH_INDEX_NAME);
+// console.log(INSTANT_SEARCH_INDEX_NAME);
+// const client = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env);
+// const index = client.initIndex(INSTANT_SEARCH_INDEX_NAME);
 
 export const GET = async () => {
   try {
@@ -39,19 +39,19 @@ export const POST = async (req: Request) => {
       },
     });
 
-    // ✅ Upload product to Algolia
-    await index.saveObject({
-      objectID: product.id, // Prisma ID as Algolia objectID
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      quantity: product.quantity,
-      categoryId: product.categoryId,
-      rating: product.rating,
-      image: product.image,
-      color: product.color,
-      size: product.size,
-    });
+    // // ✅ Upload product to Algolia
+    // await index.saveObject({
+    //   objectID: product.id, // Prisma ID as Algolia objectID
+    //   name: product.name,
+    //   description: product.description,
+    //   price: product.price,
+    //   quantity: product.quantity,
+    //   categoryId: product.categoryId,
+    //   rating: product.rating,
+    //   image: product.image,
+    //   color: product.color,
+    //   size: product.size,
+    // });
 
     return NextResponse.json({ message: "Product created & indexed", status: 200 });
   } catch (error) {
