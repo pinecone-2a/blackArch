@@ -3,7 +3,6 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaFacebook } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
-import PaymentsLogos from "./PaymentLogos";
 
 export default function Footer() {
   return (
@@ -83,9 +82,6 @@ export default function Footer() {
         <div className="flex justify-center mt-10 gap-y-5 border-t-4 items-center flex-wrap">
           <div className="flex-grow text-center md:text-left">
             Shop.co © 2000-2024, All Rights Reserved
-          </div>
-          <div className="w-fit">
-            <PaymentsLogos />
           </div>
         </div>
       </footer>
