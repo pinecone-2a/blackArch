@@ -5,7 +5,7 @@ import { createContext, useState, useEffect, ReactNode, useContext } from "react
 export type UserContextType = {
   id: string;
   email: string;
-
+  userData: string;
 } | null;
 
 export const UserContext = createContext<UserContextType>(null);
