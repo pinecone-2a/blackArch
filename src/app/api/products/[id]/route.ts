@@ -16,16 +16,8 @@ export const GET = async (req: NextRequest) => {
       where: { id },
     });
 
-    if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(product, { status: 200 });
-  } catch (error) {
-    console.error("Error fetching product:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
-  }
-};
+  return new Response(JSON.stringify({ message: `Product ID: ${id}` }), {
+    headers: { "Content-Type": "application/json" },
+  });
+}
+}
