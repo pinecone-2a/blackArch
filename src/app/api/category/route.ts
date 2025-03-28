@@ -16,12 +16,15 @@ export const GET = async () => {
 };
 
 
-export const POST = async () => {
+export const POST = async (req: Request) => {
+  const body = await req.json();
+  const {name, description} = body
+
   try {
     const products = await prisma.category.create({
       data: {
-        name: "TestCategory",
-        description: "Yurts with contemporary designs and premium insulation.",
+        name,
+        description,
 
       },
     });

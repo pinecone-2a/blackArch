@@ -1,8 +1,8 @@
 import { data } from "motion/react-client";
 import { useState, useEffect } from "react";
 
-const useFetchData = (path: string) => {
-    const [userData, setUserData] = useState<string | null>(null);
+export function useFetchData<T>(path: string) {
+  const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
   
   
@@ -16,13 +16,13 @@ const useFetchData = (path: string) => {
   
           const data = await res.json();
   
-          if (!data.user) {
+          if (!data) {
             return;
           }
   
-         setUserData(data)
+         setData(data.message)
         } catch (error) {
-          console.error("Authentication error:", error);
+          console.error(" error:", error);
      
         } finally {
           setLoading(false)
