@@ -153,7 +153,7 @@ export default function Navbar() {
             <Menu/>
             </div>
   </SheetTrigger>
-  <SheetContent className="bg-black">
+  <SheetContent className="bg-white">
   <SheetHeader>
       <SheetDescription>
     <div className="my-1.5 ">

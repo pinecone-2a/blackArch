@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Trash2, Minus, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
-
+import Reveal from "./Reavel";
 const initialCart = [
   {
     id: 1,
@@ -91,10 +91,10 @@ export default function Cart() {
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover"
                 />
                 <CardContent className="flex-1 text-center sm:text-left">
-                  <h3 className="font-bold text-lg">{item.name}</h3>
-                  <p className="text-sm text-gray-500">Size: {item.size}</p>
-                  <p className="text-sm text-gray-500">Color: {item.color}</p>
-                  <p className="font-bold mt-1 text-xl">${item.price}</p>
+                  <Reveal className="font-bold text-lg">{item.name}</Reveal>
+                  <Reveal className="text-sm text-gray-500">Size: {item.size}</Reveal>
+                  <Reveal className="text-sm text-gray-500">Color: {item.color}</Reveal>
+                  <Reveal className="font-bold mt-1 text-xl">${item.price}</Reveal>
                 </CardContent>
                 <div className="flex items-center space-x-3 bg-gray-100 rounded-full px-3 py-1">
                   <Button
