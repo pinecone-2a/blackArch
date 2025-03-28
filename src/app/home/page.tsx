@@ -10,13 +10,22 @@ import Reavel from "../_components/Reavel";
 import { Button } from "@/components/ui/button";
 import {motion } from "framer-motion"
 import Image from "next/image";
-export default function HomePage() {
+import BrandsBar from "../_components/BrandBar";
+import Link from "next/link";
+import ProductDetail from "../productDetail/[id]/page";
+import { useContext } from "react";
+import { UserContext } from "@/lib/userContext";
 
 
-type Product = {
+export type Product = {
   id: string,
   name:string,
 }
+
+
+export default function HomePage() {
+  const user = useContext(UserContext)
+  console.log("hereglegch", user)
   const [newArrival, setNewArrival] = useState<Product[]>([])
   const {data, loading} = useFetchData("products/new")
   console.log(data)
@@ -25,7 +34,6 @@ type Product = {
     if (Array.isArray(data)) {
       setNewArrival(data); 
     } else {
-      console.error("Fetched data is not an array or is undefined");
     }
   }, [data]);
   
@@ -33,10 +41,13 @@ type Product = {
   return (
     <div>
       <HomeHeader />
-      <div className="pt-1 bg-[#F2F0F1] flex flex-wrap  2xl:w-[90%] mx-auto justify-between items-end px-6 lg:px-20">
+
+      <div className="pt-1 bg-[#F2F0F1] flex flex-wrap  2xl:w-[80%] mx-auto justify-between items-end px-6 lg:px-20">
+
+
       <div className="w-full lg:w-1/2 flex flex-col flex-grow">
       <h1 className="font-extrabold text-3xl sm:text-6xl mb-10 max-w-[550px]">
-            <Reavel>ӨӨРТ ТОХИРСОН</Reavel> <Reavel>ХЭВ ЗАГВАРЫН</Reavel> <Reavel>ХУВЦАСЫГ ОЛООРОЙ</Reavel>
+            <Reavel>ӨӨРТ ТОХИРСОН</Reavel> <Reavel>ЗАГВАРЫН</Reavel> <Reavel>ХУВЦАСЫГ ОЛООРОЙ</Reavel>
             </h1>
         
         <p className="max-w-[550px] text-lg text-gray-600">
@@ -52,7 +63,8 @@ type Product = {
 </div>
 
 
-        <div className="mt-2 flex flex-wrap gap-10">
+
+        <div className="my-5 flex flex-wrap gap-10">
           <div className="flex-grow flex flex-col justify-center items-center">
             <h1 className="font-bold text-3xl">200+</h1>
             <p className="text-gray-600">  Олон Улсын Бренд</p>
@@ -87,6 +99,8 @@ type Product = {
       </div>
     </div>
 
+<div><BrandsBar/></div>
+
 
       <div className="bg-[#ffffff] w-full my-24 flex items-center justify-center">
         <div className="flex flex-col w-full max-w-7xl px-4 items-center">
@@ -98,21 +112,27 @@ type Product = {
 
           <div className="w-full overflow-x-auto">
             <div className="flex gap-6  mt-6 pl-4">
+
+
           { newArrival.map((product: any) => (  
+          <Link key={product.id} href={`/productDetail/${product.id}`}>
                 <div
                   key={product.id}
                   className="flex flex-col min-w-[220px] sm:min-w-[250px]"
                 >
-                  <div className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-[url(/podolk.png)] bg-cover bg-center rounded-xl"></div>
+
+                  <div style={{backgroundImage: `url(${product.image})`}}
+                  className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl"></div>
                   <p className="text-base sm:text-lg font-semibold mt-2">
                    {product.name}
                   </p>
                   <div className="flex items-center gap-1 mt-1">
                     <div className="flex gap-1 text-yellow-500">★★★★</div>
-                    <div className="text-sm sm:text-base">4.5/{product.rating}</div>
+                    <div className="text-sm sm:text-base">5/{product.rating}</div>
                   </div>
-                  <div className="text-sm sm:text-lg font-bold">${product.price}</div>
+                  <div className="text-sm sm:text-lg font-bold">₮{product.price}</div>
                 </div>
+                </Link>
        ))   }
             </div>
           </div>

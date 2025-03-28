@@ -7,10 +7,31 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import TransitionLink from "./TransitionLink";
 import { Toaster, toast } from "sonner";
+import { useRouter } from "next/navigation";
+
  
 export default function LoginComp() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+  const handleLogin = async () => {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({  email, password }),
+      });
+      const data = await res.json();
+      console.log(data)
+      return data;
+  
+    } catch (error) {
+      console.error("Error during registration:", error);
+      return { error: "An error occurred during registration." };
+    }
+  };
+  
   const [errors, setErrors] = useState<{
     email?: boolean;
     password?: boolean;
@@ -48,11 +69,17 @@ export default function LoginComp() {
     return true;
   };
  
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      console.log("Login successful!");
-      toast.success("Login successful!");
+      const data = await handleLogin();
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(data.message);
+        router.push("/")
+      }
+      console.log(data);
     }
   };
  
