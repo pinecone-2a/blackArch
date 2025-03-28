@@ -169,7 +169,7 @@ export default function Navbar() {
 
         <div className="flex gap-3 xsm:mt-3">
           <div className="relative">
-            <Link href="/cart" className="relative">
+            <Link href="/Cart" className="relative">
               <ShoppingCart className="w-6 h-6" />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
