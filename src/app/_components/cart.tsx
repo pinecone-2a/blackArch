@@ -59,7 +59,7 @@ export default function Cart() {
   };
 
   const applyPromoCode = () => {
-    setDiscount(promoCode === "Bilguun" ? 0.2 : 0);
+    setDiscount(promoCode === "Pineshop" ? 0.2 : 0);
   };
 
   const subtotal = cart.reduce(
