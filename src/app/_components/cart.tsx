@@ -19,10 +19,13 @@ const initialCart = [
 ];
 
 export default function Cart() {
-  const [cart, setCart] = useState(initialCart);
+  const product = localStorage.getItem('cart');
+  const data = JSON.parse(product);
+  const [cart, setCart] = useState(data);
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const deliveryFee = 15;
+  console.log(data);
 
   interface CartItem {
     id: number;
@@ -32,25 +35,26 @@ export default function Cart() {
     price: number;
     quantity: number;
     image: string;
+    description: string
   }
 
   type UpdateQuantityType = "increase" | "decrease";
 
-  const updateQuantity = (id: number, type: UpdateQuantityType): void => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity:
-                type === "increase"
-                  ? item.quantity + 1
-                  : Math.max(1, item.quantity - 1),
-            }
-          : item
-      )
-    );
-  };
+  // const updateQuantity = (id: number, type: UpdateQuantityType): void => {
+  //   setCart((prevCart) =>
+  //     prevCart.map((item) =>
+  //       item.id === id
+  //         ? {
+  //             ...item,
+  //             quantity:
+  //               type === "increase"
+  //                 ? item.quantity + 1
+  //                 : Math.max(1, item.quantity - 1),
+  //           }
+  //         : item
+  //     )
+  //   );
+  // };
 
   const removeItem = (id: number): void => {
     setCart((prevCart: CartItem[]) =>
@@ -62,12 +66,12 @@ export default function Cart() {
     setDiscount(promoCode === "Pineshop" ? 0.2 : 0);
   };
 
-  const subtotal = cart.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
-  const discountAmount = subtotal * discount;
-  const total = subtotal - discountAmount + deliveryFee;
+  // const subtotal = cart.reduce(
+  //   (acc, item) => acc + item.price * item.quantity,
+  //   0
+  // );
+  // const discountAmount = subtotal * discount;
+  // const total = subtotal - discountAmount + deliveryFee;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -76,7 +80,7 @@ export default function Cart() {
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="lg:w-2/3 space-y-4 bg-white p-4 rounded-lg shadow-lg w-full">
           {cart.length > 0 ? (
-            cart.map((item) => (
+            cart.map((item: CartItem) => (
               <Card
                 key={item.id}
                 className="flex flex-col sm:flex-row items-center sm:items-start p-4 gap-4 rounded-lg border relative w-full"
@@ -96,7 +100,7 @@ export default function Cart() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => updateQuantity(item.id, "decrease")}
+                    // onClick={() => updateQuantity(item.id, "decrease")}
                     className="w-8 h-8"
                   >
                     <Minus size={16} />
@@ -107,7 +111,7 @@ export default function Cart() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => updateQuantity(item.id, "increase")}
+                    // onClick={() => updateQuantity(item.id, "increase")}
                     className="w-8 h-8"
                   >
                     <Plus size={16} />
@@ -132,11 +136,11 @@ export default function Cart() {
             <div className="mt-4 space-y-2 text-gray-600">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span className="font-bold">${subtotal.toFixed(2)}</span>
+                {/* <span className="font-bold">${subtotal.toFixed(2)}</span> */}
               </div>
               <div className="flex justify-between text-red-500">
                 <span>Discount ({discount * 100}%)</span>
-                <span>- ${discountAmount.toFixed(2)}</span>
+                {/* <span>- ${discountAmount.toFixed(2)}</span> */}
               </div>
               <div className="flex justify-between">
                 <span>Delivery Fee</span>
@@ -145,7 +149,7 @@ export default function Cart() {
             </div>
             <div className="flex justify-between text-lg font-bold mt-4">
               <span>Total</span>
-              <span>${total.toFixed(2)}</span>
+              {/* <span>${total.toFixed(2)}</span> */}
             </div>
             <div className="mt-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
               <Input
