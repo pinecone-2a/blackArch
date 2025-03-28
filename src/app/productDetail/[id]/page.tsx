@@ -1,7 +1,5 @@
 "use client"
 import React from 'react';
-import { ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import Footer from '@/app/_components/homeFooter';
 import {
     Breadcrumb,
@@ -12,14 +10,15 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import axios from 'axios';
-import useFetchData from '@/lib/customHooks/useFetch';
 import { useState, useEffect } from 'react';
 import  Header from '@/app/_components/homeHeader';
-import { useParams } from 'next/navigation'
+import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import {FC} from 'react';
 import {use} from "react"
 import { useContext } from "react";
 import { UserContext } from "@/lib/userContext";
+import { InstantSearch } from 'react-instantsearch';
+import { LookingSimilar } from 'react-instantsearch';
 
 type ProductDetailProps = {
     params: Promise<{ id: string }>;
@@ -45,6 +44,56 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
     const [quantity, setQuantity] = useState(1);
     const user = useContext(UserContext)
 
+// const fetchRecommendations = async() => {
+    // const client = algoliasearch('YUWLMDFM73', '759f34eb01934535c841f508bc5ffb72').initRecommend();
+    //   const response = await client.getRecommendRule({
+    //     indexName: 'products',
+    //     model: 'looking-similiar',
+    //     objectID: '67dd209dfea4218b14f3f96f',
+    //   });
+    //     console.log(response);
+    // }
+      
+    // fetchRecommendations()
+
+    // const searchClient = algoliasearch('YUWLMDFM73', '759f34eb01934535c841f508bc5ffb72');
+
+    // const search = InstantSearch({
+    //   searchClient,
+    //   indexName: 'products',
+    // }).addWidgets([
+    //   LookingSimilar({
+    //     container: '#recommend-container',
+    //     objectIDs: ['f3ed406e94945_dashboard_generated_id'],
+    //   }),
+    // ]);
+    
+    // search.start();
+    
+ 
+
+
+    //   const fetchRecommendations = async (id: string) => {
+    //     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
+    //     const apiKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY!;
+    
+    //     if (!appId || !apiKey) {
+    //         console.error("Algolia API credentials are missing.");
+    //         return;
+    //     }
+    
+    //     const recommendClient = recommend(appId, apiKey);
+    
+    //     try {
+    //         const response = await recommendClient.getRecommendations({
+    //             requests: [{ indexName: 'products', objectID: id, model: 'looking-similar' }]
+    //         });
+    
+    //         console.log(response);
+    //     } catch (error) {
+    //         console.error("Error fetching recommendations:", error);
+    //     }
+    // };
 
 
     const handleColorClick = (color: any) => {
@@ -70,11 +119,10 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
     useEffect(() => {
         axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}products/id?id=${id}`) // API URL
             .then(response => {
-                setProduct(response.data);
+                setProduct(response.data.product);
             })
             .catch(error => console.error("Error:", error));
     }, []);
-
 
 
 
@@ -186,13 +234,13 @@ const handleSumbit = () => {
                     <p className='text-lg font-bold mt-4 text-end'>Choose Size</p>
 
                     <div className='flex gap-5 mt-2 rounded-full'>
-                        <button className='px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300'
+                    <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Small' ? 'border-[#FF474C]' : ''}`}
                             onClick={() => handleSizeClick('Small')}>Small</button>
-                        <button className='px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300'
+                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Medium' ? 'border-[#FF474C]' : ''}`}
                             onClick={() => handleSizeClick('Medium')}>Medium</button>
-                        <button className='px-4 py-2 border rounded-lg  hover:bg-gray-200 transition duration-300'
+                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Large' ? 'border-[#FF474C]' : ''}`}
                             onClick={() => handleSizeClick('Large')}>Large</button>
-                        <button className='px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300'
+                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'X-Large' ? 'border-[#FF474C]' : ''}`}
                             onClick={() => handleSizeClick('X-Large')}>X-Large</button>
                     </div>
 
@@ -245,7 +293,10 @@ const handleSumbit = () => {
             <div className='pt-10'>
                 <Footer />
             </div>
+            <div id="recommend-container"></div>
+
         </div>
+        
     );
 }
 
