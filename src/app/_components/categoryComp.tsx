@@ -29,10 +29,9 @@ export default function CategoryComp() {
     <div className="min-h-screen flex flex-col bg-white">
       <HomeHeader />
       <div className="flex items-start flex-col md:flex-row p-4 2xl:mx-20 xl:mx-0 lg:mx-0 md:mx-0 sm:mx-0">
+      26230.
       
-          <CategoryFilterSide  />
-      
-        <div className="flex flex-wrap  justify-center md:grid md:grid-cols-3 lg:grid-cols-4 2xl:mx-20 xl:mx-0 lg:mx-0 md:mx-0 sm:mx-0 gap-18 p-4 w-full">
+        <div className="flex flex-wrap justify-center md:grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:mx-20 xl:mx-0s lg:mx-0 md:mx-0 sm:mx-0 gap-10 p-4 w-full">
 
         { allProducts.map((product: any) => (
           <Link href={`/productDetail/${product.id}`} key={product.id}>  
