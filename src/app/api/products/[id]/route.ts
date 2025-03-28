@@ -16,11 +16,10 @@ export const GET = async (req: NextRequest) => {
       where: { id },
     });
 
-  return new Response(JSON.stringify({ product }), {
-    headers: { "Content-Type": "application/json" },
-  });
-}
-catch (error) {
-  console.log(error)
-}
-}
+    return new Response(JSON.stringify({ product }), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
