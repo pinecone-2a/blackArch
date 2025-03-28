@@ -24,11 +24,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { json } from "stream/consumers";
 
 
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const product = localStorage.getItem('cart');
+  const data = JSON.parse(product);
 
 
   interface HitType {
@@ -41,7 +44,7 @@ export default function Navbar() {
     objectId: string
   }
 
-  const cartCount = 2;
+  const cartCount = data.length;
   return (
     <div className="sticky z-10  w-full mx-auto flex px-10 top-0 bg-white  pb-4">
       <nav className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
