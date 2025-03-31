@@ -1,16 +1,6 @@
-<<<<<<< HEAD
-"use client";
-import { FC, useState } from "react";
-import React from "react";
-import { Button } from "@/components/ui/button";
-import useFetchData from "@/lib/customHooks/useFetch";
-import HomeHeader from "@/app/_components/homeHeader";
-import HomeFooter from "@/app/_components/homeFooter";
-=======
 "use client"
 import React from 'react';
 import Footer from '@/app/_components/homeFooter';
->>>>>>> main
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -18,8 +8,6 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-<<<<<<< HEAD
-=======
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import  Header from '@/app/_components/homeHeader';
@@ -30,7 +18,7 @@ import { useContext } from "react";
 import { UserContext } from "@/lib/userContext";
 import { InstantSearch } from 'react-instantsearch';
 import { LookingSimilar } from 'react-instantsearch';
->>>>>>> main
+import { useParams } from 'next/navigation';
 
 type ProductDetailProps = {
     params: { id: string };
@@ -49,17 +37,8 @@ type Product = {
 };
 
 const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
-<<<<<<< HEAD
-    const { id } = params;
-    const { data, loading } = useFetchData<Product>(`products/${id}`);
 
-    const [quantity, setQuantity] = useState(1);
-    const [selectedSize, setSelectedSize] = useState<string | null>(null);
-    const [selectedColor, setSelectedColor] = useState<string | null>(null);
-
-=======
-
-    const {id} = use(params)
+    const {id} = useParams();
     const [selectedColor, setSelectedColor] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
     const [quantity, setQuantity] = useState(1);
@@ -180,10 +159,9 @@ const handleSumbit = () => {
         }
     }
   
->>>>>>> main
     return (
         <div className="p-4 max-w-7xl mx-auto">
-            <HomeHeader />
+            <Header />
             <Breadcrumb>
                 <BreadcrumbList className="text-2xl mt-6">
                     <BreadcrumbItem>
@@ -202,89 +180,49 @@ const handleSumbit = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
                 <div>
-<<<<<<< HEAD
-                    <div className="flex flex-col lg:flex-row gap-8 items-center">
-                        <div className="flex lg:flex-col gap-4 items-center">
-                            <img src={data?.image} className="w-32 h-32 bg-gray-300 rounded-xl cursor-pointer" />
-                            <img src={data?.image} className="w-32 h-32 bg-gray-300 rounded-xl cursor-pointer" />
-                            <img src={data?.image} className="w-32 h-32 bg-gray-300 rounded-xl cursor-pointer" />
-                        </div>
-                        <div className="bg-gray-300 rounded-2xl max-w-[600px] mx-auto">
-                            <img src={data?.image} alt="Product" className="w-full rounded-xl" />
-                        </div>
-=======
                     <div className='bg-gray-300 rounded-2xl p-2'>
                         <img src={product?.image} alt='Product' className='w-full rounded-xl' />
->>>>>>> main
                     </div>
                 </div>
 
                 <div>
-<<<<<<< HEAD
-                    <h1 className="text-5xl font-bold">{data?.name}</h1>
-                    <div className="flex items-center mt-2 text-3xl">
-                        <span className="text-yellow-500">★★★★☆</span>
-                        <span className="ml-2 text-gray-500 text-sm">{data?.rating}/5</span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-3 text-4xl">
-                        <h2 className="font-bold">${data?.price}</h2>
-                    </div>
-                    <p className="mt-3 text-gray-700 text-xl">{data?.description}</p>
-=======
                     <h1 className='text-5xl font-bold'>{product?.name}</h1>
                     <div className='flex items-center mt-2 text-3xl'>
                         <span className='text-yellow-500'>★★★★☆</span>
                         <span className='ml-2 text-gray-500 text-sm'>4.5/5</span>
                     </div>
                     <div className='flex items-center gap-2 mt-3 text-4xl'>
-                        <h2 className='font-bold'>{product?.price}</h2>
-                        <h2 className='text-gray-400 line-through'>$300</h2>
-                        <h2 className='text-red-500 font-semibold'>-40%</h2>
+                        <h2 className='font-bold'>{product?.price}$</h2>
                     </div>
                     <p className='mt-3 text-gray-700 text-xl'>
                     {product?.description}
                     </p>
->>>>>>> main
 
-                    <p className="text-lg font-bold mt-4 text-end">Select Colors</p>
+                    <p className="text-lg font-bold mt-18 ">Select Colors</p>
                     <div className="flex gap-2 mt-2">
                         {["green", "gray", "red", "blue"].map((color) => (
                             <button
                                 key={color}
                                 style={{ backgroundColor: color }}
                                 className={`w-10 h-10 rounded-full ${
-                                    selectedColor === color ? "border-4 border-black ring-4 ring-gray-400" : ""
+                                    selectedColor === color ? " ring-4 ring-gray-400" : ""
                                 }`}
                                 onClick={() => setSelectedColor(color)}
                             />
                         ))}
                     </div>
 
-<<<<<<< HEAD
-                    <p className="text-lg font-bold mt-4">Choose Size</p>
-                    <div className="flex gap-5 mt-2">
-                        {["Small", "Medium", "Large", "X-Large"].map((size) => (
-                            <button
-                                key={size}
-                                className={`px-4 py-2 border rounded-lg ${selectedSize === size ? "bg-black text-white" : ""}`}
-                                onClick={() => setSelectedSize(size)}
-                            >
-                                {size}
-                            </button>
-                        ))}
-=======
-                    <p className='text-lg font-bold mt-4 text-end'>Choose Size</p>
+                    <p className='text-lg font-bold mt-18'>Choose Size</p>
 
                     <div className='flex gap-5 mt-2 rounded-full'>
-                    <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Small' ? 'border-[#FF474C]' : ''}`}
+                    <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Small' ? 'border-[#ff4747]' : ''}`}
                             onClick={() => handleSizeClick('Small')}>Small</button>
-                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Medium' ? 'border-[#FF474C]' : ''}`}
+                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Medium' ? 'border-[#ff4747]' : ''}`}
                             onClick={() => handleSizeClick('Medium')}>Medium</button>
-                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Large' ? 'border-[#FF474C]' : ''}`}
+                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Large' ? 'border-[#ff4747]' : ''}`}
                             onClick={() => handleSizeClick('Large')}>Large</button>
-                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'X-Large' ? 'border-[#FF474C]' : ''}`}
+                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'X-Large' ? 'border-[#ff4747]' : ''}`}
                             onClick={() => handleSizeClick('X-Large')}>X-Large</button>
->>>>>>> main
                     </div>
 
                     <div className="flex items-center gap-4 mt-6">
@@ -301,16 +239,12 @@ const handleSumbit = () => {
                         >
                             +
                         </button>
-<<<<<<< HEAD
-                        <Button className="bg-black text-white p-3 rounded-full ml-auto">Add to Cart</Button>
-=======
                         <button
                             className='bg-black text-white p-3 rounded-full ml-auto'
                             onClick={handleSumbit}
                         >
                             Add to Cart
                         </button>
->>>>>>> main
                     </div>
                 </div>
             </div>
@@ -340,15 +274,11 @@ const handleSumbit = () => {
                     <div className="mt-2 text-xl font-bold">$145</div>
                 </div>
             </div>
-<<<<<<< HEAD
-            <HomeFooter />
-=======
             <div className='pt-10'>
                 <Footer />
             </div>
             <div id="recommend-container"></div>
 
->>>>>>> main
         </div>
         
     );
