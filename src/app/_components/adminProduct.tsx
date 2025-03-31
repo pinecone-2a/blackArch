@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Pen, Trash, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import AdminCategoryComp from "./adminCategory";
 import {
     Dialog,
     DialogContent,
@@ -36,9 +37,12 @@ export default function AdminProductsComp() {
 
     return (
         <div className="bg-white my-5 w-[77%] mx-auto rounded-3xl p-6 relative">
+            <AdminCategoryComp/>
+            <div className="flex justify-between"> 
+            <h1 className="text-2xl font-bold">Our Products</h1> 
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button className="absolute top-6 right-6 h-12 w-32 rounded-3xl text-md flex items-center justify-center">
+                    <Button className=" top-[330px]  w-32 rounded-3xl text-md flex items-center justify-center">
                         <Plus className="mr-2 w-5 h-5" /> Add Item
                     </Button>
                 </DialogTrigger>
@@ -79,26 +83,33 @@ export default function AdminProductsComp() {
                 </DialogContent>
             </Dialog>
             
-            <h1 className="text-2xl font-bold">Our Products</h1>
-            <div className="w-[260px] h-auto rounded-2xl p-5 flex flex-col items-center border mt-6 border-gray-200">
-                <Image
-                    src="/podolk.png"
-                    width={160}
-                    height={160}
-                    alt="Black Podolk"
-                    className="rounded-lg"
-                />
-                <h1 className="text-lg font-semibold mt-3 text-gray-800">Black Podolk</h1>
-                <p className="text-md font-medium text-gray-600 mt-1">$5000</p>
-                <div className="flex gap-3 mt-4">
-                    <Button variant="outline" className="border-gray-300 rounded-2xl text-gray-700 hover:bg-gray-100">
-                        <Pen className="mr-1 w-4 h-4" /> Edit
-                    </Button>
-                    <Button variant="destructive" className="bg-red-500 rounded-2xl hover:bg-red-600">
-                        <Trash className="mr-1 w-4 h-4 " /> Delete
-                    </Button>
-                </div>
+           
             </div>
+            <div className="group bg-white w-[300px] h-[300px] rounded-xl border flex flex-col items-center">
+    <Image className="mt-6" src="/t-shirt.png" width={150} height={150} alt="T-shirt" />
+    <p className="mt-5 text-center font-semibold text-gray-800">
+        T-shirt with Tape Details
+    </p>
+    <div className="my-1 text-lg font-bold text-gray-700">$130</div>
+    <div className="w-full p-0 flex justify-between">
+    <button
+        className="w-[50%] border-t border h-[50px] duration-200 rounded-bl-xl rounded-t-none hover:bg-gray-100 text-gray-700 px-4 py-2"
+    >
+        Edit
+    </button>
+    <button
+        className="w-[50%] border-t border duration-200 h-[50px] rounded-br-xl rounded-t-none bg-red-500 hover:bg-red-600 px-4 py-2"
+    >
+        Delete
+    </button>
+</div>
+
+
+
+
+</div>
+
+
         </div>
     );
 }

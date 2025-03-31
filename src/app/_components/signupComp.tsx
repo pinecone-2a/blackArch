@@ -7,14 +7,16 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import TransitionLink from "./TransitionLink";
 import { Toaster, toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function SignupComp() {
-  const [fullName, setFullName] = useState("");
+  const router = useRouter();
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<{
-    fullName?: boolean;
+    username?: boolean;
     email?: boolean;
     password?: boolean;
     confirmPassword?: boolean;
@@ -22,10 +24,26 @@ export default function SignupComp() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const handleRegister = async () => {
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+      });
+      const data = await res.json();
+      console.log(data)
+      return data;
+  
+    } catch (error) {
+      console.error("Error during registration:", error);
+      return { error: "An error occurred during registration." };
+    }
+  };
 
   const validate = () => {
     let newErrors: {
-      fullName?: boolean;
+      username?: boolean;
       email?: boolean;
       password?: boolean;
       confirmPassword?: boolean;
@@ -33,8 +51,8 @@ export default function SignupComp() {
 
 
     const fullNameRegex = /^[A-Za-z\s]+$/;
-    if (!fullName.trim() || !fullNameRegex.test(fullName)) {
-      newErrors.fullName = true;
+    if (!username.trim() || !fullNameRegex.test(username)) {
+      newErrors.username = true;
     }
 
 
@@ -65,11 +83,17 @@ export default function SignupComp() {
     return true;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
+      const data = await handleRegister();
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(data.message);
+        router.push("/login")
+      }
       console.log("Form submitted successfully!");
-      toast.success("Form submitted successfully!");
     }
   };
 
@@ -96,10 +120,10 @@ export default function SignupComp() {
 
       <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6 w-full max-w-xs">
         <Input
-          className={`w-full rounded-2xl p-3 bg-gray-100 border-2 ${errors.fullName ? "border-red-500" : "border-transparent"}`}
+          className={`w-full rounded-2xl p-3 bg-gray-100 border-2 ${errors.username ? "border-red-500" : "border-transparent"}`}
           placeholder="Full Name"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          value={username}
+          onChange={(e) => setUserName(e.target.value)}
         />
 
         <Input
