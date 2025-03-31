@@ -19,6 +19,7 @@ import { useContext } from "react";
 import { UserContext } from "@/lib/userContext";
 import { InstantSearch } from 'react-instantsearch';
 import { LookingSimilar } from 'react-instantsearch';
+import { toast, Toaster } from 'sonner';
 
 type ProductDetailProps = {
     params: Promise<{ id: string }>;
@@ -154,7 +155,7 @@ const handleSumbit = () => {
 
             });
             localStorage.setItem("cart", JSON.stringify(cart));
-            alert("Сагсанд амжилттай нэмэгдлээ!");
+            toast.success("Сагсанд амжилттай нэмэгдлээ!");
 
         }
     }
@@ -163,7 +164,7 @@ const handleSumbit = () => {
 
         <div className='p-4 max-w-7xl mx-auto'>
             <Header />
-
+            <Toaster position='top-center'/>
             <Breadcrumb>
                 <BreadcrumbList className='text-2xl flex text-gray-300 items-center'>
                     <BreadcrumbItem>

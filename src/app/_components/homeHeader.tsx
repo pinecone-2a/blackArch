@@ -191,7 +191,7 @@ export default function Navbar() {
  <SearchBox
       classNames={{
         root: "flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2",
-        input: "w-full h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
+        input: "w-200 h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
         submit: "hidden", 
         reset: "hidden", 
       }}
