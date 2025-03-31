@@ -147,6 +147,10 @@ const handleSumbit = () => {
                 productId: product?.id,
                 size: selectedSize,
                 quantity: quantity,
+                image: product?.image,
+                name: product?.name,
+                price: product?.price,
+                description: product?.description
 
             });
             localStorage.setItem("cart", JSON.stringify(cart));
