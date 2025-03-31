@@ -124,3 +124,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: "IntegralCF";
+  src: url("/fonts/integralcf-bold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
