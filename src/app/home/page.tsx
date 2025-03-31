@@ -1,5 +1,6 @@
 "use client";
 
+
 import TransitionLink from "../_components/TransitionLink";
 import { useState, useEffect } from "react";
 import useFetchData from "@/lib/customHooks/useFetch";
@@ -123,14 +124,14 @@ export default function HomePage() {
 
                   <div style={{backgroundImage: `url(${product.image})`}}
                   className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl"></div>
-                  <p className="text-base sm:text-lg font-semibold mt-2">
+                  <Reavel className="text-base sm:text-lg font-semibold mt-2">
                    {product.name}
-                  </p>
+                  </Reavel>
                   <div className="flex items-center gap-1 mt-1">
-                    <div className="flex gap-1 text-yellow-500">★★★★</div>
-                    <div className="text-sm sm:text-base">5/{product.rating}</div>
+                    <Reavel className="flex gap-1 text-yellow-500">★★★★</Reavel>
+                    <Reavel className="text-sm sm:text-base">5/{product.rating}</Reavel>
                   </div>
-                  <div className="text-sm sm:text-lg font-bold">₮{product.price}</div>
+                  <Reavel className="text-sm sm:text-lg font-bold">₮{product.price}</Reavel>
                 </div>
                 </Link>
        ))   }
