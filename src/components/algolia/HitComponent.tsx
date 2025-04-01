@@ -11,8 +11,8 @@ interface Hit {
 
 const HitComponent = ({ hit }: { hit: Hit }) => {
   return (
-    <Link href={`/productDetail/${hit.id}`} className="w-full"> 
-    <div className="flex items-center p-4 bg-white hover:bg-gray-50 transition-colors duration-200 border-b border-gray-200 space-x-4 z-9999">
+    <Link href={`/productDetail/${hit.id}`}> 
+    <div className="flex h-20 items-center p-4 bg-white hover:bg-gray-50 transition-colors duration-200 border-b border-gray-200 space-x-4 z-9999">
       <div className="shrink-0">
         <img 
           className="h-16 w-16 object-cover rounded-lg shadow-md" 
@@ -25,15 +25,6 @@ const HitComponent = ({ hit }: { hit: Hit }) => {
         <p className="text-sm text-gray-600 line-clamp-2">{hit.description}</p>
       </div>
       <div>
-        <button 
-          className="px-3 py-1 bg-black text-white rounded-md hover:bg-blue-600 transition-colors text-sm"
-          onClick={() => {
-            // Add any action you want when the button is clicked
-            console.log(`Clicked on ${hit.name}`);
-          }}
-        >
-          View Details
-        </button>
       </div>
     </div>
     </Link>

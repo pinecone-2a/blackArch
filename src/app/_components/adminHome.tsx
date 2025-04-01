@@ -30,9 +30,7 @@ export default function AdminHome() {
             <table className="w-full border-collapse">
                     <thead>
                         <tr className="bg-black text-left text-white">
-                            <th className="p-3">INVOICE NO</th>
                             <th className="p-3">CUSTOMER NAME</th>
-                            <th className="p-3">METHOD</th>
                             <th className="p-3">AMOUNT</th>
                             <th className="p-3">ORDER TIME</th>
                             <th className="p-3">STATUS</th>
@@ -41,9 +39,7 @@ export default function AdminHome() {
                     </thead>
                     <tbody>
                         <tr className="border-b">
-                            <td className="p-3">#DSFSD322</td>
                             <td className="p-3">BUYKA</td>
-                            <td className="p-3">CASH</td>
                             <td className="p-3">$32423</td>
                             <td className="p-3">May 1, 2025 9:31 AM</td>
                             <td className="p-3">Pending</td>

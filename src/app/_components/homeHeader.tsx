@@ -191,7 +191,7 @@ export default function Navbar() {
  <SearchBox
       classNames={{
         root: "flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2",
-        input: "w-200 h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
+        input: "w-500 h-100 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
         submit: "hidden", 
         reset: "hidden", 
       }}
@@ -214,14 +214,20 @@ export default function Navbar() {
                         <div className="mt-8 flex items-center gap-4 flex-col ">
 
                         {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="absolute w-full bg-white border border-gray-300 shadow-lg rounded-lg mt-1 z-9999"
-        >
-          <Hits<HitType> hitComponent={({ hit }) => <HitComponent hit={hit} />} />
-        </motion.div>
+     <motion.div
+     initial={{ opacity: 0, y: -10 }}
+     animate={{ opacity: 1, y: 0 }}
+     exit={{ opacity: 0, y: -10 }}
+     className="absolute h-56 w-52 bg-white border border-amber-300 shadow-lg rounded-lg mt-1 z-50 overflow-hidden"
+   >
+     <Hits<HitType> 
+       hitComponent={({ hit }) => <HitComponent hit={hit} />}
+       classNames={{
+         root: 'w-full h-full',
+         list: 'w-full max-h-56 overflow-y-auto divide-y divide-gray-200'
+       }}
+     />
+   </motion.div>
    
                         )}
       </div>
