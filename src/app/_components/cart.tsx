@@ -10,6 +10,7 @@ import Reavel from "./Reavel";
 import TransitionLink from "./TransitionLink";
 import motion from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 const initialCart = [
   {
     id: 1,
@@ -126,9 +127,9 @@ export default function Cart() {
           <Reavel><h1 className="font-extrabold text-4xl xsm:text-5xl">Your Cart is Empty!</h1></Reavel>
           <Reavel><p>Must add items to the cart before you proceed to checkout</p></Reavel>
           <Reavel className="p-4">
-            <TransitionLink href="/category" className="btn w-fit">
+            <Link href="/category">
               <Button className="rounded-2xl"> Go to Shop </Button>
-            </TransitionLink>
+            </Link>
           </Reavel>
         </div>
       )}

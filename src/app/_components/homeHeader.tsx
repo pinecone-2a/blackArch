@@ -24,10 +24,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-<<<<<<< HEAD
-=======
 import { json } from "stream/consumers";
->>>>>>> 5cdd30cc4abae3e2f7e25fdfa2bf6dbae648d1f4
 
 
 
@@ -47,7 +44,7 @@ export default function Navbar() {
     objectId: string
   }
 
-  const cartCount = data.length;
+  const cartCount = data?.length || 0;
   return (
     <div className="sticky z-10  w-full mx-auto flex px-10 top-0 bg-white  pb-4">
       <nav className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
@@ -156,11 +153,7 @@ export default function Navbar() {
             <Menu/>
             </div>
   </SheetTrigger>
-<<<<<<< HEAD
-  <SheetContent className="bg-black">
-=======
   <SheetContent className="bg-white">
->>>>>>> 5cdd30cc4abae3e2f7e25fdfa2bf6dbae648d1f4
   <SheetHeader>
       <SheetDescription>
     <div className="my-1.5 ">
@@ -198,11 +191,7 @@ export default function Navbar() {
  <SearchBox
       classNames={{
         root: "flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2",
-<<<<<<< HEAD
-        input: "w-full h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
-=======
         input: "w-200 h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
->>>>>>> 5cdd30cc4abae3e2f7e25fdfa2bf6dbae648d1f4
         submit: "hidden", 
         reset: "hidden", 
       }}
