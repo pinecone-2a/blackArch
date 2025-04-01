@@ -199,8 +199,10 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6'>
 
                 <div>
-                    <div className='bg-gray-300 rounded-2xl p-2'>
-                        <img src={product?.image} alt='Product' className='w-full rounded-xl' />
+                    <div className='bg-gray-300 rounded-2xl p-2 overflow-hidden '>
+                        <img src={product?.image} 
+                        alt='Product'
+                         className='w-full h-full object-cover transition-all duration-700 ease-in-out hover:rounded-[50%] hover:scale-125' />
                     </div>
                     {/* <div className='grid grid-cols-3 md:grid-cols-6 gap-3 mt-4'>
                         <img src='t-shirt.png' className='w-full bg-gray-300 rounded-xl p-1' />
@@ -268,7 +270,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                     <div className='flex items-center gap-4 mt-6'>
 
                         <button
-                            className='px-4 py-2 bg-gray-200 rounded-lg transition-all duration-300 
+                            className='px-4 py-2 bg-gray-200 rounded-lg transition-all duration-300 cursor-grab
                 hover:bg-gray-300 active:scale-90'
                             onClick={() => handleQuantityChange('decrease')}
                         >
@@ -278,7 +280,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                         <span className='text-lg font-semibold'>{quantity}</span>
 
                         <button
-                            className='px-4 py-2 bg-gray-200 rounded-lg transition-all duration-300 
+                            className='px-4 py-2 bg-gray-200 rounded-lg transition-all duration-300 cursor-grab
                 hover:bg-gray-300 active:scale-90'
                             onClick={() => handleQuantityChange('increase')}
                         >
@@ -287,7 +289,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
 
                         <button
-                            className={`relative bg-black text-white p-3 rounded-full ml-auto 
+                            className={`relative bg-black text-white p-3 rounded-full ml-auto cursor-grab
                 transition-all duration-300 ease-in-out 
                 hover:bg-gray-900 hover:scale-110 hover:shadow-lg 
                 active:scale-95 active:bg-gray-800 
