@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import TransitionLink from "./TransitionLink";
 import { Toaster, toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -14,13 +14,14 @@ export default function LoginComp() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   
   const handleLogin = async () => {
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({  email, password }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       console.log(data)
@@ -62,7 +63,7 @@ export default function LoginComp() {
  
  
     if (Object.keys(newErrors).length > 0) {
-      toast.error("We couldn’t find an account matching the email and password you entered. Please check your email and password and try again.");
+      toast.error("We couldn't find an account matching the email and password you entered. Please check your email and password and try again.");
       return false;
     }
  
@@ -72,14 +73,21 @@ export default function LoginComp() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      const data = await handleLogin();
-      if (data.error) {
-        toast.error(data.error);
-      } else {
-        toast.success(data.message);
-        router.push("/")
+      setIsLoading(true);
+      try {
+        const data = await handleLogin();
+        if (data.error) {
+          toast.error(data.error);
+        } else {
+          toast.success(data.message);
+          router.push("/")
+        }
+        console.log(data);
+      } catch (error) {
+        toast.error("An unexpected error occurred. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
-      console.log(data);
     }
   };
  
@@ -111,6 +119,7 @@ export default function LoginComp() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          disabled={isLoading}
         />
  
  
@@ -121,11 +130,13 @@ export default function LoginComp() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
           />
           <button
             type="button"
             className="absolute right-3 top-3 text-gray-500"
             onClick={() => setShowPassword((prev) => !prev)}
+            disabled={isLoading}
           >
             {showPassword ? "Hide" : "Show"}
           </button>
@@ -139,9 +150,19 @@ export default function LoginComp() {
  
         <Button
           type="submit"
-          className="w-full text-xl rounded-2xl  bg-black text-white py-3 flex items-center justify-center gap-2 hover:bg-gray-800"
+          className="w-full text-xl rounded-2xl bg-black text-white py-3 flex items-center justify-center gap-2 hover:bg-gray-800 disabled:opacity-70"
+          disabled={isLoading}
         >
-          Continue <ChevronRight />
+          {isLoading ? (
+            <>
+              <Loader2 className="h-5 w-5 animate-spin" />
+              Logging in...
+            </>
+          ) : (
+            <>
+              Continue <ChevronRight />
+            </>
+          )}
         </Button>
       </form>
  
@@ -149,5 +170,3 @@ export default function LoginComp() {
     </div>
   );
 }
- 
- 
