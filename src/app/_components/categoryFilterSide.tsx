@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 
 export default function CategoryFilterSide() {
   const [openSections, setOpenSections] = useState({
-    type: false,
-    price: false,
-    colors: false,
-    dressStyle: false,
+    type: true,
+    price: true,
+    colors: true,
+    dressStyle: true,
   });
   const [isFilterVisible, setIsFilterVisible] = useState(true);
 

@@ -14,7 +14,7 @@ export default function AdminSideBar() {
   ];
 
   return (
-    <div className="h-screen w-[20%] bg-white p-5 ">
+    <div className="min-h-screen w-[20%] bg-white p-5 ">
       <div className="flex items-center justify-start mb-5">
         <Image  src="/reallogo.jpg" width={100} height={100} alt="logo" />
         <h1 className="text-3xl font-extrabold">PineShop</h1>
