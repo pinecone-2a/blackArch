@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import  Header from '@/app/_components/homeHeader';
+import Header from '@/app/_components/homeHeader';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
-import {FC} from 'react';
-import {use} from "react"
+import { FC } from 'react';
+import { use } from "react"
 import { useContext } from "react";
 import { UserContext } from "@/lib/userContext";
 import { InstantSearch } from 'react-instantsearch';
@@ -23,7 +23,7 @@ import { toast, Toaster } from 'sonner';
 
 type ProductDetailProps = {
     params: Promise<{ id: string }>;
-  }
+}
 
 type Product = {
     id: string,
@@ -39,13 +39,13 @@ type Product = {
 
 const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
-    const {id} = use(params)
+    const { id } = use(params)
     const [selectedColor, setSelectedColor] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
     const [quantity, setQuantity] = useState(1);
     const user = useContext(UserContext)
 
-// const fetchRecommendations = async() => {
+    // const fetchRecommendations = async() => {
     // const client = algoliasearch('YUWLMDFM73', '759f34eb01934535c841f508bc5ffb72').initRecommend();
     //   const response = await client.getRecommendRule({
     //     indexName: 'products',
@@ -54,7 +54,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
     //   });
     //     console.log(response);
     // }
-      
+
     // fetchRecommendations()
 
     // const searchClient = algoliasearch('YUWLMDFM73', '759f34eb01934535c841f508bc5ffb72');
@@ -68,28 +68,28 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
     //     objectIDs: ['f3ed406e94945_dashboard_generated_id'],
     //   }),
     // ]);
-    
+
     // search.start();
-    
- 
+
+
 
 
     //   const fetchRecommendations = async (id: string) => {
     //     const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
     //     const apiKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY!;
-    
+
     //     if (!appId || !apiKey) {
     //         console.error("Algolia API credentials are missing.");
     //         return;
     //     }
-    
+
     //     const recommendClient = recommend(appId, apiKey);
-    
+
     //     try {
     //         const response = await recommendClient.getRecommendations({
     //             requests: [{ indexName: 'products', objectID: id, model: 'looking-similar' }]
     //         });
-    
+
     //         console.log(response);
     //     } catch (error) {
     //         console.error("Error fetching recommendations:", error);
@@ -137,12 +137,12 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
             alert("Сагсанд амжилттай нэмэгдлээ!");
         }).catch(error => console.error("Error:", error));
     };
-    
-const handleSumbit = () => {
-    if(user) {
-        handleAddToCart()
-    } else {
-      
+
+    const handleSumbit = () => {
+        if (user) {
+            handleAddToCart()
+        } else {
+
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
             cart.push({
                 productId: product?.id,
@@ -159,12 +159,12 @@ const handleSumbit = () => {
 
         }
     }
-  
+
     return (
 
         <div className='p-4 max-w-7xl mx-auto'>
             <Header />
-            <Toaster position='top-center'/>
+            <Toaster position='top-center' />
             <Breadcrumb>
                 <BreadcrumbList className='text-2xl flex text-gray-300 items-center'>
                     <BreadcrumbItem>
@@ -188,11 +188,11 @@ const handleSumbit = () => {
                     <div className='bg-gray-300 rounded-2xl p-2'>
                         <img src={product?.image} alt='Product' className='w-full rounded-xl' />
                     </div>
-                    <div className='grid grid-cols-3 md:grid-cols-6 gap-3 mt-4'>
+                    {/* <div className='grid grid-cols-3 md:grid-cols-6 gap-3 mt-4'>
                         <img src='t-shirt.png' className='w-full bg-gray-300 rounded-xl p-1' />
                         <img src='t-shirt.png' className='w-full bg-gray-300 rounded-xl p-1' />
                         <img src='t-shirt.png' className='w-full bg-gray-300 rounded-xl p-1' />
-                    </div>
+                    </div> */}
 
                 </div>
 
@@ -204,15 +204,13 @@ const handleSumbit = () => {
                         <span className='ml-2 text-gray-500 text-sm'>4.5/5</span>
                     </div>
                     <div className='flex items-center gap-2 mt-3 text-4xl'>
-                        <h2 className='font-bold'>{product?.price}</h2>
-                        <h2 className='text-gray-400 line-through'>$300</h2>
-                        <h2 className='text-red-500 font-semibold'>-40%</h2>
+                        <h2 className='font-bold'>{product?.price}$</h2>
                     </div>
                     <p className='mt-3 text-gray-700 text-xl'>
-                    {product?.description}
+                        {product?.description}
                     </p>
 
-                    <p className='text-lg font-bold mt-4 text-end'>Select Colors</p>
+                    <p className='text-lg font-bold mt-18'>Select Colors</p>
                     <div className='flex gap-2 mt-2'>
                         <button className='w-10 h-10 rounded-full bg-green-700 hover:ring-4 hover:ring-green-500 transition duration-300'
                             onClick={() => handleColorClick('green')}>
@@ -236,10 +234,10 @@ const handleSumbit = () => {
                         </button>
                     </div>
 
-                    <p className='text-lg font-bold mt-4 text-end'>Choose Size</p>
+                    <p className='text-lg font-bold mt-18'>Choose Size</p>
 
                     <div className='flex gap-5 mt-2 rounded-full'>
-                    <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Small' ? 'border-[#FF474C]' : ''}`}
+                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Small' ? 'border-[#FF474C]' : ''}`}
                             onClick={() => handleSizeClick('Small')}>Small</button>
                         <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Medium' ? 'border-[#FF474C]' : ''}`}
                             onClick={() => handleSizeClick('Medium')}>Medium</button>
@@ -301,8 +299,9 @@ const handleSumbit = () => {
             <div id="recommend-container"></div>
 
         </div>
-        
+
     );
 }
 
 export default ProductDetail;
+
