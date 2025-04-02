@@ -20,6 +20,7 @@ import { UserContext } from "@/lib/userContext";
 import { InstantSearch } from 'react-instantsearch';
 import { LookingSimilar } from 'react-instantsearch';
 import { toast, Toaster } from 'sonner';
+import { Check } from 'lucide-react';
 
 type ProductDetailProps = {
     params: Promise<{ id: string }>;
@@ -43,8 +44,24 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
     const [selectedColor, setSelectedColor] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
     const [quantity, setQuantity] = useState(1);
-    const user = useContext(UserContext)
+    const user = useContext(UserContext);
+    const [ripple, setRipple] = useState(false);
+    const [shake, setShake] = useState(false);
 
+<<<<<<< HEAD
+    const handleClick = () => {
+        setRipple(true);
+        setShake(true);
+        handleSumbit();
+
+        setTimeout(() => setRipple(false), 600);
+        setTimeout(() => setShake(false), 300);
+    };
+
+
+
+=======
+>>>>>>> main
     // const fetchRecommendations = async() => {
     // const client = algoliasearch('YUWLMDFM73', '759f34eb01934535c841f508bc5ffb72').initRecommend();
     //   const response = await client.getRecommendRule({
@@ -185,8 +202,10 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6'>
 
                 <div>
-                    <div className='bg-gray-300 rounded-2xl p-2'>
-                        <img src={product?.image} alt='Product' className='w-full rounded-xl' />
+                    <div className='bg-gray-300 rounded-2xl p-2 overflow-hidden '>
+                        <img src={product?.image} 
+                        alt='Product'
+                         className='w-full h-full object-cover transition-all duration-700 ease-in-out hover:rounded-[50%] hover:scale-125' />
                     </div>
                     {/* <div className='grid grid-cols-3 md:grid-cols-6 gap-3 mt-4'>
                         <img src='t-shirt.png' className='w-full bg-gray-300 rounded-xl p-1' />
@@ -211,31 +230,52 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                     </p>
 
                     <p className='text-lg font-bold mt-18'>Select Colors</p>
+<<<<<<< HEAD
+=======
                     <div className='flex gap-2 mt-2'>
                         <button className='w-10 h-10 rounded-full bg-green-700 hover:ring-4 hover:ring-green-500 transition duration-300'
                             onClick={() => handleColorClick('green')}>
                         </button>
+>>>>>>> main
 
-                        <button className='w-10 h-10 rounded-full bg-black hover:ring-4 hover:ring-gray-500 transition duration-300'
-                            onClick={() => handleColorClick('black')}>
-                        </button>
-
-                        <button className='w-10 h-10 rounded-full bg-gray-700 hover:ring-4 hover:ring-gray-400 transition duration-300'
-                            onClick={() => handleColorClick('gray')}>
-                        </button>
-                        <button className='w-10 h-10 rounded-full bg-red-700 hover:ring-4 hover:ring-red-500 transition duration-300'
-                            onClick={() => handleColorClick('red')}>
-                        </button>
-                        <button className='w-10 h-10 rounded-full bg-pink-400 hover:ring-4 hover:ring-pink-500 transition duration-300'
-                            onClick={() => handleColorClick('pink')}>
-                        </button>
-                        <button className='w-10 h-10 rounded-full bg-blue-700 hover:ring-4 hover:ring-blue-500 transition duration-300'
-                            onClick={() => handleColorClick('blue')}>
-                        </button>
+                    <div className='flex gap-2 mt-2 '>
+                        {[
+                            { color: 'green', bgColor: 'bg-green-700', ringColor: 'hover:ring-green-500' },
+                            { color: 'black', bgColor: 'bg-black', ringColor: 'hover:ring-gray-500' },
+                            { color: 'gray', bgColor: 'bg-gray-700', ringColor: 'hover:ring-gray-400' },
+                            { color: 'red', bgColor: 'bg-red-700', ringColor: 'hover:ring-red-500' },
+                            { color: 'pink', bgColor: 'bg-pink-400', ringColor: 'hover:ring-pink-500' },
+                            { color: 'blue', bgColor: 'bg-blue-700', ringColor: 'hover:ring-blue-500' }
+                        ].map(({ color, bgColor, ringColor }) => (
+                            <button
+                                key={color}
+                                className={`relative w-10 h-10 rounded-full ${bgColor} ${ringColor} hover:ring-4 transition duration-300 flex items-center justify-center cursor-grab`}
+                                onClick={() => handleColorClick(color)}
+                            >
+                                {selectedColor === color && (
+                                    <Check className="text-white" />
+                                )}
+                            </button>
+                        ))}
                     </div>
 
                     <p className='text-lg font-bold mt-18'>Choose Size</p>
 
+<<<<<<< HEAD
+                    <div className='flex gap-5 mt-2'>
+                        {['Small', 'Medium', 'Large', 'X-Large'].map((size) => (
+                            <button
+                                key={size}
+                                className={`px-4 py-2 border rounded-lg transition-all duration-300 ease-out cursor-grab
+                        hover:bg-gray-200 hover:text-black transform
+                        active:scale-90 
+                        ${selectedSize === size ? 'bg-black text-white shadow-md scale-105' : ''}`}
+                                onClick={() => handleSizeClick(size)}
+                            >
+                                {size}
+                            </button>
+                        ))}
+=======
                     <div className='flex gap-5 mt-2 rounded-full'>
                         <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Small' ? 'border-[#FF474C]' : ''}`}
                             onClick={() => handleSizeClick('Small')}>Small</button>
@@ -245,28 +285,45 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                             onClick={() => handleSizeClick('Large')}>Large</button>
                         <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'X-Large' ? 'border-[#FF474C]' : ''}`}
                             onClick={() => handleSizeClick('X-Large')}>X-Large</button>
+>>>>>>> main
                     </div>
 
 
                     <div className='flex items-center gap-4 mt-6'>
+
                         <button
-                            className='px-4 py-2 bg-gray-200 rounded-lg'
+                            className='px-4 py-2 bg-gray-200 rounded-lg transition-all duration-300 cursor-grab
+                hover:bg-gray-300 active:scale-90'
                             onClick={() => handleQuantityChange('decrease')}
                         >
                             -
                         </button>
+
                         <span className='text-lg font-semibold'>{quantity}</span>
+
                         <button
-                            className='px-4 py-2 bg-gray-200 rounded-lg'
+                            className='px-4 py-2 bg-gray-200 rounded-lg transition-all duration-300 cursor-grab
+                hover:bg-gray-300 active:scale-90'
                             onClick={() => handleQuantityChange('increase')}
                         >
                             +
                         </button>
+
+
                         <button
-                            className='bg-black text-white p-3 rounded-full ml-auto'
-                            onClick={handleSumbit}
+                            className={`relative bg-black text-white p-3 rounded-full ml-auto cursor-grab
+                transition-all duration-300 ease-in-out 
+                hover:bg-gray-900 hover:scale-110 hover:shadow-lg 
+                active:scale-95 active:bg-gray-800 
+                ${shake ? 'animate-shake' : ''}`}
+                            onClick={handleClick}
                         >
                             Add to Cart
+                            {ripple && (
+                                <span className="absolute inset-0 flex items-center justify-center">
+                                    <span className="w-20 h-20 bg-white opacity-30 rounded-full animate-ping"></span>
+                                </span>
+                            )}
                         </button>
                     </div>
                 </div>
