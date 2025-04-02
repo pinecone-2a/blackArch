@@ -48,7 +48,6 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
     const [ripple, setRipple] = useState(false);
     const [shake, setShake] = useState(false);
 
-<<<<<<< HEAD
     const handleClick = () => {
         setRipple(true);
         setShake(true);
@@ -60,8 +59,6 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
 
 
-=======
->>>>>>> main
     // const fetchRecommendations = async() => {
     // const client = algoliasearch('YUWLMDFM73', '759f34eb01934535c841f508bc5ffb72').initRecommend();
     //   const response = await client.getRecommendRule({
@@ -230,13 +227,6 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                     </p>
 
                     <p className='text-lg font-bold mt-18'>Select Colors</p>
-<<<<<<< HEAD
-=======
-                    <div className='flex gap-2 mt-2'>
-                        <button className='w-10 h-10 rounded-full bg-green-700 hover:ring-4 hover:ring-green-500 transition duration-300'
-                            onClick={() => handleColorClick('green')}>
-                        </button>
->>>>>>> main
 
                     <div className='flex gap-2 mt-2 '>
                         {[
@@ -261,21 +251,6 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
                     <p className='text-lg font-bold mt-18'>Choose Size</p>
 
-<<<<<<< HEAD
-                    <div className='flex gap-5 mt-2'>
-                        {['Small', 'Medium', 'Large', 'X-Large'].map((size) => (
-                            <button
-                                key={size}
-                                className={`px-4 py-2 border rounded-lg transition-all duration-300 ease-out cursor-grab
-                        hover:bg-gray-200 hover:text-black transform
-                        active:scale-90 
-                        ${selectedSize === size ? 'bg-black text-white shadow-md scale-105' : ''}`}
-                                onClick={() => handleSizeClick(size)}
-                            >
-                                {size}
-                            </button>
-                        ))}
-=======
                     <div className='flex gap-5 mt-2 rounded-full'>
                         <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Small' ? 'border-[#FF474C]' : ''}`}
                             onClick={() => handleSizeClick('Small')}>Small</button>
@@ -285,7 +260,6 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                             onClick={() => handleSizeClick('Large')}>Large</button>
                         <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'X-Large' ? 'border-[#FF474C]' : ''}`}
                             onClick={() => handleSizeClick('X-Large')}>X-Large</button>
->>>>>>> main
                     </div>
 
 
