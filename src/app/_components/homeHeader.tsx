@@ -78,7 +78,7 @@ export default function Navbar() {
 
 
 
-   <div className="hidden lg:block">
+   <div className="hidden mt-9 lg:block">
    <NextInstantSearch
         initialUiState={{
           posts: {
@@ -103,7 +103,7 @@ export default function Navbar() {
         reset: "hidden", 
       }}
       placeholder="Search..."
-      onKeyDown={(e) => setIsOpen(true)} // Open dropdown on typing
+      onKeyDown={(e) => setIsOpen(true)} 
       onBlur={() => setTimeout(() => setIsOpen(false), 200)} // Close on blur (with delay)
       submitIconComponent={() => (
         <motion.button
@@ -125,7 +125,7 @@ export default function Navbar() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="absolute w-full bg-white border border-gray-300 shadow-lg rounded-lg mt-1 z-9999"
+          className="absolute w-[500px] bg-white border border-gray-300 shadow-lg rounded-lg mt-1 z-9999"
         >
           <Hits<HitType> hitComponent={({ hit }) => <HitComponent hit={hit} />} />
         </motion.div>
@@ -218,9 +218,9 @@ export default function Navbar() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="absolute w-full bg-white border border-gray-300 shadow-lg rounded-lg mt-1 z-9999"
+          className="absolute w-[250px] bg-white border border-gray-300 shadow-lg rounded-lg mt-1 z-9999"
         >
-          <Hits<HitType> hitComponent={({ hit }) => <HitComponent hit={hit} />} />
+          <Hits<HitType> hitComponent={({ hit }) =><HitComponent hit={hit} />} />
         </motion.div>
    
                         )}

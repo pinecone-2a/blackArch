@@ -140,22 +140,7 @@ export default function HomePage() {
           <div className="rounded-2xl bg-white h-12 w-full sm:w-[70%] md:w-[50%] border flex items-center justify-center mt-8 cursor-pointer text-lg font-semibold hover:bg-gray-100 transition">
             View all
           </div>
-          <div className="w-full bg-[#F0F0F0] flex flex-col items-center mt-14 rounded-2xl p-8">
-            <p className="text-[30px] sm:text-[36px] font-semibold text-center">
-              ХЭВ ЗАГВАРААР ХАЙХ
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mt-6">
-              {["Casual", "Formal", "Party"].map((style, i) => (
-                <div
-                  key={i}
-                  className="w-full h-[220px] sm:h-[250px] bg-white rounded-2xl bg-[url(/casual.png)] bg-cover bg-center flex items-center pl-8 text-white text-[30px] sm:text-[36px] font-semibold shadow-lg hover:scale-105 transition-transform"
-                >
-                  {style}
-                </div>
-              ))}
-            </div>
-          </div>
+         
         </div>
       </div>
 
