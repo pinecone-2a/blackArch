@@ -42,7 +42,7 @@ const Reveal: React.FC<RevealProps> = ({ children, className = 'w-fit', btn = 'w
         initial='hidden'
         animate={SlideControls}
         transition={{ duration: 0.5, ease: 'easeIn' }}
-        className='absolute top-1 bottom-1 left-0 right-0 bg-black z-20'
+        className='absolute top-1 bottom-1 left-0 right-0 bg-black z-10'
       />
     </motion.div>
   )

@@ -199,10 +199,10 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6'>
 
                 <div>
-                    <div className='bg-gray-300 rounded-2xl p-2 overflow-hidden '>
-                        <img src={product?.image} 
-                        alt='Product'
-                         className='w-full h-full object-cover transition-all duration-700 ease-in-out hover:rounded-[50%] hover:scale-125' />
+                    <div className=' rounded-2xl p-2 overflow-hidden '>
+                        <img src={product?.image}
+                            alt='Product'
+                            className='w-full h-full object-cover transition-all duration-700 ease-in-out hover:rounded-[50%] hover:scale-125' />
                     </div>
                     {/* <div className='grid grid-cols-3 md:grid-cols-6 gap-3 mt-4'>
                         <img src='t-shirt.png' className='w-full bg-gray-300 rounded-xl p-1' />
@@ -226,7 +226,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                         {product?.description}
                     </p>
 
-                    <p className='text-lg font-bold mt-18'>Select Colors</p>
+                    {/* <p className='text-lg font-bold mt-18'>Select Colors</p>
 
                     <div className='flex gap-2 mt-2 '>
                         {[
@@ -247,18 +247,18 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                                 )}
                             </button>
                         ))}
-                    </div>
+                    </div> */}
 
                     <p className='text-lg font-bold mt-18'>Choose Size</p>
 
                     <div className='flex gap-5 mt-2 rounded-full'>
-                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Small' ? 'border-[#FF474C]' : ''}`}
+                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Small' ? 'bg-black text-white' : ''}`}
                             onClick={() => handleSizeClick('Small')}>Small</button>
-                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Medium' ? 'border-[#FF474C]' : ''}`}
+                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Medium' ? 'bg-black text-white' : ''}`}
                             onClick={() => handleSizeClick('Medium')}>Medium</button>
-                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Large' ? 'border-[#FF474C]' : ''}`}
+                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Large' ? 'bg-black text-white' : ''}`}
                             onClick={() => handleSizeClick('Large')}>Large</button>
-                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'X-Large' ? 'border-[#FF474C]' : ''}`}
+                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'X-Large' ? 'bg-black text-white' : ''}`}
                             onClick={() => handleSizeClick('X-Large')}>X-Large</button>
                     </div>
 

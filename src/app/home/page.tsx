@@ -29,7 +29,8 @@ export default function HomePage() {
   console.log("hereglegch", user)
   const [newArrival, setNewArrival] = useState<Product[]>([])
   const { data, loading } = useFetchData("products/new")
-  console.log(data)
+  console.log(data);
+  
 
   useEffect(() => {
     if (Array.isArray(data)) {
@@ -38,6 +39,7 @@ export default function HomePage() {
     }
   }, [data]);
 
+ 
 
 
   return (
@@ -120,7 +122,7 @@ export default function HomePage() {
                 <Link key={product.id} href={`/productDetail/${product.id}`}>
                   <div
                     key={product.id}
-                    className="flex flex-col min-w-[220px] sm:min-w-[250px]"
+                    className="flex flex-col min-w-[220px] sm:min-w-[250px] "
                   >
 
                     <div style={{ backgroundImage: `url(${product.image})` }}
