@@ -25,9 +25,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { json } from "stream/consumers";
+<<<<<<< HEAD
 import Lottie from "lottie-react";
 import shoppingCart from "./shoppingCart.json"
 
+=======
+>>>>>>> main
 
 
 
@@ -166,6 +169,7 @@ export default function Navbar() {
             </Link>
           </div>
           <Sheet>
+<<<<<<< HEAD
             <SheetTrigger>
               <div className="lg:hidden">
                 <Menu />
@@ -230,6 +234,72 @@ export default function Navbar() {
                     <div className="flex flex-col items-center">
                     </div>
                     <div className="mt-8 flex items-center gap-4 flex-col ">
+=======
+  <SheetTrigger>
+            <div className="lg:hidden">
+            <Menu/>
+            </div>
+  </SheetTrigger>
+  <SheetContent className="bg-white">
+  <SheetHeader>
+      <SheetDescription>
+    <div className="my-1.5 ">
+        <div className="flex flex-col text-lg gap-8">
+          <Link href={"/category"}><span>
+              Shop
+            </span></Link>
+            <Link href={"/category"}><span>
+              New Arrivals
+            </span></Link>
+            <Link href={"/category"}><span >
+              Top Selling
+            </span></Link>
+            <Link href={"/category"}><span>
+              On Sale
+            </span></Link>
+          </div>
+        </div>
+        <NextInstantSearch
+        initialUiState={{
+          posts: {
+            query: "",
+            page: 1,
+          },
+        }}
+        searchClient={searchClient}
+        indexName={INSTANT_SEARCH_INDEX_NAME}
+        routing
+        insights
+        future={{
+          preserveSharedStateOnUnmount: true,
+          persistHierarchicalRootCount: true,
+        }}
+      >
+ <SearchBox
+      classNames={{
+        root: "flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2",
+        input: "w-200 h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
+        submit: "hidden", 
+        reset: "hidden", 
+      }}
+      placeholder="Search..."
+      onKeyDown={(e) => setIsOpen(true)} // Open dropdown on typing
+      onBlur={() => setTimeout(() => setIsOpen(false), 200)} // Close on blur (with delay)
+      submitIconComponent={() => (
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
+        >
+          <Search className="w-5 h-5 text-gray-700" />
+        </motion.button>
+      )}
+    />
+          <Configure hitsPerPage={6} distinct={true} getRankingInfo={true} />
+            <div className="flex flex-col items-center">
+                        </div>
+                        <div className="mt-8 flex items-center gap-4 flex-col ">
+>>>>>>> main
 
                       {isOpen && (
                         <motion.div
