@@ -17,7 +17,7 @@ export default function Home() {
           <HomePage />
         </Template>
       </div>
-      \
+      
     </UserProvider>
   );
 }
