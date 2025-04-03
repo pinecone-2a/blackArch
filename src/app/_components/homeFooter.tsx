@@ -2,6 +2,8 @@ import { Github, Twitter, Linkedin, Slack } from "lucide-react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Lottie from "lottie-react";
+import mailAnimation from "./mailAnimation.json"
 
 export default function Footer() {
   return (
@@ -50,7 +52,10 @@ export default function Footer() {
               Privacy & Cookies Policy
             </p>
           </div>
-          <p className="mt-4 md:mt-0">hello@pineshop</p>
+          <p className="mt-4 md:mt-0 flex gap-1">
+            hello@pineshop
+            <Lottie animationData={mailAnimation} style={{ width: 20, height: 20 }} />
+            </p>
         </div>
       </div>
     </div>
