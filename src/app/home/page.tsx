@@ -16,6 +16,9 @@ import Link from "next/link";
 import ProductDetail from "../productDetail/[id]/page";
 import { useContext } from "react";
 import { UserContext } from "@/lib/userContext";
+import breakdance from "./breakdance.json"
+import muted from "./muted.json"
+import Lottie from "lottie-react";
 
 
 export type Product = {
@@ -55,68 +58,77 @@ export default function HomePage() {
     );
   };
 
+  const [isMuted, setIsMuted] = useState(true);
 
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+  };
 
   return (
     <div>
       <HomeHeader />
 
-      <div className="pt-1 bg-[#F2F0F1] flex flex-wrap  2xl:w-[80%] mx-auto justify-between items-end px-6 lg:px-20">
-
-
-        <div className="w-full lg:w-1/2 flex flex-col flex-grow">
-          <h1 className="font-extrabold text-3xl sm:text-6xl mb-10 max-w-[550px]">
-            <Reavel>ӨӨРТ ТОХИРСОН</Reavel> <Reavel>ЗАГВАРЫН</Reavel> <Reavel>ХУВЦАСЫГ ОЛООРОЙ</Reavel>
-          </h1>
-
-          <p className="max-w-[550px] text-lg text-gray-600">
-            Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.
-          </p>
-
-          <div className="mt-10 flex justify-center lg:justify-start ">
-            <TransitionLink href="/category">
-              <Button className="w-[300px] flex h-[40px] rounded-2xl py-3 text-lg">
-                Shop Now
-              </Button>
-            </TransitionLink>
-          </div>
+      <div className="py-24 bg-[#F2F0F1] flex flex-wrap 2xl:w-[100%] mx-auto justify-between items-end px-6 lg:px-20 relative">
+      <video
+  src="beecleg.mp4"
+  autoPlay
+  loop
+  muted={isMuted}
+  className="absolute top-0 left-0 w-full h-full object-cover z-0"
+/>
+<button
+        onClick={toggleMute}
+        className="absolute top-4 right-4 p-2  text-white rounded-full  w-[50px] h-[50px]"
+      >
+        {!isMuted ?<Lottie animationData={breakdance} style={{ width: 50, height: 50,}} className="rounded-full overflow-hidden"/>: <Lottie animationData={muted} style={{ width: 50, height: 50, borderRadius:50}} />}
+      </button>
 
 
 
-          <div className="my-5 flex flex-wrap gap-10">
-            <div className="flex-grow flex flex-col justify-center items-center">
-              <h1 className="font-bold text-3xl">200+</h1>
-              <p className="text-gray-600">  Олон Улсын Бренд</p>
-            </div>
-            <div className="flex-grow flex flex-col justify-center items-center">
-              <h1 className="font-bold text-3xl">2,000+</h1>
-              <p className="text-gray-600">Сайн Чанарын Бүтээгдэхүүн</p>
-            </div>
-            <div className="flex-grow flex flex-col justify-center items-center">
-              <h1 className="font-bold  text-3xl">30,000+</h1>
-              <p className="text-gray-600">   Идэвхтэй Үйлчлүүлэгчид</p>
-            </div>
-          </div>
-        </div>
+  <div className="w-full lg:w-1/2 flex flex-col flex-grow z-10 relative">
+    <h1 className="font-extrabold text-3xl sm:text-6xl mb-10 max-w-[550px]">
+      <Reavel>ӨӨРТ ТОХИРСОН</Reavel> <Reavel>ЗАГВАРЫН</Reavel> <Reavel>ХУВЦАСЫГ ОЛООРОЙ</Reavel>
+    </h1>
 
-        <div className="flex justify-end flex-grow relative">
-          <motion.div
-            initial={{ opacity: 0, y: 75 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: 'spring', stiffness: 50 }}
-            className="w-full max-w-[500px] mx-auto flex"
-          >
-            <Image
-              width={500}
-              height={500}
-              src="/Rectangle.png"
-              alt="Fashion Banner"
+    <p className="max-w-[550px] text-lg text-gray-600">
+      Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.
+    </p>
 
+    <div className="mt-10 flex justify-center lg:justify-start">
+      <TransitionLink href="/category">
+        <Button className="w-[300px] flex h-[40px] rounded-2xl py-3 text-lg">
+          Shop Now
+        </Button>
+      </TransitionLink>
+    </div>
 
-            />
-          </motion.div>
-        </div>
+    <div className="my-5 flex flex-wrap gap-10">
+      <div className="flex-grow flex flex-col justify-center items-center">
+        <h1 className="font-bold text-3xl">200+</h1>
+        <p className="text-gray-600">Олон Улсын Бренд</p>
       </div>
+      <div className="flex-grow flex flex-col justify-center items-center">
+        <h1 className="font-bold text-3xl">2,000+</h1>
+        <p className="text-gray-600">Сайн Чанарын Бүтээгдэхүүн</p>
+      </div>
+      <div className="flex-grow flex flex-col justify-center items-center">
+        <h1 className="font-bold  text-3xl">30,000+</h1>
+        <p className="text-gray-600">Идэвхтэй Үйлчлүүлэгчид</p>
+      </div>
+    </div>
+  </div>
+
+  <div className="flex justify-end flex-grow relative">
+    <motion.div
+      initial={{ opacity: 0, y: 75 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 50 }}
+      className="w-full max-w-[500px] mx-auto flex"
+    >
+    </motion.div>
+  </div>
+</div>
+
 
       <div><BrandsBar /></div>
 

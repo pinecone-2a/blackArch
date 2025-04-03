@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 export default function BrandsBar() {
   const color = 'white';
   return (
-    <div className='bg-black 2xl:w-[80%] mx-auto overflow-hidden w-full flex justify-center items-center py-6'>
+    <div className='bg-black 2xl:w-[100%] mx-auto overflow-hidden w-full flex justify-center items-center py-6'>
   <motion.div
         initial={{ x: '0%' }}
         animate={{ x: '20%' }}
