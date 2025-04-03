@@ -24,10 +24,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-<<<<<<< HEAD
-=======
-import { json } from "stream/consumers";
->>>>>>> 5cdd30cc4abae3e2f7e25fdfa2bf6dbae648d1f4
 
 
 
@@ -156,11 +152,7 @@ export default function Navbar() {
             <Menu/>
             </div>
   </SheetTrigger>
-<<<<<<< HEAD
   <SheetContent className="bg-black">
-=======
-  <SheetContent className="bg-white">
->>>>>>> 5cdd30cc4abae3e2f7e25fdfa2bf6dbae648d1f4
   <SheetHeader>
       <SheetDescription>
     <div className="my-1.5 ">
@@ -198,11 +190,7 @@ export default function Navbar() {
  <SearchBox
       classNames={{
         root: "flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2",
-<<<<<<< HEAD
         input: "w-full h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
-=======
-        input: "w-200 h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
->>>>>>> 5cdd30cc4abae3e2f7e25fdfa2bf6dbae648d1f4
         submit: "hidden", 
         reset: "hidden", 
       }}
