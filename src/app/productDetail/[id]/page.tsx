@@ -20,7 +20,9 @@ import { UserContext } from "@/lib/userContext";
 import { InstantSearch } from 'react-instantsearch';
 import { LookingSimilar } from 'react-instantsearch';
 import { toast, Toaster } from 'sonner';
+
 import { Check } from 'lucide-react';
+
 
 type ProductDetailProps = {
     params: Promise<{ id: string }>;
@@ -178,7 +180,8 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
         <div className='p-4 max-w-7xl mx-auto'>
             <Header />
-            <Toaster position='top-center' />
+
+            <Toaster position='top-center'/>
             <Breadcrumb>
                 <BreadcrumbList className='text-2xl flex text-gray-300 items-center'>
                     <BreadcrumbItem>
