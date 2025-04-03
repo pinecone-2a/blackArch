@@ -43,8 +43,11 @@ interface CartItem {
 }
 
 export default function Cart() {
-  const storedCart = typeof window !== "undefined" ? localStorage.getItem("cart") : null;
-  const initialCartState: CartItem[] = storedCart ? JSON.parse(storedCart) : initialCart;
+  const storedCart =
+    typeof window !== "undefined" ? localStorage.getItem("cart") : null;
+  const initialCartState: CartItem[] = storedCart
+    ? JSON.parse(storedCart)
+    : initialCart;
 
   const [cart, setCart] = useState<CartItem[]>(initialCartState);
   const [promoCode, setPromoCode] = useState("");
@@ -57,13 +60,18 @@ export default function Cart() {
 
   const removeItem = (productId: string): void => {
     setCart((prevCart) => {
-      const updatedCart = prevCart.filter((item) => item.productId !== productId);
+      const updatedCart = prevCart.filter(
+        (item) => item.productId !== productId
+      );
       localStorage.setItem("cart", JSON.stringify(updatedCart));
-      return updatedCart; 
+      return updatedCart;
     });
   };
 
-  const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const subtotal = cart.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
   const discountAmount = subtotal * discount;
   const total = subtotal - discountAmount + deliveryFee;
 
@@ -73,25 +81,41 @@ export default function Cart() {
         <>
           <h2 className="text-3xl font-bold mb-6 text-center">Your Cart</h2>
           <div className="flex flex-col lg:flex-row gap-6">
-            <div className="lg:w-2/3 space-y-4 bg-white p-4 rounded-lg shadow-lg w-full">
+            <div className="space-y-4 bg-white p-4 rounded-lg shadow-lg w-full">
               {cart.map((item: CartItem) => (
-                <Card key={item.productId} className="flex flex-col sm:flex-row items-center sm:items-start p-4 gap-4 rounded-lg border relative w-full">
-                  <img src={item.image} alt={item.name} className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover" />
+                <Card
+                  key={item.productId}
+                  className="flex flex-col sm:flex-row items-center sm:items-start p-4 gap-4 rounded-lg border relative w-full"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover"
+                  />
                   <CardContent className="flex-1 text-center sm:text-left">
                     <Reveal className="font-bold text-lg">{item.name}</Reveal>
-                    <Reveal className="text-sm text-gray-500">Size: {item.size}</Reveal>
-                    <Reveal className="text-sm text-gray-500">Color: {item.color}</Reveal>
-                    <Reveal className="font-bold mt-1 text-xl">${item.price}</Reveal>
+                    <Reveal className="text-sm text-gray-500">
+                      Size: {item.size}
+                    </Reveal>
+                    <Reveal className="text-sm text-gray-500">
+                      Color: {item.color}
+                    </Reveal>
+                    <Reveal className="font-bold mt-1 text-xl">
+                      ${item.price}
+                    </Reveal>
                   </CardContent>
-  
-                  <Button onClick={() => removeItem(item.productId)} className="text-red-500 hover:bg-red-100 rounded-full p-2">
+
+                  <Button
+                    onClick={() => removeItem(item.productId)}
+                    className="text-red-500 hover:bg-red-100 rounded-full p-2"
+                  >
                     <Trash2 size={18} />
                   </Button>
                 </Card>
               ))}
             </div>
-  
-            <div className="lg:w-1/3 w-full">
+
+            <div className="w-full">
               <div className="bg-gray-100 p-6 rounded-lg shadow-lg">
                 <h3 className="text-xl font-bold text-center">Order Summary</h3>
                 <div className="mt-4 space-y-2 text-gray-600">
@@ -113,10 +137,25 @@ export default function Cart() {
                   <span>${total.toFixed(2)}</span>
                 </div>
                 <div className="mt-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                  <Input type="text" placeholder="Add promo code" value={promoCode} onChange={(e) => setPromoCode(e.target.value)} className="flex-1" />
-                  <Button onClick={() => setDiscount(promoCode === "Pineshop" ? 0.2 : 0)}>Apply</Button>
+                  <Input
+                    type="text"
+                    placeholder="Add promo code"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button
+                    onClick={() =>
+                      setDiscount(promoCode === "Pineshop" ? 0.05 : 0)
+                    }
+                  >
+                    Apply
+                  </Button>
                 </div>
-                <p className="text-sm text-gray-500 mt-2 text-center">Use promo code <b>Pineshop</b> for 20% discount</p>
+                <p className="text-sm text-gray-500 mt-2 text-center">
+                  <b>Pineshop</b> гэсэн промо кодыг ашигласнаар 5% хөнгөлөлт
+                  эдлэх боломжтой.
+                </p>
                 <Button className="w-full mt-4">Go to Checkout →</Button>
               </div>
             </div>
@@ -124,8 +163,14 @@ export default function Cart() {
         </>
       ) : (
         <div className="flex flex-col items-center justify-center h-screen text-center">
-          <Reavel><h1 className="font-extrabold text-4xl xsm:text-5xl">Your Cart is Empty!</h1></Reavel>
-          <Reavel><p>Must add items to the cart before you proceed to checkout</p></Reavel>
+          <Reavel>
+            <h1 className="font-extrabold text-4xl xsm:text-5xl">
+              Your Cart is Empty!
+            </h1>
+          </Reavel>
+          <Reavel>
+            <p>Must add items to the cart before you proceed to checkout</p>
+          </Reavel>
           <Reavel className="p-4">
             <Link href="/category">
               <Button className="rounded-2xl"> Go to Shop </Button>
