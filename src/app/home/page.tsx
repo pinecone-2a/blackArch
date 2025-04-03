@@ -32,7 +32,8 @@ export default function HomePage() {
   console.log("hereglegch", user)
   const [newArrival, setNewArrival] = useState<Product[]>([])
   const { data, loading } = useFetchData("products/new")
-  console.log(data)
+  console.log(data);
+  
 
   useEffect(() => {
     if (Array.isArray(data)) {
