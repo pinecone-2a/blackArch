@@ -17,7 +17,7 @@ import ProductDetail from "../productDetail/[id]/page";
 import { useContext } from "react";
 import { UserContext } from "@/lib/userContext";
 import breakdance from "./breakdance.json"
-import muted from "./muted.json"
+import muted1 from "./mute1.json"
 import Lottie from "lottie-react";
 
 
@@ -69,54 +69,43 @@ export default function HomePage() {
     <div>
       <HomeHeader />
 
-      <div className="py-24 bg-[#F2F0F1] flex flex-wrap 2xl:w-[100%] mx-auto justify-between items-end px-6 lg:px-20 relative">
+      <div className="py-48 bg-black flex flex-wrap w-full 2xl:w-[100%] mx-auto justify-between items-end px-6 lg:px-20 relative  ">
       <video
-  src="beecleg.mp4"
-  autoPlay
-  loop
-  muted={isMuted}
-  className="absolute top-0 left-0 w-full h-full object-cover z-0"
-/>
+      src="video2.mp4"
+      autoPlay
+      loop
+      muted={isMuted}
+      className="absolute top-0 right-0 w-full h-full object-cover z-0 md:w-[50%] "
+    />
+   <div className="absolute top-0 left-0 h-full w-[50%] hidden md:block ">
+    <img src="street.jpg" className="h-full w-full object-cover z-0" />
+    <div className="absolute top-0 -right-60 w-[550px] h-full bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.9)] to-transparent z-20 pointer-events-none" />
+  </div>
+   {/* <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white via-[rgba(185,185,185,0.1)] to-white z-10 pointer-events-none" /> */}
+    
 <button
         onClick={toggleMute}
         className="absolute top-4 right-4 p-2  text-white rounded-full  w-[50px] h-[50px]"
       >
-        {!isMuted ?<Lottie animationData={breakdance} style={{ width: 50, height: 50,}} className="rounded-full overflow-hidden"/>: <Lottie animationData={muted} style={{ width: 50, height: 50, borderRadius:50}} />}
+        {!isMuted ?<Lottie animationData={breakdance} style={{ width: 50, height: 50,}} className="rounded-full overflow-hidden"/>:<div className="bg-white h-[50px] w-[50px] rounded-full"> <Lottie animationData={muted1} style={{ width: 50, height: 50, borderRadius:50}} /></div>}
       </button>
 
 
 
   <div className="w-full lg:w-1/2 flex flex-col flex-grow z-10 relative">
-    <h1 className="font-extrabold text-3xl sm:text-6xl mb-10 max-w-[550px]">
+    <h1 className="font-extrabold text-3xl sm:text-6xl mb-10 max-w-[550px] text-white opacity-90">
       <Reavel>ӨӨРТ ТОХИРСОН</Reavel> <Reavel>ЗАГВАРЫН</Reavel> <Reavel>ХУВЦАСЫГ ОЛООРОЙ</Reavel>
     </h1>
 
-    <p className="max-w-[550px] text-lg text-gray-600">
-      Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.
-    </p>
-
     <div className="mt-10 flex justify-center lg:justify-start">
       <TransitionLink href="/category">
-        <Button className="w-[300px] flex h-[40px] rounded-2xl py-3 text-lg">
+        <Button className="w-[300px] flex h-[40px] rounded-2xl py-3 text-lg bg-white text-black  shadow-2xl border hover:text-white xl:mt-[100px]">
           Shop Now
         </Button>
       </TransitionLink>
     </div>
 
-    <div className="my-5 flex flex-wrap gap-10">
-      <div className="flex-grow flex flex-col justify-center items-center">
-        <h1 className="font-bold text-3xl">200+</h1>
-        <p className="text-gray-600">Олон Улсын Бренд</p>
-      </div>
-      <div className="flex-grow flex flex-col justify-center items-center">
-        <h1 className="font-bold text-3xl">2,000+</h1>
-        <p className="text-gray-600">Сайн Чанарын Бүтээгдэхүүн</p>
-      </div>
-      <div className="flex-grow flex flex-col justify-center items-center">
-        <h1 className="font-bold  text-3xl">30,000+</h1>
-        <p className="text-gray-600">Идэвхтэй Үйлчлүүлэгчид</p>
-      </div>
-    </div>
+    
   </div>
 
   <div className="flex justify-end flex-grow relative">
