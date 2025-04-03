@@ -45,7 +45,7 @@ export default function Navbar() {
 
   const cartCount = data?.length || 0;
   return (
-    <div className="sticky z-10  w-full mx-auto flex px-10 top-0 bg-white  pb-4">
+    <div className="sticky z-20  w-full mx-auto flex px-10 top-0 bg-white  pb-4">
       <nav className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
         <span>
           <Link
@@ -96,6 +96,8 @@ export default function Navbar() {
               </Link>
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
             </p>
+
+
           </div>
         </div>
 
