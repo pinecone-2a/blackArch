@@ -33,7 +33,7 @@ export default function AdminCategoryComp() {
 
   return (
     <div className="w-11/12 rounded-xl min-h-[300px] flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">Dishes Category</h1>
+      <h1 className="text-2xl font-bold">Outfit Category</h1>
       <div className="flex flex-wrap gap-3">
         <Link href={`/admin/menu`}>
           <Badge
