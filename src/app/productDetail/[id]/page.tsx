@@ -202,7 +202,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6'>
 
                 <div>
-                    <div className='bg-gray-300 rounded-2xl p-2 overflow-hidden '>
+                    <div className=' rounded-2xl p-2 overflow-hidden '>
                         <img src={product?.image} 
                         alt='Product'
                          className='w-full h-full object-cover transition-all duration-700 ease-in-out hover:rounded-[50%] hover:scale-125' />
@@ -223,7 +223,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                         <span className='ml-2 text-gray-500 text-sm'>4.5/5</span>
                     </div>
                     <div className='flex items-center gap-2 mt-3 text-4xl'>
-                        <h2 className='font-bold'>{product?.price}$</h2>
+                        <h2 className='font-bold'>{product?.price}₮</h2>
                     </div>
                     <p className='mt-3 text-gray-700 text-xl'>
                         {product?.description}

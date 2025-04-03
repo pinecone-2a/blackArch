@@ -65,6 +65,7 @@ export default function HomePage() {
     setIsMuted(!isMuted);
   };
 
+
   return (
     <div>
       <HomeHeader />
@@ -187,8 +188,33 @@ export default function HomePage() {
             View all
           </div>
          
+
+
+      <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-4 p-6 bg-white">
+     
+     <div className="relative">
+       <img src="/zurag4.jpg" alt="Fashion 1" className="w-200 h-200 object-cover rounded-lg transition-transform duration-300 hover:scale-105 " />
+     </div>
+
+ <div className="grid grid-rows-2  gap-1">
+       <div className="relative">
+         <img src="/zurag1.jpg" alt="Fashion 3" className="w-100 h-100 object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
+       </div>
+       <div className="relative">
+         <img src="/zurag2.jpg" alt="Fashion 4" className="w-100 h-100 object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
+       </div>
+     </div>
+     <div className="relative">
+       <img src="/zurag3.jpg" alt="Fashion 2" className="w-200 h-200 object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
+     </div>
         </div>
       </div>
+
+
+
+  
+      
+    </div>
 
       <Footer />
     </div>
