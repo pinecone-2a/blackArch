@@ -127,8 +127,8 @@ export default function Navbar() {
                 reset: "hidden",
               }}
               placeholder="Search..."
-              onKeyDown={(e) => setIsOpen(true)} // Open dropdown on typing
-              onBlur={() => setTimeout(() => setIsOpen(false), 200)} // Close on blur (with delay)
+              onKeyDown={(e) => setIsOpen(true)} 
+              onBlur={() => setTimeout(() => setIsOpen(false), 200)} 
               submitIconComponent={() => (
                 <motion.button
                   whileHover={{ scale: 1.1 }}

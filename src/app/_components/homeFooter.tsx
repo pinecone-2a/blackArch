@@ -52,10 +52,10 @@ export default function Footer() {
               Privacy & Cookies Policy
             </p>
           </div>
-          <p className="mt-4 md:mt-0 flex gap-1">
+          <div className="mt-4 md:mt-0 flex gap-1">
             hello@pineshop
             <Lottie animationData={mailAnimation} style={{ width: 20, height: 20 }} />
-            </p>
+            </div>
         </div>
       </div>
     </div>
