@@ -342,4 +342,3 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 }
 
 export default ProductDetail;
-
