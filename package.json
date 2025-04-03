@@ -41,6 +41,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "lenis": "^1.2.3",
+    "lottie": "^0.0.1",
     "lottie-react": "^2.4.1",
     "lucide": "^0.479.0",
     "lucide-react": "^0.479.0",
@@ -71,4 +72,3 @@
     "typescript": "^5"
   }
 }
-
