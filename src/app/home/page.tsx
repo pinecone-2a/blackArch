@@ -21,6 +21,9 @@ import { UserContext } from "@/lib/userContext";
 export type Product = {
   id: string,
   name: string,
+  rating:string,
+  price:string,
+  image:string,
 }
 
 
@@ -39,7 +42,20 @@ export default function HomePage() {
     }
   }, [data]);
 
- 
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % newArrival.length);
+  };
+
+
+  const prevSlide = () => {
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + newArrival.length) % newArrival.length
+    );
+  };
+
 
 
   return (
@@ -114,51 +130,62 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="w-full overflow-x-auto">
-            <div className="flex gap-6  mt-6 pl-4">
-
-
-              {newArrival.map((product: any) => (
-                <Link key={product.id} href={`/productDetail/${product.id}`}>
-                  <div
-                    key={product.id}
-                    className="flex flex-col min-w-[220px] sm:min-w-[250px] "
-                  >
-
-                    <div style={{ backgroundImage: `url(${product.image})` }}
-                      className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl"></div>
-                    <Reavel className="text-base sm:text-lg font-semibold mt-2">
-                      {product.name}
-                    </Reavel>
-                    <div className="flex items-center gap-1 mt-1">
-                      <Reavel className="flex gap-1 text-yellow-500">★★★★</Reavel>
-                      <Reavel className="text-sm sm:text-base">5/{product.rating}</Reavel>
-                    </div>
-                    <Reavel className="text-sm sm:text-lg font-bold">₮{product.price}</Reavel>
-                  </div>
-                </Link>
-              ))}
+          <div className="relative">
+ 
+      <div className="flex overflow-hidden w-full h-full">
+        <div
+          className="relative flex transition-transform duration-1000"
+          style={{
+            transform: `rotateY(${currentIndex * -90}deg)`,
+            transformStyle: 'preserve-3d',
+          }}
+        >
+          {newArrival.map((product: Product, index) => (
+            <div
+              key={product.id}
+              className="min-w-[220px] sm:min-w-[250px] relative flex flex-col"
+              style={{
+                transform: `rotateY(${index * 90}deg) translateZ(400px)`,
+                backfaceVisibility: 'hidden', 
+              }}
+            >
+              <Link href={`/productDetail/${product.id}`}>
+                <div
+                  style={{ backgroundImage: `url(${product.image})` }}
+                  className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl"
+                ></div>
+              </Link>
+              <div className="text-base sm:text-lg font-semibold mt-2">
+                {product.name}
+              </div>
+              <div className="flex items-center gap-1 mt-1">
+                <div className="flex gap-1 text-yellow-500">★★★★</div>
+                <div className="text-sm sm:text-base">5/{product.rating}</div>
+              </div>
+              <div className="text-sm sm:text-lg font-bold">₮{product.price}</div>
             </div>
-          </div>
+          ))}
+        </div>
+      </div>
+
+
+      <button
+        className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+        onClick={prevSlide}
+      >
+        &#10094;
+      </button>
+      <button
+        className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+        onClick={nextSlide}
+      >
+        &#10095;
+      </button>
+    </div>
           <div className="rounded-2xl bg-white h-12 w-full sm:w-[70%] md:w-[50%] border flex items-center justify-center mt-8 cursor-pointer text-lg font-semibold hover:bg-gray-100 transition">
             View all
           </div>
-          <div className="w-full bg-[#F0F0F0] flex flex-col items-center mt-14 rounded-2xl p-8">
-            <p className="text-[30px] sm:text-[36px] font-semibold text-center">
-              ХЭВ ЗАГВАРААР ХАЙХ
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mt-6">
-              {["Casual", "Formal", "Party"].map((style, i) => (
-                <div
-                  key={i}
-                  className="w-full h-[220px] sm:h-[250px] bg-white rounded-2xl bg-[url(/casual.png)] bg-cover bg-center flex items-center pl-8 text-white text-[30px] sm:text-[36px] font-semibold shadow-lg hover:scale-105 transition-transform"
-                >
-                  {style}
-                </div>
-              ))}
-            </div>
-          </div>
+         
         </div>
       </div>
 

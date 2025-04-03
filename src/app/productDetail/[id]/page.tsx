@@ -20,7 +20,9 @@ import { UserContext } from "@/lib/userContext";
 import { InstantSearch } from 'react-instantsearch';
 import { LookingSimilar } from 'react-instantsearch';
 import { toast, Toaster } from 'sonner';
+
 import { Check } from 'lucide-react';
+
 
 type ProductDetailProps = {
     params: Promise<{ id: string }>;
@@ -178,7 +180,8 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
         <div className='p-4 max-w-7xl mx-auto'>
             <Header />
-            <Toaster position='top-center' />
+
+            <Toaster position='top-center'/>
             <Breadcrumb>
                 <BreadcrumbList className='text-2xl flex text-gray-300 items-center'>
                     <BreadcrumbItem>
@@ -199,10 +202,10 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6'>
 
                 <div>
-                    <div className=' rounded-2xl p-2 overflow-hidden '>
-                        <img src={product?.image}
-                            alt='Product'
-                            className='w-full h-full object-cover transition-all duration-700 ease-in-out hover:rounded-[50%] hover:scale-125' />
+                    <div className='bg-gray-300 rounded-2xl p-2 overflow-hidden '>
+                        <img src={product?.image} 
+                        alt='Product'
+                         className='w-full h-full object-cover transition-all duration-700 ease-in-out hover:rounded-[50%] hover:scale-125' />
                     </div>
                     {/* <div className='grid grid-cols-3 md:grid-cols-6 gap-3 mt-4'>
                         <img src='t-shirt.png' className='w-full bg-gray-300 rounded-xl p-1' />
@@ -226,7 +229,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                         {product?.description}
                     </p>
 
-                    {/* <p className='text-lg font-bold mt-18'>Select Colors</p>
+                    <p className='text-lg font-bold mt-18'>Select Colors</p>
 
                     <div className='flex gap-2 mt-2 '>
                         {[
@@ -247,19 +250,23 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                                 )}
                             </button>
                         ))}
-                    </div> */}
+                    </div>
 
                     <p className='text-lg font-bold mt-18'>Choose Size</p>
 
-                    <div className='flex gap-5 mt-2 rounded-full'>
-                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Small' ? 'bg-black text-white' : ''}`}
-                            onClick={() => handleSizeClick('Small')}>Small</button>
-                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Medium' ? 'bg-black text-white' : ''}`}
-                            onClick={() => handleSizeClick('Medium')}>Medium</button>
-                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'Large' ? 'bg-black text-white' : ''}`}
-                            onClick={() => handleSizeClick('Large')}>Large</button>
-                        <button className={`px-4 py-2 border rounded-lg hover:bg-gray-200 transition duration-300 ${selectedSize === 'X-Large' ? 'bg-black text-white' : ''}`}
-                            onClick={() => handleSizeClick('X-Large')}>X-Large</button>
+                    <div className='flex gap-5 mt-2'>
+                        {['Small', 'Medium', 'Large', 'X-Large'].map((size) => (
+                            <button
+                                key={size}
+                                className={`px-4 py-2 border rounded-lg transition-all duration-300 ease-out cursor-grab
+                        hover:bg-gray-200 hover:text-black transform
+                        active:scale-90 
+                        ${selectedSize === size ? 'bg-black text-white shadow-md scale-105' : ''}`}
+                                onClick={() => handleSizeClick(size)}
+                            >
+                                {size}
+                            </button>
+                        ))}
                     </div>
 
 
