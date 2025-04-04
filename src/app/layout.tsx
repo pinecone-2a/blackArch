@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
+ 
 
 
 export default function RootLayout({
@@ -27,12 +27,13 @@ export default function RootLayout({
 
 
 
+
   return (
     <html lang="en">
       <UserProvider> 
-      <Head>
+      {/* <Head>
         <link rel="icon" type="image/png" href="/shopping-cart.png" />
-      </Head>
+      </Head> */}
       <ReactLenis root>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
