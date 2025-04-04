@@ -196,12 +196,12 @@ export default function HomePage() {
        <img src="/zurag4.jpg" alt="Fashion 1" className="w-200 h-200 object-cover rounded-lg transition-transform duration-300 hover:scale-105 " />
      </div>
 
- <div className="grid grid-rows-2  gap-1">
+ <div className="grid grid-rows-2  gap-3">
        <div className="relative">
-         <img src="/zurag1.jpg" alt="Fashion 3" className="w-100 h-100 object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
+         <img src="/zurag1.jpg" alt="Fashion 3" className="w-100 h-98 object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
        </div>
        <div className="relative">
-         <img src="/zurag2.jpg" alt="Fashion 4" className="w-100 h-100 object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
+         <img src="/zurag2.jpg" alt="Fashion 4" className="w-100 h-98 object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
        </div>
      </div>
      <div className="relative">
