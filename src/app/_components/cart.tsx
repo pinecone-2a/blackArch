@@ -58,7 +58,7 @@ export default function Cart() {
       {cart.length > 0 ? (
         <>
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-            Your Shopping Cart
+            Таны сагсанд байгаа бүтээгдэхүүнүүд
           </h2>
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-2/3 space-y-4 w-full">
@@ -205,7 +205,7 @@ export default function Cart() {
             <div className="mx-auto w-28 h-28 bg-gray-50 rounded-full flex items-center justify-center mb-6">
               <ShoppingBag className="w-14 h-14 text-gray-400" />
             </div>
-            <h1 className="font-extrabold text-3xl">Your Cart is Empty</h1>
+            <h1 className="font-extrabold text-3xl">Таны сагс хоосон байна.</h1>
             <p className="mt-3 text-gray-500 mb-8">
               Looks like you haven't added anything to your cart yet.
             </p>
