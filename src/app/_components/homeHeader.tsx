@@ -15,7 +15,12 @@ import HitComponent from "@/components/algolia/HitComponent";
 import PopularSearches from "@/components/algolia/PopularSearches";
 import CustomPagination from "@/components/algolia/CustomPagination";
 import { SearchBox } from "react-instantsearch";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+
+// Dynamically import Lottie with no SSR
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import {
   Sheet,
   SheetContent,
@@ -23,34 +28,47 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+
 } from "@/components/ui/sheet"
+
+
+
 import { json } from "stream/consumers";
-import Lottie from "lottie-react";
-import shoppingCart from "./shoppingCart.json"
-
-
+import shoppingCart from "./shoppingCart.json";
 
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const product = localStorage.getItem('cart');
-  const data = JSON.parse(product);
-
-
+  const [cartData, setCartData] = useState<any[]>([]);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const product = localStorage.getItem("cart");
+      if (product) {
+        try {
+          const parsedData = JSON.parse(product);
+          setCartData(parsedData);
+        } catch (error) {
+          console.error("Error parsing cart data:", error);
+          setCartData([]);
+        }
+      }
+    }
+  }, []);
 
   interface HitType {
     objectID: string;
     [key: string]: any;
     name: string;
     description: string;
-    image: string
-    id: string
-    objectId: string
+    image: string;
+    id: string;
+    objectId: string;
   }
 
-  const cartCount = data?.length || 0;
+  const cartCount = cartData?.length || 0;
   return (
-    <div className="sticky z-10  w-full mx-auto flex px-10 top-0 bg-white  pb-4">
+    <div className="fixed z-50 w-full mx-auto flex px-10 top-0 bg-white pb-4 border-b shadow-sm">
       <nav className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
         <span>
           <Link
@@ -64,37 +82,47 @@ export default function Navbar() {
         <div className="my-1.5 hidden lg:block">
           <div className="flex text-lg gap-5">
             <div className="relative group">
-
-              <Link href={"/category"} className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]">Shop</Link>
+              <Link
+                href={"/category"}
+                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
+              >
+                Shop
+              </Link>
 
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
             </div>
             <p className="relative group">
-
-              <Link href={"/category"} className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]">New Arrivals</Link>
+              <Link
+                href={"/category"}
+                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
+              >
+                New Arrivals
+              </Link>
 
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
             </p>
             <p className="relative group">
-
-              <Link href={"/category"} className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]">Top Selling</Link>
+              <Link
+                href={"/category"}
+                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
+              >
+                Top Selling
+              </Link>
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
             </p>
             <p className="relative group">
-
-              <Link href={"/category"} className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]">On Sale</Link>
+              <Link
+                href={"/category"}
+                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
+              >
+                On Sale
+              </Link>
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
             </p>
 
 
           </div>
         </div>
-
-
-
-
-
-
 
         <div className="hidden lg:block">
           <NextInstantSearch
@@ -116,13 +144,14 @@ export default function Navbar() {
             <SearchBox
               classNames={{
                 root: "flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2",
-                input: "w-full h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
+                input:
+                  "w-full h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
                 submit: "hidden",
                 reset: "hidden",
               }}
               placeholder="Search..."
-              onKeyDown={(e) => setIsOpen(true)} // Open dropdown on typing
-              onBlur={() => setTimeout(() => setIsOpen(false), 200)} // Close on blur (with delay)
+              onKeyDown={(e) => setIsOpen(true)} 
+              onBlur={() => setTimeout(() => setIsOpen(false), 200)} 
               submitIconComponent={() => (
                 <motion.button
                   whileHover={{ scale: 1.1 }}
@@ -134,10 +163,8 @@ export default function Navbar() {
               )}
             />
             <Configure hitsPerPage={6} distinct={true} getRankingInfo={true} />
-            <div className="flex flex-col items-center">
-            </div>
+            <div className="flex flex-col items-center"></div>
             <div className="mt-8 flex items-center gap-4 flex-col ">
-
               {isOpen && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
@@ -145,19 +172,30 @@ export default function Navbar() {
                   exit={{ opacity: 0, y: -10 }}
                   className="absolute w-full bg-white border border-gray-300 shadow-lg rounded-lg mt-1 z-9999"
                 >
-                  <Hits<HitType> hitComponent={({ hit }) => <HitComponent hit={hit} />} />
+                  <Hits<HitType>
+                    hitComponent={({ hit }) => <HitComponent hit={hit} />}
+                  />
                 </motion.div>
-
               )}
             </div>
-
           </NextInstantSearch>
         </div>
 
         <div className="flex gap-3 xsm:mt-3">
+          <Link 
+            href="/profile" 
+            className="hidden lg:flex items-center mr-2 hover:text-[#d94f5c] transition-colors"
+          >
+            My Profile
+          </Link>
           <div className="relative">
             <Link href="/cart" className="relative">
-              <Lottie animationData={shoppingCart} style={{ width: 50, height: 50 }} />
+              {typeof window !== 'undefined' && (
+                <Lottie
+                  animationData={shoppingCart}
+                  style={{ width: 50, height: 50 }}
+                />
+              )}
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
                   {cartCount}
@@ -166,12 +204,13 @@ export default function Navbar() {
             </Link>
           </div>
           <Sheet>
+
   <SheetTrigger>
             <div className="lg:hidden">
             <Menu/>
             </div>
   </SheetTrigger>
-  <SheetContent className="bg-white">
+  <SheetContent className="bg-black">
   <SheetHeader>
       <SheetDescription>
     <div className="my-1.5 ">
@@ -187,6 +226,9 @@ export default function Navbar() {
             </span></Link>
             <Link href={"/category"}><span>
               On Sale
+            </span></Link>
+            <Link href={"/profile"}><span>
+              My Profile
             </span></Link>
           </div>
         </div>
@@ -209,7 +251,7 @@ export default function Navbar() {
  <SearchBox
       classNames={{
         root: "flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2",
-        input: "w-200 h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
+        input: "w-full h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
         submit: "hidden", 
         reset: "hidden", 
       }}
@@ -231,24 +273,25 @@ export default function Navbar() {
                         </div>
                         <div className="mt-8 flex items-center gap-4 flex-col ">
 
-                      {isOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="absolute w-full bg-white border border-gray-300 shadow-lg rounded-lg mt-1 z-9999"
-                        >
-                          <Hits<HitType> hitComponent={({ hit }) => <HitComponent hit={hit} />} />
-                        </motion.div>
+                        {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="absolute w-full bg-white border border-gray-300 shadow-lg rounded-lg mt-1 z-9999"
+        >
+          <Hits<HitType> hitComponent={({ hit }) => <HitComponent hit={hit} />} />
+        </motion.div>
+   
+                        )}
+      </div>
 
-                      )}
-                    </div>
+         </NextInstantSearch>
+      </SheetDescription>
+    </SheetHeader>
+  </SheetContent>
+</Sheet>
 
-                  </NextInstantSearch>
-                </SheetDescription>
-              </SheetHeader>
-            </SheetContent>
-          </Sheet>
         </div>
       </nav>
     </div>

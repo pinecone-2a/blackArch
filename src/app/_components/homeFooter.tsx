@@ -1,11 +1,17 @@
+"use client";
 import { Github, Twitter, Linkedin, Slack } from "lucide-react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
+import mailAnimation from "./mailAnimation.json"
+
+// Dynamically import Lottie with no SSR
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 export default function Footer() {
   return (
-    <div className="w-full mx-auto bg-black text-white py-8">
+    <div className="w-full mx-auto bg-black text-white py-16">
       <div className="w-[90%] md:w-[80%] max-w-[1200px] mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="w-full md:w-auto flex flex-col items-start">
@@ -39,7 +45,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="border-t border-gray-600 my-6"></div>
+        <div className="border-t border-gray-600 my-10"></div>
         <div className="flex flex-col md:flex-row justify-between text-gray-400 text-sm text-center md:text-left">
           <div className="flex flex-wrap gap-3 justify-center md:justify-start">
             <p>© 2025 pineshop</p>
@@ -50,7 +56,12 @@ export default function Footer() {
               Privacy & Cookies Policy
             </p>
           </div>
-          <p className="mt-4 md:mt-0">hello@pineshop</p>
+          <p className="mt-4 md:mt-0 flex gap-1">
+            hello@pineshop
+            {typeof window !== 'undefined' && (
+              <Lottie animationData={mailAnimation} style={{ width: 20, height: 20 }} />
+            )}
+            </p>
         </div>
       </div>
     </div>
