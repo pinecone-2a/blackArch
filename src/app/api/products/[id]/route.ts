@@ -7,9 +7,8 @@ export const GET = async (
   req: NextRequest,
   context: { params: { id: string } }
 ) => {
-  const id = context.params.id;
+  const { id } = await context.params; 
 
-  // Validate MongoDB ObjectId format
   if (!ObjectId.isValid(id)) {
     return new Response(JSON.stringify({ error: 'Invalid product ID' }), { status: 400 });
   }
