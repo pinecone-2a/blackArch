@@ -5,7 +5,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
   const id = params.id;
 
   try {
-    if (\!id) {
+    if (!id) {
       return NextResponse.json(
         { error: "Missing category ID" },
         { status: 400 }
@@ -19,7 +19,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
       },
     });
 
-    if (\!category) {
+    if (!category) {
       return NextResponse.json(
         { error: "Category not found" },
         { status: 404 }
@@ -40,7 +40,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
   const id = params.id;
 
   try {
-    if (\!id) {
+    if (!id) {
       return NextResponse.json(
         { error: "Missing category ID" },
         { status: 400 }
@@ -72,7 +72,7 @@ export const DELETE = async (req: NextRequest, { params }: { params: { id: strin
   const id = params.id;
 
   try {
-    if (\!id) {
+    if (!id) {
       return NextResponse.json(
         { error: "Missing category ID" },
         { status: 400 }
