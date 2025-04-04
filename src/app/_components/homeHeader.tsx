@@ -17,7 +17,7 @@ import CustomPagination from "@/components/algolia/CustomPagination";
 import { SearchBox } from "react-instantsearch";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import shoppingCart from "../_components/shoppingCart.json";
+
 
 // Dynamically import Lottie with no SSR
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -33,6 +33,8 @@ import {
 
 
 
+import { json } from "stream/consumers";
+import shoppingCart from "./shoppingCart.json";
 
 
 export default function Navbar() {

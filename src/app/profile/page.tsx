@@ -10,7 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+<<<<<<< HEAD
 import HomeFooter from "../_components/homeFooter";
+=======
+import Footer from "../_components/homeFooter";
+>>>>>>> main
 import Navbar from "../_components/homeHeader";
 
 const ProfilePage = () => {
