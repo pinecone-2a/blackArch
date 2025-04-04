@@ -1,6 +1,5 @@
 import { FaFacebook, FaTwitter, FaYoutube } from "react-icons/fa";
-
-export default function Footer() {
+export default function HomeFooter() {
   return (
     <footer className="relative text-white py-6 mt-10 overflow-hidden h-96">
       <img

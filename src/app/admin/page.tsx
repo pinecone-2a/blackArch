@@ -10,19 +10,14 @@ import type { User } from "@/lib/constants/types";
 
 export default function Admin() {
 
-  const user = useContext(UserContext) as UserContextType;
-  const router = useRouter();
-
-
-
 
 
   return (
-    <div className="flex min-h-screen bg-[#4c4c4c]">
-      <AdminSideBar  />
+    <div className="flex min-h-screen bg-gray-100">
+      <AdminSideBar />
       <div className="flex flex-col flex-1"> 
-        <AdminHeader  />
-        <AdminHome  />
+        <AdminHeader />
+        <AdminHome />
       </div>
     </div>
   );

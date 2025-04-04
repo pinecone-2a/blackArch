@@ -1,8 +1,8 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { useState } from "react";
+import { Plus, Pencil, Trash2, Check, X, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogClose,
@@ -11,74 +11,327 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
-import { Label } from "@/components/ui/label"
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "sonner";
+
+// Define Category type
+type Category = {
+  id: string;
+  name: string;
+  description?: string;
+  products?: any[];
+};
 
 export default function AdminCategoryComp() {
-  const [newCategory, setNewCategory] = useState<string>("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    name: "",
+    description: ""
+  });
+  const [editMode, setEditMode] = useState(false);
+  const [editCategoryId, setEditCategoryId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-//   const addCategory = () => {
-//     fetch("http://localhost:5006/food-category/", {
-//       headers: {
-//         Accept: "application/json",
-//         "Content-Type": "application/json",
-//       },
-//       method: "POST",
-//       body: JSON.stringify({ categoryName: newCategory }),
-//     });
-//     setNewCategory(""); 
-//   };
+  // Fetch categories on component mount
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Fetch categories from API
+  const fetchCategories = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}category`);
+      const data = await response.json();
+      if (data.message && Array.isArray(data.message)) {
+        setCategories(data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      toast.error("Failed to load categories");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle input change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Handle form submission for adding/editing category
+  const handleSubmit = async () => {
+    if (!formData.name.trim()) {
+      toast.error("Category name is required");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      if (editMode && editCategoryId) {
+        // Update existing category
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}category/${editCategoryId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          toast.success("Category updated successfully");
+          fetchCategories();
+        } else {
+          throw new Error("Failed to update category");
+        }
+      } else {
+        // Create new category
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}category`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          toast.success("Category added successfully");
+          fetchCategories();
+        } else {
+          throw new Error("Failed to add category");
+        }
+      }
+      // Reset form and close dialog
+      resetForm();
+      setDialogOpen(false);
+    } catch (error) {
+      console.error("Error submitting category:", error);
+      toast.error(editMode ? "Failed to update category" : "Failed to add category");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Handle editing a category
+  const handleEdit = (category: Category) => {
+    setFormData({
+      name: category.name,
+      description: category.description || "",
+    });
+    setEditMode(true);
+    setEditCategoryId(category.id);
+    setDialogOpen(true);
+  };
+
+  // Handle deleting a category
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}category/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        toast.success("Category deleted successfully");
+        fetchCategories();
+      } else {
+        throw new Error("Failed to delete category");
+      }
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      toast.error("Failed to delete category");
+    } finally {
+      setConfirmDeleteId(null);
+    }
+  };
+
+  // Reset form data and edit mode
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      description: "",
+    });
+    setEditMode(false);
+    setEditCategoryId(null);
+  };
 
   return (
-    <div className="w-11/12 rounded-xl min-h-[300px] flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">Outfit Category</h1>
-      <div className="flex flex-wrap gap-3">
-        <Link href={`/admin/menu`}>
-          <Badge
-            variant="outline"
-            className="rounded-full border py-2 px-4 flex gap-2 text-sm font-medium"
-          >
-            All Oufits
-          </Badge>
-        </Link>
-       
-        <Dialog>
+    <div className="w-full p-6 bg-gray-50">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Categories</h1>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="destructive" className="rounded-full bg-black hover:bg-gray-900 duration-300 p-[10px]">
-              <Plus />
+            <Button 
+              className="gap-2"
+              onClick={() => {
+                resetForm();
+                setDialogOpen(true);
+              }}
+            >
+              <Plus className="w-4 h-4" /> Add Category
             </Button>
           </DialogTrigger>
-          <DialogContent className="flex flex-col rounded-3xl gap-6 w-[460px] p-6">
-            <DialogHeader className="pb-4">
-              <DialogTitle>Add new category</DialogTitle>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>{editMode ? "Edit Category" : "Add New Category"}</DialogTitle>
+              <DialogDescription>
+                {editMode 
+                  ? "Update the category details below." 
+                  : "Create a new category for your products."}
+              </DialogDescription>
             </DialogHeader>
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="categoryName">Category name</Label>
-              <Input
-                id="categoryName"
-                type="text"
-                className="w-[412px]"
-                placeholder="Type category name..."
-                onChange={(e) => setNewCategory(e.target.value)}
-                required
-                pattern="[A-Za-z0-9\s]+"
-              />
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Name*
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="col-span-3"
+                  placeholder="Enter category name"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-4 items-start gap-4">
+                <Label htmlFor="description" className="text-right pt-2">
+                  Description
+                </Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  className="col-span-3"
+                  placeholder="Enter category description (optional)"
+                  rows={3}
+                />
+              </div>
             </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button
-                  className="bg-black text-white duration-200 border shadow-none"
-                  type="submit"
-                
-                >
-                  Add category
-                </Button>
-              </DialogClose>
+            <DialogFooter className="flex justify-between">
+              <Button variant="outline" onClick={() => {
+                resetForm();
+                setDialogOpen(false);
+              }}>
+                Cancel
+              </Button>
+              <Button onClick={handleSubmit} disabled={submitting}>
+                {submitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {editMode ? "Updating..." : "Adding..."}
+                  </>
+                ) : (
+                  editMode ? "Update Category" : "Add Category"
+                )}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
+      </div>
+
+      {/* Categories List */}
+      <div className="grid gap-6">
+        {loading ? (
+          <Card>
+            <CardContent className="p-6 flex justify-center items-center h-32">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </CardContent>
+          </Card>
+        ) : categories.length > 0 ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {categories.map((category) => (
+              <Card key={category.id} className="overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="p-6">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-lg font-semibold">{category.name}</h3>
+                        {category.description && (
+                          <p className="text-gray-500 text-sm mt-1 line-clamp-2">
+                            {category.description}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex gap-1">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => handleEdit(category)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          onClick={() => setConfirmDeleteId(category.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-500">
+                          {category.products?.length || 0} products
+                        </span>
+                        <Link href={`/admin/products?category=${category.id}`}>
+                          <Button variant="link" size="sm" className="h-8 px-2">
+                            View Products
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Delete Confirmation */}
+                  {confirmDeleteId === category.id && (
+                    <div className="p-4 bg-red-50 border-t border-red-100 flex justify-between items-center">
+                      <p className="text-sm text-red-700">
+                        Delete this category?
+                      </p>
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="ghost"
+                          onClick={() => setConfirmDeleteId(null)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="destructive"
+                          onClick={() => handleDelete(category.id)}
+                        >
+                          <Check className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Card>
+            <CardContent className="p-6 text-center">
+              <p className="text-gray-500 mb-4">No categories found</p>
+              <Button onClick={() => setDialogOpen(true)}>
+                <Plus className="w-4 h-4 mr-2" /> Add Your First Category
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

@@ -28,29 +28,52 @@ export default function CategoryComp() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <HomeHeader />
-      <div className="flex items-start flex-col md:flex-row p-4 2xl:mx-20 xl:mx-0 lg:mx-0 md:mx-0 sm:mx-0">
-     <CategoryFilterSide/>
-      
-        <div className="flex flex-wrap justify-center md:grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 2xl:mx-20 xl:mx-0s lg:mx-0 md:mx-0 sm:mx-0 gap-10 p-4 w-full">
-
-        { allProducts.map((product: any) => (
-          <Link href={`/productDetail/${product.id}`} key={product.id}>  
-          <div key={product.id} className="group bg-white w-[300px] h-[250px]  rounded-xl border  p-3 flex flex-col items-center relative overflow-hidden transition-all duration-300 ease-in-out hover:h-[300px]">
-            <img src={product.image} width={130} height={130} alt="T-shirt" />
-            <Reveal className="mt-5 text-center font-semibold text-gray-800">
-            {product.name}
-            </Reveal>
-            <Reveal className="my-1 text-lg font-bold text-gray-700">{product.price}</Reveal>
-            <div className="absolute bottom-0 w-full flex justify-center">
-              <Button className="opacity-0 text-lg translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-in-out w-full h-[50px] rounded-bl-xl rounded-br-xl !rounded-t-none">
-                Add to Cart
-              </Button>
-            </div>
+      <div className="mt-24 pt-4 pb-16 max-w-7xl mx-auto w-full">
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 px-6">Shop Collection</h1>
+        
+        <div className="flex flex-col md:flex-row gap-6 px-4">
+          <div className="md:w-1/4 w-full">
+            <CategoryFilterSide/>
           </div>
-          </Link>
-              ))   }
-
-
+          
+          <div className="md:w-3/4 w-full">
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="bg-white rounded-xl border p-4 flex flex-col items-center h-[300px] shadow-sm">
+                    <div className="w-full h-[180px] bg-gray-100 animate-pulse rounded-lg mb-4"></div>
+                    <div className="w-3/4 h-5 bg-gray-100 animate-pulse rounded mb-2"></div>
+                    <div className="w-1/3 h-6 bg-gray-100 animate-pulse rounded"></div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+                {allProducts.map((product: any) => (
+                  <Link href={`/productDetail/${product.id}`} key={product.id} className="transform transition-transform hover:scale-[1.02]">
+                    <div className="group bg-white h-[300px] rounded-xl border shadow-sm p-4 flex flex-col items-center relative overflow-hidden transition-all duration-300 ease-in-out">
+                      <div className="w-full h-[180px] flex items-center justify-center overflow-hidden rounded-lg bg-gray-50">
+                        <img 
+                          src={product.image} 
+                          alt={product.name} 
+                          className="object-contain h-full w-full p-2 transition-transform duration-700 ease-in-out group-hover:scale-110"
+                        />
+                      </div>
+                      <div className="mt-4 w-full text-center">
+                        <h3 className="font-semibold text-gray-800 truncate">{product.name}</h3>
+                        <p className="mt-1 text-lg font-bold text-gray-900">₮{product.price}</p>
+                      </div>
+                      <div className="absolute bottom-0 w-full">
+                        <Button className="opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-in-out w-full rounded-t-none rounded-b-xl shadow-lg bg-black text-white hover:bg-gray-800">
+                          View Product
+                        </Button>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <Footer />

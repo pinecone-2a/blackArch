@@ -1,41 +1,105 @@
 import Link from "next/link";
 import React from "react";
+import { Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface Hit {
   name: string;
   description: string;
   image: string;
   objectId: string;
-  id: string
+  id: string;
+  price?: number;
+  rating?: number;
+  discount?: number;
+  category?: string;
 }
 
 const HitComponent = ({ hit }: { hit: Hit }) => {
+  // Calculate discount percentage if available
+  const discountPercent = hit.discount ? Math.round(hit.discount) : null;
+
+  // Format price with currency
+  const formattedPrice = hit.price ? `${hit.price}₮` : "";
+  
+  // Calculate original price if there's a discount
+  const originalPrice = hit.price && hit.discount ? 
+    Math.round(hit.price / (1 - hit.discount / 100)) : null;
+
+  // Render stars based on rating
+  const renderStars = (rating: number = 4) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    
+    for (let i = 0; i < 5; i++) {
+      if (i < fullStars) {
+        stars.push(
+          <Star key={i} className="w-3 h-3 fill-yellow-500 text-yellow-500" />
+        );
+      } else {
+        stars.push(
+          <Star key={i} className="w-3 h-3 text-yellow-500" />
+        );
+      }
+    }
+    
+    return <div className="flex">{stars}</div>;
+  };
+
   return (
-    <Link href={`/productDetail/${hit.id}`} > 
-    <div className="flex items-center p-4 bg-white hover:bg-gray-50 transition-colors duration-200 border-b border-gray-200 space-x-4 z-9999">
-      <div className="shrink-0">
-        <img 
-          className="h-16 w-16 object-cover rounded-lg shadow-md" 
-          src={hit.image} 
-          alt={`${hit.name} image`} 
-        />
+    <Link href={`/productDetail/${hit.id}`} className="block"> 
+      <div className="flex items-start p-4 bg-white hover:bg-gray-50 transition-colors duration-200 border-b border-gray-200 gap-4">
+        <div className="shrink-0 relative">
+          <img 
+            className="h-24 w-24 object-cover rounded-lg shadow-sm" 
+            src={hit.image} 
+            alt={`${hit.name} product image`} 
+          />
+          {discountPercent && (
+            <Badge variant="destructive" className="absolute top-1 right-1 text-xs">
+              {discountPercent}% OFF
+            </Badge>
+          )}
+        </div>
+        
+        <div className="flex-grow">
+          <h3 className="text-base font-semibold text-gray-900 line-clamp-1 mb-1">
+            {hit.name}
+          </h3>
+          
+          {hit.category && (
+            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full inline-block mb-1.5">
+              {hit.category}
+            </span>
+          )}
+          
+          <p className="text-sm text-gray-600 line-clamp-2 mb-1.5">
+            {hit.description}
+          </p>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              {hit.rating && renderStars(hit.rating)}
+              {hit.rating && <span className="text-xs text-gray-500">{hit.rating}/5</span>}
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-gray-900">{formattedPrice}</span>
+              {originalPrice && (
+                <span className="text-xs text-gray-400 line-through">{originalPrice}₮</span>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        <div className="shrink-0 self-center ml-2">
+          <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
       </div>
-      <div className="flex-grow max-w-1/2">
-        <h3 className="text-lg font-bold text-gray-800 mb-1">{hit.name}</h3>
-        <p className="text-sm text-gray-600 line-clamp-2">{hit.description}</p>
-      </div>
-      <div>
-        <button 
-          className="px-3 py-1 bg-black text-white rounded-md hover:bg-blue-600 transition-colors text-sm flex h-8 justify-center items-center"
-          onClick={() => {
-            // Add any action you want when the button is clicked
-            console.log(`Clicked on ${hit.name}`);
-          }}
-        >
-          View Details
-        </button>
-      </div>
-    </div>
     </Link>
   );
 };
