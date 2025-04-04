@@ -215,7 +215,7 @@ export default function Cart() {
                   боломжтой.
                 </p>
 
-                <Link href="/payment">
+                <Link href="/cart/payment">
                   <Button className="w-full mt-6 py-6 bg-black hover:bg-gray-800 rounded-xl text-lg">
                     Үргэлжлүүлэх
                   </Button>
