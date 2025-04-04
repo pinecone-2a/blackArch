@@ -117,7 +117,7 @@ export default function HomePage() {
 
           <div className="mt-10 flex justify-center lg:justify-start">
             <TransitionLink href="/category">
-              <Button className="w-[300px] flex h-[40px] rounded-2xl py-3 text-lg bg-white text-black  shadow-2xl border hover:text-white xl:mt-[100px]">
+              <Button className="w-[300px] flex h-[40px] rounded-2xl py-3 text-lg bg-white text-black  shadow-2xl border hover:text-black xl:mt-[100px]">
                 Shop Now
               </Button>
             </TransitionLink>
