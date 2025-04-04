@@ -1,8 +1,8 @@
 import prisma from "@/lib/connect";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  const id = params.id;
+export const GET = async (req: NextRequest, { params }: { params: Promise< { id: string }> }) => {
+  const {id} = await params;
 
   try {
     if (!id) {
@@ -36,8 +36,8 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
   }
 };
 
-export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  const id = params.id;
+export const PUT = async (req: NextRequest, { params }: { params: Promise< { id: string }> }) => {
+  const {id} =  await params;
 
   try {
     if (!id) {
@@ -68,8 +68,8 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
   }
 };
 
-export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  const id = params.id;
+export const DELETE = async (req: NextRequest, { params }: { params: Promise <{ id: string } >}) => {
+  const {id} = await params;
 
   try {
     if (!id) {
