@@ -28,7 +28,8 @@ export default function CategoryFilterSide() {
       initial={{ height: 70 }}
       animate={{ height: isFilterVisible ? "auto" : 70 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="max-w-[375px]  overflow-hidden  w-full border-2 rounded-3xl my-6 p-5 mx-auto sm:w-[90%] md:w-[80%] lg:w-[60%] xl:w-[40%] ">
+      className="max-w-[375px]  overflow-hidden  w-full border-2 rounded-3xl my-6 p-5 mx-auto sm:w-[90%] md:w-[80%] lg:w-[60%] xl:w-[40%] "
+    >
       <div className="flex items-center justify-between mb-4">
         <h1 className="font-bold text-2xl">Filters</h1>
         <SlidersHorizontal
@@ -42,7 +43,8 @@ export default function CategoryFilterSide() {
           <div className="mt-4">
             <div
               className="flex items-center justify-between cursor-pointer"
-              onClick={() => toggleSection("type")}>
+              onClick={() => toggleSection("type")}
+            >
               <h1 className="font-bold text-xl">Type</h1>
               {openSections.type ? <ChevronUp /> : <ChevronDown />}
             </div>
@@ -53,7 +55,8 @@ export default function CategoryFilterSide() {
                 opacity: openSections.type ? 1 : 0,
               }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden">
+              className="overflow-hidden"
+            >
               <div className="flex flex-col text-lg font-medium gap-2 mt-2">
                 {["T-shirts", "Shirts", "Jeans", "Shorts"].map((item) => (
                   <label key={item} className="flex justify-between mx-1 gap-2">
@@ -69,7 +72,8 @@ export default function CategoryFilterSide() {
           <div>
             <div
               className="flex items-center justify-between cursor-pointer"
-              onClick={() => toggleSection("price")}>
+              onClick={() => toggleSection("price")}
+            >
               <h1 className="font-bold text-xl">Price</h1>
               {openSections.price ? <ChevronUp /> : <ChevronDown />}
             </div>
@@ -80,7 +84,8 @@ export default function CategoryFilterSide() {
                 opacity: openSections.price ? 1 : 0,
               }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden">
+              className="overflow-hidden"
+            >
               <div>
                 <div className="flex items-center justify-center gap-3 mt-3">
                   <Input className="w-[85px] h-[40px]" placeholder="$0" />
@@ -98,7 +103,8 @@ export default function CategoryFilterSide() {
           <div>
             <div
               className="flex items-center my-5 justify-between cursor-pointer"
-              onClick={() => toggleSection("colors")}>
+              onClick={() => toggleSection("colors")}
+            >
               <h1 className="font-bold text-xl">Colors</h1>
               {openSections.colors ? <ChevronUp /> : <ChevronDown />}
             </div>
@@ -109,7 +115,8 @@ export default function CategoryFilterSide() {
                 opacity: openSections.colors ? 1 : 0,
               }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden">
+              className="overflow-hidden"
+            >
               <div className="flex gap-2 flex-wrap mt-3">
                 {[
                   "#8B4513",
@@ -133,7 +140,8 @@ export default function CategoryFilterSide() {
           <div>
             <div
               className="flex items-center justify-between cursor-pointer"
-              onClick={() => toggleSection("dressStyle")}>
+              onClick={() => toggleSection("dressStyle")}
+            >
               <h1 className="font-bold text-xl">Dress Style</h1>
               {openSections.dressStyle ? <ChevronUp /> : <ChevronDown />}
             </div>
@@ -144,12 +152,14 @@ export default function CategoryFilterSide() {
                 opacity: openSections.dressStyle ? 1 : 0,
               }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden">
+              className="overflow-hidden"
+            >
               <div className="flex flex-col text-lg font-medium gap-2 mt-2">
                 {["Casual", "Formal", "Party", "Sport"].map((style) => (
                   <label
                     key={style}
-                    className="flex justify-between mx-1 gap-2">
+                    className="flex justify-between mx-1 gap-2"
+                  >
                     {style}
                     <Checkbox />
                   </label>
