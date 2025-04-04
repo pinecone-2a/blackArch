@@ -1,63 +1,62 @@
-import { Github, Twitter, Linkedin, Slack } from "lucide-react";
-import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Facebook, Instagram, Youtube } from "lucide-react";
 import Lottie from "lottie-react";
-import mailAnimation from "./mailAnimation.json"
+import facebook from "./facebook.json";
+import instagram from "./instagram.json";
+import youtube from "./youtube.json";
 
-export default function Footer() {
+export default function MinimalistFooter() {
   return (
-    <div className="w-full mx-auto bg-black text-white py-8">
-      <div className="w-[90%] md:w-[80%] max-w-[1200px] mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div className="w-full md:w-auto flex flex-col items-start">
-            <div className="flex items-center gap-2 mb-4">
-              <Image src="/blacklogo.png" width={40} height={40} alt="logo" />
-              <p className="text-2xl font-bold">Transparent</p>
-            </div>
-            <div className="flex gap-3">
-              {[Github, Twitter, Linkedin, Slack].map((Icon, index) => (
-                <div
-                  key={index}
-                  className="flex justify-center items-center w-10 h-10 rounded-md border bg-[#303030] hover:bg-[#404040] transition-all duration-300"
-                >
-                  <Icon size={20} />
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="w-full md:w-[500px] bg-[#262626] border p-5 md:p-6 rounded-2xl">
-            <p className="text-sm text-gray-300">
-              Sign up for our newsletter and join the Transparent community.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center gap-3 mt-4">
-              <Input
-                className="bg-[#1f1f1f] rounded-2xl text-white p-3 w-full"
-                placeholder="Enter your email..."
-              />
-              <Button className="rounded-2xl bg-white text-black hover:bg-gray-200 transition-all duration-300 w-full sm:w-auto">
-                Subscribe
-              </Button>
-            </div>
-          </div>
+    <footer className="bg-black text-white py-8 px-6">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between text-center md:text-left space-y-6 md:space-y-0 h-300">
+        
+   
+        <div className="flex items-center space-x-2">
+          <img src="/authlogo.jpg" className="w-8 h-8 text-3xl" />
+          <h2 className="text-lg font-semibold tracking-wide">
+            Pineshop
+          </h2>
         </div>
-        <div className="border-t border-gray-600 my-6"></div>
-        <div className="flex flex-col md:flex-row justify-between text-gray-400 text-sm text-center md:text-left">
-          <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-            <p>© 2025 pineshop</p>
-            <p className="cursor-pointer hover:text-white transition">
-              Terms of Service
-            </p>
-            <p className="cursor-pointer hover:text-white transition">
-              Privacy & Cookies Policy
-            </p>
-          </div>
-          <p className="mt-4 md:mt-0 flex gap-1">
-            hello@pineshop
-            <Lottie animationData={mailAnimation} style={{ width: 20, height: 20 }} />
-            </p>
+
+      
+        <div className="flex space-x-6">
+          <a
+            href="#"
+            className="text-gray-400 hover:text-[#3b5998] transition"
+          >
+             <Lottie
+                  animationData={facebook}
+                  style={{ width: 100, height: 100 }}
+                  onClick={() => window.open("https://www.facebook.com/", "_blank")}
+                />
+          </a>
+          <a
+            href="#"
+            className="text-gray-400 hover:text-[#C13584] transition"
+          >
+             <Lottie
+                  animationData={instagram}
+                  style={{ width: 100, height: 100 }}
+                  onClick={() => window.open("https://www.instagram.com/", "_blank")}
+                />
+          </a>
+          <a
+            href="#"
+            className="text-gray-400 hover:text-[#3f83fb] transition"  
+          >
+            <Lottie
+                  animationData={youtube}
+                  style={{ width: 100, height: 100 }}
+                  onClick={() => window.open("https://www.youtube.com/watch?v=LPTlvQ1Zet0", "_blank")}
+                />
+          </a>
         </div>
+
+    
+        <p className="text-white text-5xl text-sm">
+          © 2025 Pineshop. All rights reserved.
+        </p>
+
       </div>
-    </div>
+    </footer>
   );
 }

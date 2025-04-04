@@ -6,11 +6,15 @@ import Template from "../_components/template";
 
 export default function CartPage() {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Template>
-        <Navbar />
-        <Cart />
-        <Footer />
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <div className="flex-grow">
+            <Cart />
+          </div>
+          <Footer />
+        </div>
       </Template>
     </div>
   );
