@@ -34,9 +34,6 @@ import {
 
 
 
-import Lottie from "lottie-react";
-
-
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);

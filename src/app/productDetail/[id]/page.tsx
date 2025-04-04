@@ -288,7 +288,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
             <div className="w-full overflow-x-auto">
                 <div className="flex gap-6 mt-6 pl-4">
                     {isLoading ? (
-                        // Skeleton loading for recommended products
+                        
                         [1, 2, 3, 4, 5].map((_, i) => (
                             <div key={i} className="flex flex-col min-w-[220px] sm:min-w-[250px]">
                                 <Skeleton className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] rounded-xl" />
@@ -298,7 +298,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                             </div>
                         ))
                     ) : (
-                        // Actual recommended products
+                        
                         [1, 2, 3, 4, 5].map((_, i) => (
                             <div
                                 key={i}
