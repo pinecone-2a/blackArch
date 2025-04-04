@@ -15,7 +15,6 @@ export default function CategoryFilterSide() {
   });
   const [isFilterVisible, setIsFilterVisible] = useState(true);
 
-  // State to hold the filter values
   const [selectedFilters, setSelectedFilters] = useState({
     type: [] as string[],
     price: { min: 0, max: 500 },
@@ -23,17 +22,14 @@ export default function CategoryFilterSide() {
     dressStyle: [] as string[],
   });
 
-  // Toggle the visibility of the filter section
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
-  // Toggle the filter visibility
   const toggleFilterVisibility = () => {
     setIsFilterVisible((prev) => !prev);
   };
 
-  // Handle filter value change
   const handleCheckboxChange = (category: string, value: string) => {
     setSelectedFilters((prev) => {
       const updatedCategory = prev[category as keyof typeof prev];
@@ -50,7 +46,6 @@ export default function CategoryFilterSide() {
     });
   };
 
-  // Handle price range change
   const handlePriceChange = (min: string, max: string) => {
     setSelectedFilters((prev) => ({
       ...prev,
@@ -61,10 +56,8 @@ export default function CategoryFilterSide() {
     }));
   };
 
-  // Apply the filter logic (you would use this to filter your product data)
   const applyFilters = () => {
     console.log("Filters applied:", selectedFilters);
-    // You would use selectedFilters here to filter your clothes data
   };
 
   return (

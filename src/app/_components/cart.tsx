@@ -53,6 +53,20 @@ export default function Cart() {
   const discountAmount = subtotal * discount;
   const total = subtotal - discountAmount + deliveryFee;
 
+  function updateQuantity(productId: string, action: string): void {
+    setCart((prevCart) => {
+      return prevCart.map((item) => {
+        if (item.productId === productId) {
+          if (action === "increase") {
+            return { ...item, quantity: item.quantity + 1 };
+          } else if (action === "decrease" && item.quantity > 1) {
+            return { ...item, quantity: item.quantity - 1 };
+          }
+        }
+        return item;
+      });
+    });
+  }
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 mt-20">
       {cart.length > 0 ? (
@@ -89,13 +103,24 @@ export default function Cart() {
                     </div>
                     <div className="flex items-center justify-between mt-3">
                       <div className="flex items-center">
-                        <button className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100">
+                        <button
+                          className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100"
+                          onClick={() =>
+                            updateQuantity(item.productId, "decrease")
+                          }
+                        >
                           -
                         </button>
                         <span className="mx-3 font-medium">
                           {item.quantity}
                         </span>
-                        <button className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100">
+
+                        <button
+                          className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100"
+                          onClick={() =>
+                            updateQuantity(item.productId, "increase")
+                          }
+                        >
                           +
                         </button>
                       </div>
@@ -143,12 +168,12 @@ export default function Cart() {
                 </h3>
                 <div className="space-y-3 text-gray-600">
                   <div className="flex justify-between items-center">
-                    <span>Subtotal ({cart.length} items)</span>
+                    <span>Тоо болон үнэ: ({cart.length} items)</span>
                     <span className="font-medium">₮{subtotal.toFixed(2)}</span>
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between items-center text-green-600">
-                      <span>Discount ({discount * 100}%)</span>
+                      <span>Хөнгөлөлт ({discount * 100}%)</span>
                       <span>- ₮{discountAmount.toFixed(2)}</span>
                     </div>
                   )}
@@ -160,7 +185,7 @@ export default function Cart() {
                   </div>
                   <div className="border-t my-3 pt-3"></div>
                   <div className="flex justify-between text-lg font-bold">
-                    <span>Total</span>
+                    <span>Нийт</span>
                     <span>₮{total.toFixed(2)}</span>
                   </div>
                 </div>
