@@ -72,11 +72,12 @@ export default function HomePage() {
 
   return (
     <div>
-      <HomeHeader />
+      <div className="sticky"> <HomeHeader /> </div>
+     
 
       <div className="py-48 bg-black flex flex-wrap w-full 2xl:w-[100%] mx-auto justify-between items-end px-6 lg:px-20 relative  ">
         <video
-          src="video2.mp4"
+          src="video.mp4"
           autoPlay
           loop
           muted={isMuted}
