@@ -130,7 +130,7 @@ export default function Cart() {
                     >
                       <path d="m15 18-6-6 6-6" />
                     </svg>
-                    Continue Shopping
+                    Буцах
                   </Button>
                 </Link>
               </div>
@@ -139,7 +139,7 @@ export default function Cart() {
             <div className="lg:w-1/3 w-full mt-8 lg:mt-0">
               <div className="bg-white border shadow-sm p-6 rounded-xl sticky top-28">
                 <h3 className="text-xl font-bold border-b pb-4 mb-4">
-                  Order Summary
+                  Төлбөрийн мэдээлэл
                 </h3>
                 <div className="space-y-3 text-gray-600">
                   <div className="flex justify-between items-center">
@@ -153,7 +153,7 @@ export default function Cart() {
                     </div>
                   )}
                   <div className="flex justify-between items-center">
-                    <span>Delivery Fee</span>
+                    <span>Хүргэлтийн төлбөр</span>
                     <span className="font-medium">
                       ₮{deliveryFee.toFixed(2)}
                     </span>
@@ -192,7 +192,7 @@ export default function Cart() {
 
                 <Link href="/payment">
                   <Button className="w-full mt-6 py-6 bg-black hover:bg-gray-800 rounded-xl text-lg">
-                    Proceed to Checkout
+                    Үргэлжлүүлэх
                   </Button>
                 </Link>
               </div>
@@ -207,11 +207,12 @@ export default function Cart() {
             </div>
             <h1 className="font-extrabold text-3xl">Таны сагс хоосон байна.</h1>
             <p className="mt-3 text-gray-500 mb-8">
-              Looks like you haven't added anything to your cart yet
+              Одоогийн байдлаар таны сагсанд ямар нэгэн бүтээгдэхүүн байхгүй
+              байна.
             </p>
             <Link href="/category">
               <Button className="rounded-xl px-10 py-6 bg-black hover:bg-gray-800 text-white text-lg">
-                Explore Products
+                Бүтээгдэхүүн үзэх
               </Button>
             </Link>
           </div>
