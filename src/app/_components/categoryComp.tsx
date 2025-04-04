@@ -48,7 +48,7 @@ export default function CategoryComp() {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
                 {allProducts.map((product: any) => (
                   <Link href={`/productDetail/${product.id}`} key={product.id} className="transform transition-transform hover:scale-[1.02]">
                     <div className="group bg-white h-[300px] rounded-xl border shadow-sm p-4 flex flex-col items-center relative overflow-hidden transition-all duration-300 ease-in-out">
