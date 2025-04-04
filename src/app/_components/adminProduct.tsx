@@ -128,18 +128,36 @@ export default function AdminProductsComp() {
     };
     
 
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
-        if (files && files[0] && files[0].type.startsWith("image/")) {
-            const file = files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(reader.result as string);
+        if (!files || !files[0] || !files[0].type.startsWith("image/")) return;
+    
+        const file = files[0];
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET as string); // Replace with your Cloudinary preset
+    
+        try {
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
+                method: "POST",
+                body: formData,
+            });
+    
+            const data = await res.json();
+    
+            if (data.secure_url) {
+                setImage(data.secure_url); 
                 setCroppedImage(null);
-            };
-            reader.readAsDataURL(file);
+                toast.success("Image uploaded successfully!");
+            } else {
+                throw new Error("Upload failed");
+            }
+        } catch (error) {
+            console.error("Error uploading to Cloudinary:", error);
+            toast.error("Failed to upload image.");
         }
     };
+    
     
 
     const getCroppedImage = async () => {

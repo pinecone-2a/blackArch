@@ -13,14 +13,10 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Header from '@/app/_components/homeHeader';
 import { Skeleton } from "@/components/ui/skeleton";
-import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { FC } from 'react';
 import { use } from "react"
-import { useContext } from "react";
-import { UserContext } from "@/lib/userContext";
-import { InstantSearch } from 'react-instantsearch';
 import { LookingSimilar } from 'react-instantsearch';
-import { toast, Toaster } from 'sonner';
+import { toast, Toaster } from 'sonner'
 
 import { Check } from 'lucide-react';
 
