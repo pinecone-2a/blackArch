@@ -30,7 +30,7 @@ export default function Cart() {
   const [cart, setCart] = useState<CartItem[]>(initialCartState);
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
-  const deliveryFee = 15;
+  const deliveryFee = 5000;
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -176,7 +176,7 @@ export default function Cart() {
                     />
                     <Button
                       onClick={() =>
-                        setDiscount(promoCode === "Pineshop" ? 0.2 : 0)
+                        setDiscount(promoCode === "Pineshop" ? 0.05 : 0)
                       }
                       variant="outline"
                       size="sm"
