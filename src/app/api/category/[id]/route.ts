@@ -1,11 +1,11 @@
 import prisma from "@/lib/connect";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  const id = params.id;
+export const GET = async (req: NextRequest, { params }: { params: Promise< { id: string }> }) => {
+  const {id} = await params;
 
   try {
-    if (\!id) {
+    if (!id) {
       return NextResponse.json(
         { error: "Missing category ID" },
         { status: 400 }
@@ -19,7 +19,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
       },
     });
 
-    if (\!category) {
+    if (!category) {
       return NextResponse.json(
         { error: "Category not found" },
         { status: 404 }
@@ -36,11 +36,11 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
   }
 };
 
-export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  const id = params.id;
+export const PUT = async (req: NextRequest, { params }: { params: Promise< { id: string }> }) => {
+  const {id} =  await params;
 
   try {
-    if (\!id) {
+    if (!id) {
       return NextResponse.json(
         { error: "Missing category ID" },
         { status: 400 }
@@ -68,11 +68,11 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
   }
 };
 
-export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  const id = params.id;
+export const DELETE = async (req: NextRequest, { params }: { params: Promise <{ id: string } >}) => {
+  const {id} = await params;
 
   try {
-    if (\!id) {
+    if (!id) {
       return NextResponse.json(
         { error: "Missing category ID" },
         { status: 400 }

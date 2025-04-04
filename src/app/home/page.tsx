@@ -18,15 +18,12 @@ import { useContext } from "react";
 import { UserContext } from "@/lib/userContext";
 import breakdance from "./breakdance.json"
 import muted1 from "./mute1.json"
-<<<<<<< HEAD
-import Lottie from "lottie-react";
-=======
+
 import dynamic from "next/dynamic";
 
 // Dynamically import Lottie with no SSR
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 import { Skeleton } from "@/components/ui/skeleton";
->>>>>>> main
 
 
 export type Product = {
@@ -44,7 +41,11 @@ export default function HomePage() {
   const [newArrival, setNewArrival] = useState<Product[]>([])
   const { data, loading } = useFetchData("products/new")
   console.log(data);
-  
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (Array.isArray(data)) {
@@ -68,13 +69,6 @@ export default function HomePage() {
   };
 
   const [isMuted, setIsMuted] = useState(true);
-<<<<<<< HEAD
-=======
-
-  const toggleMute = () => {
-    setIsMuted(!isMuted);
-  };
->>>>>>> main
 
   const toggleMute = () => {
     setIsMuted(!isMuted);
@@ -82,9 +76,10 @@ export default function HomePage() {
 
   return (
     <div>
-      <HomeHeader />
+      <div className="sticky inset-0 z-30">  <HomeHeader /> </div>
+     
 
-      <div className="py-48 bg-black flex flex-wrap w-full 2xl:w-[100%] mx-auto justify-between items-end px-6 lg:px-20 relative  ">
+      <div className="py-48 bg-black flex flex-wrap w-full 2xl:w-[100%] mx-auto justify-between items-end px-6 lg:px-20 relative -z-0">
       <video
       src="video2.mp4"
       autoPlay
@@ -97,22 +92,21 @@ export default function HomePage() {
     <div className="absolute top-0 -right-60 w-[550px] h-full bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.9)] to-transparent z-20 pointer-events-none" />
   </div>
    {/* <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white via-[rgba(185,185,185,0.1)] to-white z-10 pointer-events-none" /> */}
+    {mounted && 
     
-<button
+    <button
         onClick={toggleMute}
         className="absolute top-4 right-4 p-2  text-white rounded-full  w-[50px] h-[50px]"
       >
-<<<<<<< HEAD
-        {!isMuted ?<Lottie animationData={breakdance} style={{ width: 50, height: 50,}} className="rounded-full overflow-hidden"/>:<div className="bg-white h-[50px] w-[50px] rounded-full"> <Lottie animationData={muted1} style={{ width: 50, height: 50, borderRadius:50}} /></div>}
-=======
         {typeof window !== 'undefined' && (!isMuted ? 
   <Lottie animationData={breakdance} style={{ width: 50, height: 50}} className="rounded-full overflow-hidden"/> : 
   <div className="bg-white h-[50px] w-[50px] rounded-full">
     <Lottie animationData={muted1} style={{ width: 50, height: 50, borderRadius:50}} />
   </div>
 )}
->>>>>>> main
       </button>
+    }
+
 
 
 

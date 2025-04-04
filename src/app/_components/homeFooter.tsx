@@ -5,11 +5,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 import mailAnimation from "./mailAnimation.json"
+import { useEffect, useState } from "react";
 
 // Dynamically import Lottie with no SSR
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 export default function Footer() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+
+
+
   return (
     <div className="w-full mx-auto bg-black text-white py-16">
       <div className="w-[90%] md:w-[80%] max-w-[1200px] mx-auto">
@@ -31,9 +41,9 @@ export default function Footer() {
             </div>
           </div>
           <div className="w-full md:w-[500px] bg-[#262626] border p-5 md:p-6 rounded-2xl">
-            <p className="text-sm text-gray-300">
+            <div className="text-sm text-gray-300">
               Sign up for our newsletter and join the Transparent community.
-            </p>
+            </div>
             <div className="flex flex-col sm:flex-row items-center gap-3 mt-4">
               <Input
                 className="bg-[#1f1f1f] rounded-2xl text-white p-3 w-full"
@@ -56,12 +66,16 @@ export default function Footer() {
               Privacy & Cookies Policy
             </p>
           </div>
-          <p className="mt-4 md:mt-0 flex gap-1">
-            hello@pineshop
-            {typeof window !== 'undefined' && (
-              <Lottie animationData={mailAnimation} style={{ width: 20, height: 20 }} />
-            )}
-            </p>
+          {mounted && 
+          
+          <div className="mt-4 md:mt-0 flex gap-1">
+          hello@pineshop
+          {typeof window !== 'undefined' && (
+            <Lottie animationData={mailAnimation} style={{ width: 20, height: 20 }} />
+          )}
+          </div>
+          }
+         
         </div>
       </div>
     </div>
