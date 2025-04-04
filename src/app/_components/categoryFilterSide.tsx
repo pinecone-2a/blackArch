@@ -65,7 +65,7 @@ export default function CategoryFilterSide() {
       initial={{ height: 70 }}
       animate={{ height: isFilterVisible ? "auto" : 70 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="overflow-hidden w-full border bg-white rounded-xl shadow-sm p-5 sticky top-28"
+      className="overflow-hidden w-full border bg-white rounded-xl shadow-sm p-5 sticky top-28 mt-4"
     >
       <div className="flex items-center justify-between mb-4">
         <h1 className="font-bold text-2xl">Filters</h1>

@@ -68,7 +68,7 @@ export default function Cart() {
     });
   }
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 mt-20">
+    <div className="max-w-6xl mx-auto px-4 py-8 mt-24">
       {cart.length > 0 ? (
         <>
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
@@ -168,7 +168,7 @@ export default function Cart() {
                 </h3>
                 <div className="space-y-3 text-gray-600">
                   <div className="flex justify-between items-center">
-                    <span>Тоо болон үнэ: ({cart.length} items)</span>
+                    <span>Тоо болон үнэ: ({cart.length})</span>
                     <span className="font-medium">₮{subtotal.toFixed(2)}</span>
                   </div>
                   {discount > 0 && (
