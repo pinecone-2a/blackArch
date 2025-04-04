@@ -228,6 +228,7 @@ export default function HomePage() {
 
 
       <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-4 p-6 bg-white">
+
      {loading ? (
        <>
          <Skeleton className="w-full h-[300px] rounded-lg" />
@@ -255,6 +256,7 @@ export default function HomePage() {
          </div>
        </>
      )}
+
         </div>
       </div>
 

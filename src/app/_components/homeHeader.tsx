@@ -28,8 +28,14 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+
 } from "@/components/ui/sheet"
 
+
+
+import { json } from "stream/consumers";
+import Lottie from "lottie-react";
+import shoppingCart from "./shoppingCart.json";
 
 
 export default function Navbar() {
@@ -114,6 +120,8 @@ export default function Navbar() {
               </Link>
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
             </p>
+
+
           </div>
         </div>
 
@@ -143,8 +151,8 @@ export default function Navbar() {
                 reset: "hidden",
               }}
               placeholder="Search..."
-              onKeyDown={(e) => setIsOpen(true)} // Open dropdown on typing
-              onBlur={() => setTimeout(() => setIsOpen(false), 200)} // Close on blur (with delay)
+              onKeyDown={(e) => setIsOpen(true)} 
+              onBlur={() => setTimeout(() => setIsOpen(false), 200)} 
               submitIconComponent={() => (
                 <motion.button
                   whileHover={{ scale: 1.1 }}
@@ -197,6 +205,7 @@ export default function Navbar() {
             </Link>
           </div>
           <Sheet>
+
   <SheetTrigger>
             <div className="lg:hidden">
             <Menu/>
@@ -283,6 +292,7 @@ export default function Navbar() {
     </SheetHeader>
   </SheetContent>
 </Sheet>
+
         </div>
       </nav>
     </div>
