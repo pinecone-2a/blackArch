@@ -24,7 +24,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { json } from "stream/consumers";
 import Lottie from "lottie-react";
 import shoppingCart from "./shoppingCart.json";
 
