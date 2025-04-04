@@ -286,6 +286,7 @@ export default function AdminProductsComp() {
             color: [],
             size: [],
         });
+        setIsDialogOpen(false)
         setImage(null);
         setCroppedImage(null);
         setEditMode(false);
