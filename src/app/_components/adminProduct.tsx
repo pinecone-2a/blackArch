@@ -58,15 +58,12 @@ export default function AdminProductsComp() {
     const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState<{id: string, name: string}[]>([]);
     const [image, setImage] = useState<string | null>(null);
-    const [crop, setCrop] = useState<Crop>({
-        unit: "%",
-        width: 50,
-        height: 50,
-        x: 25,
-        y: 25,
-    });
     const [croppedImage, setCroppedImage] = useState<string | null>(null);
+    const [crop, setCrop] = useState<Crop>({ unit: '%', width: 50, height: 50, x: 0, y: 0 });
     const [imageRef, setImageRef] = useState<HTMLImageElement | null>(null);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+    
+
     const [productForm, setProductForm] = useState({
         name: "",
         description: "",
@@ -130,49 +127,69 @@ export default function AdminProductsComp() {
     
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files;
-        if (files && files[0] && files[0].type.startsWith("image/")) {
-            const file = files[0];
+        const file = event.target.files?.[0];
+        if (file && file.type.startsWith("image/")) {
             const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(reader.result as string);
-                setCroppedImage(null);
-            };
+            reader.onloadend = () => setImage(reader.result as string);
             reader.readAsDataURL(file);
         }
     };
-    
+
+    const onCropComplete = (croppedArea: any, croppedPixels: any) => {
+        setCroppedAreaPixels(croppedPixels);
+    };
+
+    const uploadToCloudinary = async (blob: Blob) => {
+        const formData = new FormData();
+        formData.append("file", blob);
+        formData.append("upload_preset", "unsigned_pineshop");
+
+        try {
+            const res = await fetch("https://api.cloudinary.com/v1_1/dkfnzxaid/image/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await res.json();
+            setCroppedImage(data.secure_url);
+        } catch (error) {
+            console.error("Upload failed:", error);
+        }
+    };
 
     const getCroppedImage = async () => {
         if (!imageRef || !image) return;
-        
+    
         const canvas = document.createElement("canvas");
         const scaleX = imageRef.naturalWidth / imageRef.width;
         const scaleY = imageRef.naturalHeight / imageRef.height;
-        
+    
+        const cropWidth = crop.width ? crop.width * scaleX : 0;
+        const cropHeight = crop.height ? crop.height * scaleY : 0;
+    
+        canvas.width = cropWidth;
+        canvas.height = cropHeight;
+    
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
-        
-        const croppedWidth = crop.width ? crop.width * scaleX : 0;
-        const croppedHeight = crop.height ? crop.height * scaleY : 0;
-        
-        canvas.width = croppedWidth;
-        canvas.height = croppedHeight;
-        
+    
         ctx.drawImage(
             imageRef,
             crop.x * scaleX,
             crop.y * scaleY,
-            croppedWidth,
-            croppedHeight,
+            cropWidth,
+            cropHeight,
             0,
             0,
-            croppedWidth,
-            croppedHeight
+            cropWidth,
+            cropHeight
         );
-        
-        const croppedImageURL = canvas.toDataURL("image/png");
-        setCroppedImage(croppedImageURL);
+    
+        canvas.toBlob(async (blob) => {
+            if (blob) {
+                await uploadToCloudinary(blob);
+            }
+        }, "image/jpeg");
     };
     
 
