@@ -207,7 +207,7 @@ export default function Cart() {
             </div>
             <h1 className="font-extrabold text-3xl">Таны сагс хоосон байна.</h1>
             <p className="mt-3 text-gray-500 mb-8">
-              Looks like you haven't added anything to your cart yet.
+              Looks like you haven't added anything to your cart yet
             </p>
             <Link href="/category">
               <Button className="rounded-xl px-10 py-6 bg-black hover:bg-gray-800 text-white text-lg">
