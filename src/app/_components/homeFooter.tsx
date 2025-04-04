@@ -2,10 +2,12 @@ import { Github, Twitter, Linkedin, Slack } from "lucide-react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Lottie from "lottie-react";
+import mailAnimation from "./mailAnimation.json"
 
 export default function Footer() {
   return (
-    <div className="2xl:w-[80%] mx-auto bg-black text-white py-8">
+    <div className="w-full mx-auto bg-black text-white py-8">
       <div className="w-[90%] md:w-[80%] max-w-[1200px] mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="w-full md:w-auto flex flex-col items-start">
@@ -50,7 +52,10 @@ export default function Footer() {
               Privacy & Cookies Policy
             </p>
           </div>
-          <p className="mt-4 md:mt-0">hello@pineshop</p>
+          <p className="mt-4 md:mt-0 flex gap-1">
+            hello@pineshop
+            <Lottie animationData={mailAnimation} style={{ width: 20, height: 20 }} />
+            </p>
         </div>
       </div>
     </div>

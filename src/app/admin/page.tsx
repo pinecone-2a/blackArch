@@ -5,6 +5,7 @@ import AdminSideBar from "../_components/adminSideBar";
 import AdminHome from "../_components/adminHome";
 import { UserContext, UserContextType } from "@/lib/userContext";
 import { useRouter } from "next/navigation";
+import AdminHeader from "../_components/adminHeader";
 import type { User } from "@/lib/constants/types";
 
 export default function Admin() {
@@ -17,9 +18,13 @@ export default function Admin() {
 
 
   return (
-    <div className="flex bg-black">
-      <AdminSideBar />
-      <AdminHome />
+    <div className="flex min-h-screen bg-[#4c4c4c]">
+      <AdminSideBar  />
+      <div className="flex flex-col flex-1"> 
+        <AdminHeader  />
+        <AdminHome  />
+      </div>
     </div>
   );
+  
 }
