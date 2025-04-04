@@ -18,6 +18,7 @@ import { useContext } from "react";
 import { UserContext } from "@/lib/userContext";
 import breakdance from "./breakdance.json"
 import muted1 from "./mute1.json"
+
 import dynamic from "next/dynamic";
 
 
@@ -40,7 +41,11 @@ export default function HomePage() {
   const [newArrival, setNewArrival] = useState<Product[]>([])
   const { data, loading } = useFetchData("products/new")
   console.log(data);
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (Array.isArray(data)) {
@@ -69,37 +74,39 @@ export default function HomePage() {
     setIsMuted(!isMuted);
   };
 
-
   return (
     <div>
-      <div className="sticky"> <HomeHeader /> </div>
+      <div className="sticky inset-0 z-30">  <HomeHeader /> </div>
      
 
-      <div className="py-48 bg-black flex flex-wrap w-full 2xl:w-[100%] mx-auto justify-between items-end px-6 lg:px-20 relative  ">
-        <video
-          src="video.mp4"
-          autoPlay
-          loop
-          muted={isMuted}
-          className="absolute top-0 right-0 w-full h-full object-cover z-0 md:w-[50%] "
-        />
-        <div className="absolute top-0 left-0 h-full w-[50%] hidden md:block ">
-          <img src="street.jpg" className="h-full w-full object-cover z-0" />
-          <div className="absolute top-0 -right-60 w-[550px] h-full bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.9)] to-transparent z-20 pointer-events-none" />
-        </div>
-        {/* <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white via-[rgba(185,185,185,0.1)] to-white z-10 pointer-events-ne" /> */}
+      <div className="py-48 bg-black flex flex-wrap w-full 2xl:w-[100%] mx-auto justify-between items-end px-6 lg:px-20 relative -z-0">
+      <video
+      src="video2.mp4"
+      autoPlay
+      loop
+      muted={isMuted}
+      className="absolute top-0 right-0 w-full h-full object-cover z-0 md:w-[50%] "
+    />
+   <div className="absolute top-0 left-0 h-full w-[50%] hidden md:block ">
+    <img src="street.jpg" className="h-full w-full object-cover z-0" />
+    <div className="absolute top-0 -right-60 w-[550px] h-full bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.9)] to-transparent z-20 pointer-events-none" />
+  </div>
+   {/* <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white via-[rgba(185,185,185,0.1)] to-white z-10 pointer-events-none" /> */}
+    {mounted && 
+    
+    <button
+        onClick={toggleMute}
+        className="absolute top-4 right-4 p-2  text-white rounded-full  w-[50px] h-[50px]"
+      >
+        {typeof window !== 'undefined' && (!isMuted ? 
+  <Lottie animationData={breakdance} style={{ width: 50, height: 50}} className="rounded-full overflow-hidden"/> : 
+  <div className="bg-white h-[50px] w-[50px] rounded-full">
+    <Lottie animationData={muted1} style={{ width: 50, height: 50, borderRadius:50}} />
+  </div>
+)}
+      </button>
+    }
 
-        <button
-          onClick={toggleMute}
-          className="absolute top-4 right-4 p-2  text-white rounded-full  w-[50px] h-[50px]"
-        >
-          {typeof window !== 'undefined' && (!isMuted ?
-            <Lottie animationData={breakdance} style={{ width: 50, height: 50 }} className="rounded-full overflow-hidden" /> :
-            <div className="bg-white h-[50px] w-[50px] rounded-full">
-              <Lottie animationData={muted1} style={{ width: 50, height: 50, borderRadius: 50 }} />
-            </div>
-          )}
-        </button>
 
 
 
@@ -110,7 +117,7 @@ export default function HomePage() {
 
           <div className="mt-10 flex justify-center lg:justify-start">
             <TransitionLink href="/category">
-              <Button className="w-[300px] flex h-[40px] rounded-2xl py-3 text-lg bg-white text-black  shadow-2xl border hover:text-white xl:mt-[100px]">
+              <Button className="w-[300px] flex h-[40px] rounded-2xl py-3 text-lg bg-white text-black  shadow-2xl border hover:text-black xl:mt-[100px]">
                 Shop Now
               </Button>
             </TransitionLink>

@@ -1,4 +1,6 @@
 "use client";
+
+
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { Menu } from "lucide-react";
@@ -19,8 +21,8 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 
-// Dynamically import Lottie with no SSR
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+
 import {
   Sheet,
   SheetContent,
@@ -40,8 +42,13 @@ import shoppingCart from "./shoppingCart.json";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [cartData, setCartData] = useState<any[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+
   
   useEffect(() => {
+
+    setMounted(true);
     if (typeof window !== 'undefined') {
       const product = localStorage.getItem("cart");
       if (product) {
@@ -68,8 +75,8 @@ export default function Navbar() {
 
   const cartCount = cartData?.length || 0;
   return (
-    <div className="sticky z-30  w-full mx-auto flex px-10 top-0 bg-white border-b pb-4">
-      <nav className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
+    <div className="sticky z-20 w-full mx-auto flex px-10  top-0 bg-white  pb-4">
+      <nav className="bg-red w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
         <span>
           <Link
             href={"/"}
@@ -153,13 +160,13 @@ export default function Navbar() {
               onKeyDown={(e) => setIsOpen(true)} 
               onBlur={() => setTimeout(() => setIsOpen(false), 200)} 
               submitIconComponent={() => (
-                <motion.button
+                <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
                 >
                   <Search className="w-5 h-5 text-gray-700" />
-                </motion.button>
+                </motion.div>
               )}
             />
             <Configure hitsPerPage={6} distinct={true} getRankingInfo={true} />
@@ -189,7 +196,8 @@ export default function Navbar() {
             My Profile
           </Link>
           <div className="relative">
-            <Link href="/cart" className="relative">
+            {
+              mounted &&   <Link href="/cart" className="relative">
               {typeof window !== 'undefined' && (
                 <Lottie
                   animationData={shoppingCart}
@@ -202,6 +210,8 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
+            }
+          
           </div>
           <Sheet>
 

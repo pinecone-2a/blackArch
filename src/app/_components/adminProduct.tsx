@@ -47,6 +47,7 @@ const colors = [
 const sizes = ["XS", "S", "M", "L", "XL", "XXL", "One Size"];
 
 export default function AdminProductsComp() {
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [price, setPrice] = useState(0);
     const [quantity, setQuantity] = useState(1);
     const [products, setProducts] = useState<any[]>([]);
@@ -225,9 +226,9 @@ export default function AdminProductsComp() {
             const productData = {
                 name: productForm.name,
                 description: productForm.description,
-                price: parseInt(productForm.price) , // Convert to cents
+                price: parseInt(productForm.price) ,
                 quantity: parseInt(productForm.quantity),
-                image: croppedImage || "/t-shirt.png", // Default image if none provided
+                image: croppedImage || "/t-shirt.png", 
                 categoryId: productForm.categoryId,
                 color: productForm.color,
                 size: productForm.size,
@@ -285,6 +286,7 @@ export default function AdminProductsComp() {
             color: [],
             size: [],
         });
+        setIsDialogOpen(false)
         setImage(null);
         setCroppedImage(null);
         setEditMode(false);
@@ -294,6 +296,7 @@ export default function AdminProductsComp() {
     const handleEdit = (productId: string) => {
         const productToEdit = products.find(p => p.id === productId);
         if (productToEdit) {
+            
             setEditMode(true);
             setEditProductId(productId);
             setProductForm({
@@ -307,10 +310,11 @@ export default function AdminProductsComp() {
                 size: Array.isArray(productToEdit.size) ? [...productToEdit.size] : [],
             });
             setCroppedImage(productToEdit.image as string);
+            setIsDialogOpen(true);
+
         }
     };
     
-    // Handler for deleting a product
     const handleDelete = async (productId: string) => {
         if (confirm("Are you sure you want to delete this product?")) {
             try {
@@ -331,7 +335,6 @@ export default function AdminProductsComp() {
         }
     };
     
-    // Handle product selection for bulk actions
     const handleSelectProduct = (productId: string, checked: boolean) => {
         if (checked) {
             setSelectedProducts([...selectedProducts, productId]);
@@ -340,7 +343,6 @@ export default function AdminProductsComp() {
         }
     };
     
-    // Handle select all
     const handleSelectAll = (checked: boolean) => {
         if (checked) {
             setSelectedProducts(filteredProducts.map(p => p.id));
@@ -402,7 +404,9 @@ export default function AdminProductsComp() {
         <div className="flex-1 p-6 bg-gray-50">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">Бүтээгдэхүүн</h1>
-                <Dialog>
+              
+
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                         <Button className="gap-2">
                             <Plus className="w-4 h-4" /> Бүтээгдэхүүн нэмэх
@@ -619,6 +623,7 @@ export default function AdminProductsComp() {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
+               
             </div>
             
             <div className="flex flex-col gap-6">
