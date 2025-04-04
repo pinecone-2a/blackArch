@@ -87,7 +87,7 @@ export default function HomePage() {
           <img src="street.jpg" className="h-full w-full object-cover z-0" />
           <div className="absolute top-0 -right-60 w-[550px] h-full bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.9)] to-transparent z-20 pointer-events-none" />
         </div>
-        {/* <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white via-[rgba(185,185,185,0.1)] to-white z-10 pointer-events-none" /> */}
+        {/* <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white via-[rgba(185,185,185,0.1)] to-white z-10 pointer-events-ne" /> */}
 
         <button
           onClick={toggleMute}
