@@ -68,7 +68,7 @@ export default function Navbar() {
 
   const cartCount = cartData?.length || 0;
   return (
-    <div className="fixed z-50 w-full mx-auto flex px-10 top-0 bg-white pb-4 border-b shadow-sm">
+    <div className="sticky z-99  w-full mx-auto flex px-10 top-0 bg-white  pb-4">
       <nav className="bg-white w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
         <span>
           <Link
