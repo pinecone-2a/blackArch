@@ -141,38 +141,6 @@ export default function AdminProductsComp() {
         }
     };
     
-
-    const getCroppedImage = async () => {
-        if (!imageRef || !image) return;
-        
-        const canvas = document.createElement("canvas");
-        const scaleX = imageRef.naturalWidth / imageRef.width;
-        const scaleY = imageRef.naturalHeight / imageRef.height;
-        
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-        
-        const croppedWidth = crop.width ? crop.width * scaleX : 0;
-        const croppedHeight = crop.height ? crop.height * scaleY : 0;
-        
-        canvas.width = croppedWidth;
-        canvas.height = croppedHeight;
-        
-        ctx.drawImage(
-            imageRef,
-            crop.x * scaleX,
-            crop.y * scaleY,
-            croppedWidth,
-            croppedHeight,
-            0,
-            0,
-            croppedWidth,
-            croppedHeight
-        );
-        
-        const croppedImageURL = canvas.toDataURL("image/png");
-        setCroppedImage(croppedImageURL);
-    };
     
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -397,6 +365,38 @@ export default function AdminProductsComp() {
         }
         return 0;
     });
+
+    const getCroppedImage = async () => {
+        if (!imageRef || !image) return;
+        
+        const canvas = document.createElement("canvas");
+        const scaleX = imageRef.naturalWidth / imageRef.width;
+        const scaleY = imageRef.naturalHeight / imageRef.height;
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const croppedWidth = crop.width ? crop.width * scaleX : 0;
+        const croppedHeight = crop.height ? crop.height * scaleY : 0;
+
+        canvas.width = croppedWidth;
+        canvas.height = croppedHeight;
+
+        ctx.drawImage(
+            imageRef,
+            crop.x * scaleX,
+            crop.y * scaleY,
+            croppedWidth,
+            croppedHeight,
+            0,
+            0,
+            croppedWidth,
+            croppedHeight
+        );
+
+        const croppedImageURL = canvas.toDataURL("image/png");
+        setCroppedImage(croppedImageURL);
+    };
 
     return (
         <div className="flex-1 p-6 bg-gray-50">
