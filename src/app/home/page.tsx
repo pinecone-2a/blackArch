@@ -18,7 +18,11 @@ import { useContext } from "react";
 import { UserContext } from "@/lib/userContext";
 import breakdance from "./breakdance.json"
 import muted1 from "./mute1.json"
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic";
+
+// Dynamically import Lottie with no SSR
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 export type Product = {
@@ -88,7 +92,12 @@ export default function HomePage() {
         onClick={toggleMute}
         className="absolute top-4 right-4 p-2  text-white rounded-full  w-[50px] h-[50px]"
       >
-        {!isMuted ?<Lottie animationData={breakdance} style={{ width: 50, height: 50,}} className="rounded-full overflow-hidden"/>:<div className="bg-white h-[50px] w-[50px] rounded-full"> <Lottie animationData={muted1} style={{ width: 50, height: 50, borderRadius:50}} /></div>}
+        {typeof window !== 'undefined' && (!isMuted ? 
+  <Lottie animationData={breakdance} style={{ width: 50, height: 50}} className="rounded-full overflow-hidden"/> : 
+  <div className="bg-white h-[50px] w-[50px] rounded-full">
+    <Lottie animationData={muted1} style={{ width: 50, height: 50, borderRadius:50}} />
+  </div>
+)}
       </button>
 
 
@@ -142,71 +151,110 @@ export default function HomePage() {
             transformStyle: 'preserve-3d',
           }}
         >
-          {newArrival.map((product: Product, index) => (
-            <div
-              key={product.id}
-              className="min-w-[220px] sm:min-w-[250px] relative flex flex-col"
-              style={{
-                transform: `rotateY(${index * 90}deg) translateZ(400px)`,
-                backfaceVisibility: 'hidden', 
-              }}
-            >
-              <Link href={`/productDetail/${product.id}`}>
-                <div
-                  style={{ backgroundImage: `url(${product.image})` }}
-                  className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl"
-                ></div>
-              </Link>
-              <div className="text-base sm:text-lg font-semibold mt-2">
-                {product.name}
+          {loading ? (
+            // Skeleton loading for products
+            Array(4).fill(0).map((_, index) => (
+              <div
+                key={`skeleton-${index}`}
+                className="min-w-[220px] sm:min-w-[250px] relative flex flex-col"
+                style={{
+                  transform: `rotateY(${index * 90}deg) translateZ(400px)`,
+                  backfaceVisibility: 'hidden', 
+                }}
+              >
+                <Skeleton className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] rounded-xl" />
+                <Skeleton className="h-6 w-3/4 mt-2" />
+                <Skeleton className="h-4 w-1/2 mt-1" />
+                <Skeleton className="h-5 w-1/4 mt-1" />
               </div>
-              <div className="flex items-center gap-1 mt-1">
-                <div className="flex gap-1 text-yellow-500">★★★★</div>
-                <div className="text-sm sm:text-base">5/{product.rating}</div>
+            ))
+          ) : (
+            // Actual products
+            newArrival.map((product: Product, index) => (
+              <div
+                key={product.id}
+                className="min-w-[220px] sm:min-w-[250px] relative flex flex-col"
+                style={{
+                  transform: `rotateY(${index * 90}deg) translateZ(400px)`,
+                  backfaceVisibility: 'hidden', 
+                }}
+              >
+                <Link href={`/productDetail/${product.id}`}>
+                  <div
+                    style={{ backgroundImage: `url(${product.image})` }}
+                    className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl"
+                  ></div>
+                </Link>
+                <div className="text-base sm:text-lg font-semibold mt-2">
+                  {product.name}
+                </div>
+                <div className="flex items-center gap-1 mt-1">
+                  <div className="flex gap-1 text-yellow-500">★★★★</div>
+                  <div className="text-sm sm:text-base">5/{product.rating}</div>
+                </div>
+                <div className="text-sm sm:text-lg font-bold">₮{product.price}</div>
               </div>
-              <div className="text-sm sm:text-lg font-bold">₮{product.price}</div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
 
 
-      <button
-        className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
-        onClick={prevSlide}
-      >
-        &#10094;
-      </button>
-      <button
-        className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
-        onClick={nextSlide}
-      >
-        &#10095;
-      </button>
+      {!loading && (
+        <>
+          <button
+            className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+            onClick={prevSlide}
+          >
+            &#10094;
+          </button>
+          <button
+            className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+            onClick={nextSlide}
+          >
+            &#10095;
+          </button>
+        </>
+      )}
     </div>
           <div className="rounded-2xl bg-white h-12 w-full sm:w-[70%] md:w-[50%] border flex items-center justify-center mt-8 cursor-pointer text-lg font-semibold hover:bg-gray-100 transition">
-            View all
+            {loading ? (
+              <Skeleton className="h-6 w-20" />
+            ) : (
+              "View all"
+            )}
           </div>
          
 
 
       <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-4 p-6 bg-white">
-     
-     <div className="relative">
-       <img src="/zurag4.jpg" alt="Fashion 1" className="w-200 h-200 object-cover rounded-lg transition-transform duration-300 hover:scale-105 " />
-     </div>
-
- <div className="grid grid-rows-2  gap-1">
-       <div className="relative">
-         <img src="/zurag1.jpg" alt="Fashion 3" className="w-100 h-100 object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
-       </div>
-       <div className="relative">
-         <img src="/zurag2.jpg" alt="Fashion 4" className="w-100 h-100 object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
-       </div>
-     </div>
-     <div className="relative">
-       <img src="/zurag3.jpg" alt="Fashion 2" className="w-200 h-200 object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
-     </div>
+     {loading ? (
+       <>
+         <Skeleton className="w-full h-[300px] rounded-lg" />
+         <div className="grid grid-rows-2 gap-1">
+           <Skeleton className="w-full h-[145px] rounded-lg" />
+           <Skeleton className="w-full h-[145px] rounded-lg" />
+         </div>
+         <Skeleton className="w-full h-[300px] rounded-lg" />
+       </>
+     ) : (
+       <>
+         <div className="relative">
+           <img src="/street.jpg" alt="Fashion 1" className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
+         </div>
+         <div className="grid grid-rows-2 gap-1">
+           <div className="relative">
+             <img src="/casual.png" alt="Fashion 3" className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
+           </div>
+           <div className="relative">
+             <img src="/street2.jpg" alt="Fashion 2" className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
+           </div>
+         </div>
+         <div className="relative">
+           <img src="/street.jpg" alt="Fashion 2" className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-105" />
+         </div>
+       </>
+     )}
         </div>
       </div>
 
