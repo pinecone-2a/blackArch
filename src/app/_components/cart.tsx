@@ -107,7 +107,7 @@ export default function Cart() {
 
                   <Button
                     onClick={() => removeItem(item.productId)}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 p-0"
+                    className="absolute top-4 right-4 text-white rounded-full h-8 w-8 p-0"
                   >
                     <Trash2 size={16} />
                   </Button>
@@ -186,7 +186,8 @@ export default function Cart() {
                   </div>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  Use promo code <b>Pineshop</b> for 20% discount
+                  <b>Pineshop</b> промо кодыг ашигласнаар 5% хөнгөлөлт авах
+                  боломжтой.
                 </p>
 
                 <Link href="/payment">
