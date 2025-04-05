@@ -159,37 +159,55 @@ export default function AdminProductsComp() {
 
     const getCroppedImage = async () => {
         if (!imageRef || !image) return;
-    
-        const canvas = document.createElement("canvas");
-        const scaleX = imageRef.naturalWidth / imageRef.width;
-        const scaleY = imageRef.naturalHeight / imageRef.height;
-    
-        const cropWidth = crop.width ? crop.width * scaleX : 0;
-        const cropHeight = crop.height ? crop.height * scaleY : 0;
-    
-        canvas.width = cropWidth;
-        canvas.height = cropHeight;
-    
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-    
-        ctx.drawImage(
-            imageRef,
-            crop.x * scaleX,
-            crop.y * scaleY,
-            cropWidth,
-            cropHeight,
-            0,
-            0,
-            cropWidth,
-            cropHeight
-        );
-    
-        canvas.toBlob(async (blob) => {
-            if (blob) {
-                await uploadToCloudinary(blob);
+        
+        // Set a loading state for the crop operation
+        setSubmitting(true);
+        
+        // Use setTimeout to allow the UI to update with loading state
+        setTimeout(async () => {
+            try {
+                const canvas = document.createElement("canvas");
+                const scaleX = imageRef.naturalWidth / imageRef.width;
+                const scaleY = imageRef.naturalHeight / imageRef.height;
+            
+                const cropWidth = crop.width ? crop.width * scaleX : 0;
+                const cropHeight = crop.height ? crop.height * scaleY : 0;
+            
+                canvas.width = cropWidth;
+                canvas.height = cropHeight;
+            
+                const ctx = canvas.getContext("2d");
+                if (!ctx) {
+                    setSubmitting(false);
+                    return;
+                }
+            
+                ctx.drawImage(
+                    imageRef,
+                    crop.x * scaleX,
+                    crop.y * scaleY,
+                    cropWidth,
+                    cropHeight,
+                    0,
+                    0,
+                    cropWidth,
+                    cropHeight
+                );
+            
+                canvas.toBlob(async (blob) => {
+                    if (blob) {
+                        await uploadToCloudinary(blob);
+                        setSubmitting(false);
+                    } else {
+                        setSubmitting(false);
+                    }
+                }, "image/jpeg");
+            } catch (error) {
+                console.error("Error cropping image:", error);
+                toast.error("Failed to crop image");
+                setSubmitting(false);
             }
-        }, "image/jpeg");
+        }, 0);
     };
     
 
@@ -478,8 +496,13 @@ export default function AdminProductsComp() {
                                         className="flex-1"
                                     />
                                     {image && !croppedImage && (
-                                        <Button onClick={getCroppedImage} type="button">
-                                            Crop
+                                        <Button onClick={getCroppedImage} type="button" disabled={submitting}>
+                                            {submitting ? (
+                                                <>
+                                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                    Cropping...
+                                                </>
+                                            ) : "Crop"}
                                         </Button>
                                     )}
                                 </div>
