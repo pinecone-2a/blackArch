@@ -32,8 +32,8 @@ export const GET = async (
 };
 
 
-export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  const id = params.id;
+export const PUT = async (req: NextRequest, context: { params: { id: string } }) => {
+  const { id } = await context.params;
 
   try {
     if (!id) {
@@ -71,8 +71,8 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
   }
 };
 
-export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  const id = params.id;
+export const DELETE = async (req: NextRequest, context: { params: { id: string } }) => {
+  const { id } = await context.params;
 
   try {
     if (!id) {

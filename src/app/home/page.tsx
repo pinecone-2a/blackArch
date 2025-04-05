@@ -85,10 +85,19 @@ export default function HomePage() {
       autoPlay
       loop
       muted={isMuted}
-      className="absolute top-0 right-0 w-full h-full object-cover z-0 md:w-[50%] "
+      playsInline
+      preload="metadata"
+      className="absolute top-0 right-0 w-full h-full object-cover z-0 md:w-[50%]"
     />
    <div className="absolute top-0 left-0 h-full w-[50%] hidden md:block ">
-    <img src="street.jpg" className="h-full w-full object-cover z-0" />
+    <img 
+      src="street.jpg" 
+      className="h-full w-full object-cover z-0" 
+      alt="Street fashion"
+      width={800}
+      height={600}
+      loading="eager"
+    />
     <div className="absolute top-0 -right-60 w-[550px] h-full bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.9)] to-transparent z-20 pointer-events-none" />
   </div>
    {/* <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white via-[rgba(185,185,185,0.1)] to-white z-10 pointer-events-none" /> */}
@@ -149,26 +158,16 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="relative">
-
-            <div className="flex overflow-hidden w-full h-full">
-              <div
-                className="relative flex transition-transform duration-1000"
-                style={{
-                  transform: `rotateY(${currentIndex * -90}deg)`,
-                  transformStyle: 'preserve-3d',
-                }}
-              >
+          <div className="relative w-full max-w-4xl mx-auto py-8">
+            {/* Simplified carousel - no 3D transforms */}
+            <div className="overflow-hidden">
+              <div className="flex gap-6">
                 {loading ? (
                   // Skeleton loading for products
                   Array(4).fill(0).map((_, index) => (
                     <div
                       key={`skeleton-${index}`}
-                      className="min-w-[220px] sm:min-w-[250px] relative flex flex-col"
-                      style={{
-                        transform: `rotateY(${index * 90}deg) translateZ(400px)`,
-                        backfaceVisibility: 'hidden',
-                      }}
+                      className="min-w-[220px] sm:min-w-[250px] flex-shrink-0 flex flex-col"
                     >
                       <Skeleton className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] rounded-xl" />
                       <Skeleton className="h-6 w-3/4 mt-2" />
@@ -177,48 +176,61 @@ export default function HomePage() {
                     </div>
                   ))
                 ) : (
-                  // Actual products
-                  newArrival.map((product: Product, index) => (
-                    <div
-                      key={product.id}
-                      className="min-w-[220px] sm:min-w-[250px] relative flex flex-col"
-                      style={{
-                        transform: `rotateY(${index * 90}deg) translateZ(400px)`,
-                        backfaceVisibility: 'hidden',
-                      }}
-                    >
-                      <Link href={`/productDetail/${product.id}`}>
+                  <>
+                
+                    {newArrival.map((product: Product, index) => {
+                  
+                      if (Math.abs(index - currentIndex) > 1 && 
+                          !(index === newArrival.length - 1 && currentIndex === 0) && 
+                          !(index === 0 && currentIndex === newArrival.length - 1)) {
+                        return null;
+                      }
+                      
+                      return (
                         <div
-                          style={{ backgroundImage: `url(${product.image})` }}
-                          className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl"
-                        ></div>
-                      </Link>
-                      <div className="text-base sm:text-lg font-semibold mt-2">
-                        {product.name}
-                      </div>
-                      <div className="flex items-center gap-1 mt-1">
-                        <div className="flex gap-1 text-yellow-500">★★★★</div>
-                        <div className="text-sm sm:text-base">5/{product.rating}</div>
-                      </div>
-                      <div className="text-sm sm:text-lg font-bold">₮{product.price}</div>
-                    </div>
-                  ))
+                          key={product.id}
+                          className={`min-w-[220px] sm:min-w-[250px] flex-shrink-0 flex flex-col transition-opacity duration-300 
+                                     ${index === currentIndex ? 'opacity-100' : 'opacity-50'}`}
+                        >
+                          <Link href={`/productDetail/${product.id}`}>
+                            <img 
+                              src={product.image} 
+                              alt={product.name}
+                              width={250}
+                              height={260}
+                              className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] rounded-xl object-cover"
+                              loading={index === currentIndex ? "eager" : "lazy"}
+                            />
+                          </Link>
+                          <div className="text-base sm:text-lg font-semibold mt-2">
+                            {product.name}
+                          </div>
+                          <div className="flex items-center gap-1 mt-1">
+                            <div className="flex gap-1 text-yellow-500">★★★★</div>
+                            <div className="text-sm sm:text-base">5/{product.rating}</div>
+                          </div>
+                          <div className="text-sm sm:text-lg font-bold">₮{product.price}</div>
+                        </div>
+                      );
+                    })}
+                  </>
                 )}
               </div>
             </div>
 
-
             {!loading && (
               <>
                 <button
-                  className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+                  className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full shadow-lg"
                   onClick={prevSlide}
+                  aria-label="Previous product"
                 >
                   &#10094;
                 </button>
                 <button
-                  className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
+                  className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full shadow-lg"
                   onClick={nextSlide}
+                  aria-label="Next product"
                 >
                   &#10095;
                 </button>

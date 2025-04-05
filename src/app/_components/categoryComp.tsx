@@ -28,7 +28,7 @@ export default function CategoryComp() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <HomeHeader />
-      <div className="mt-24 pt-4 pb-16 max-w-7xl mx-auto w-full">
+      <div className="mt-24 pt-4 pb-8 max-w-7xl mx-auto w-full flex-grow">
         <h1 className="text-3xl md:text-4xl font-bold mb-6 px-6">Shop Collection</h1>
         
         <div className="flex flex-col md:flex-row gap-6 px-4">
