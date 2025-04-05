@@ -2,7 +2,6 @@ import { getUserFromToken } from "@/lib/auth/getUser";
 import prisma from "@/lib/connect";
 import { NextRequest, NextResponse } from "next/server";
 
-// Get user address
 export async function GET(req: NextRequest) {
   const user = getUserFromToken(req);
 
@@ -14,12 +13,12 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  console.log("Fetching address for user:", user.userId);
+  console.log("Fetching address for user:", user.id);
 
   try {
     const userData = await prisma.user.findUnique({
       where: {
-        id: user.userId,
+        id: user.id,
       },
       select: {
         address: true,
@@ -36,7 +35,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// Update user address
 export async function PUT(req: NextRequest) {
   const user = getUserFromToken(req);
 
@@ -48,7 +46,7 @@ export async function PUT(req: NextRequest) {
     );
   }
 
-  console.log("Fetching address for user:", user.userId);
+  console.log("Fetching address for user:", user.id);
 
   try {
     const { street, city, state, zip } = await req.json();
@@ -62,7 +60,7 @@ export async function PUT(req: NextRequest) {
 
     const updatedUser = await prisma.user.update({
       where: {
-        id: user.userId,
+        id: user.id,
       },
       data: {
         address: {
