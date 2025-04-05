@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const user = getUserFromToken(req);
 
+  console.log("User from token:", user); // Debugging line
   if (!user) {
     console.error("No user token found or invalid token");
     return NextResponse.json(
@@ -13,12 +14,12 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  console.log("Fetching orders for user:", user.userId);
+
 
   try {
     const orders = await prisma.order.findMany({
       where: {
-        userId: user.userId,
+        userId: user.id,
       },
       include: {
         user: {
