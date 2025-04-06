@@ -98,7 +98,7 @@ export default function Navbar() {
 
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
             </div>
-            <p className="relative group">
+            <div className="relative group">
               <Link
                 href={"/category"}
                 className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
@@ -107,8 +107,8 @@ export default function Navbar() {
               </Link>
 
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
-            </p>
-            <p className="relative group">
+            </div>
+            <div className="relative group">
               <Link
                 href={"/category"}
                 className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
@@ -116,7 +116,7 @@ export default function Navbar() {
                 Хувцасны төрлүүд
               </Link>
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
-            </p>
+            </div>
          
 
 
@@ -258,13 +258,9 @@ export default function Navbar() {
       onKeyDown={(e) => setIsOpen(true)} // Open dropdown on typing
       onBlur={() => setTimeout(() => setIsOpen(false), 200)} // Close on blur (with delay)
       submitIconComponent={() => (
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
-        >
+        <div className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 cursor-pointer">
           <Search className="w-5 h-5 text-gray-700" />
-        </motion.button>
+        </div>
       )}
     />
           <Configure hitsPerPage={6} distinct={true} getRankingInfo={true} />

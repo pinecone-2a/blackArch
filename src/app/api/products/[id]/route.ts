@@ -7,9 +7,8 @@ export const GET = async (
   req: NextRequest,
   context: { params: { id: string } }
 ) => {
-  const id = context.params.id;
+  const { id } = await context.params; 
 
-  // Validate MongoDB ObjectId format
   if (!ObjectId.isValid(id)) {
     return new Response(JSON.stringify({ error: 'Invalid product ID' }), { status: 400 });
   }
@@ -33,8 +32,8 @@ export const GET = async (
 };
 
 
-export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  const id = params.id;
+export const PUT = async (req: NextRequest, context: { params: { id: string } }) => {
+  const { id } = await context.params;
 
   try {
     if (!id) {
@@ -45,7 +44,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
     }
 
     const body = await req.json();
-    const { name, description, price, quantity, categoryId, rating, image, color, size } = body;
+    const { name, description, price, quantity, categoryId, rating, image, color, size, images } = body;
 
     const product = await prisma.product.update({
       where: { id },
@@ -59,6 +58,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
         image,
         color,
         size,
+        images,
       },
     });
 
@@ -72,8 +72,8 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
   }
 };
 
-export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  const id = params.id;
+export const DELETE = async (req: NextRequest, context: { params: { id: string } }) => {
+  const { id } = await context.params;
 
   try {
     if (!id) {

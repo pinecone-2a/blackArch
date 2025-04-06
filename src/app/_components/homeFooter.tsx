@@ -1,4 +1,16 @@
+<<<<<<< HEAD
 "use client";
+=======
+import { Facebook, Instagram, Youtube } from "lucide-react";
+import dynamic from "next/dynamic";
+
+// Dynamically import Lottie with SSR disabled
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+
+import facebook from "./facebook.json";
+import instagram from "./instagram.json";
+import youtube from "./youtube.json";
+>>>>>>> main
 
 import React from "react";
 import Link from "next/link";
@@ -8,6 +20,7 @@ import { Input } from "@/components/ui/input";
 
 const Footer = () => {
   return (
+<<<<<<< HEAD
     <footer className="bg-black text-white pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top section with newsletter */}
@@ -94,6 +107,54 @@ const Footer = () => {
             </Link>
           </div>
         </div>
+=======
+    <footer className="bg-black text-white py-8 px-6 mt-auto">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between text-center md:text-left space-y-6 md:space-y-0">
+        
+        <div className="flex items-center space-x-2">
+          <img src="/authlogo.jpg" className="w-8 h-8 text-3xl" />
+          <h2 className="text-lg font-semibold tracking-wide">
+            Pineshop
+          </h2>
+        </div>
+      
+        <div className="flex space-x-6">
+          <a
+            href="#"
+            className="text-gray-400 hover:text-[#3b5998] transition"
+          >
+             <Lottie
+                  animationData={facebook}
+                  style={{ width: 60, height: 60 }}
+                  onClick={() => window.open("https://www.facebook.com/", "_blank")}
+                />
+          </a>
+          <a
+            href="#"
+            className="text-gray-400 hover:text-[#C13584] transition"
+          >
+             <Lottie
+                  animationData={instagram}
+                  style={{ width: 60, height: 60 }}
+                  onClick={() => window.open("https://www.instagram.com/", "_blank")}
+                />
+          </a>
+          <a
+            href="#"
+            className="text-gray-400 hover:text-[#3f83fb] transition"  
+          >
+            <Lottie
+                  animationData={youtube}
+                  style={{ width: 60, height: 60 }}
+                  onClick={() => window.open("https://www.youtube.com/watch?v=LPTlvQ1Zet0", "_blank")}
+                />
+          </a>
+        </div>
+    
+        <p className="text-sm">
+          © 2025 Pineshop. All rights reserved.
+        </p>
+>>>>>>> main
       </div>
     </footer>
   );
