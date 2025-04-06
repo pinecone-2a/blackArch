@@ -58,7 +58,7 @@ export default function Cart() {
       {cart.length > 0 ? (
         <>
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-            Your Shopping Cart
+            Сагсалсан бараа
           </h2>
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-2/3 space-y-4 w-full">
@@ -130,7 +130,7 @@ export default function Cart() {
                     >
                       <path d="m15 18-6-6 6-6" />
                     </svg>
-                    Continue Shopping
+                    Буцах
                   </Button>
                 </Link>
               </div>
@@ -139,28 +139,28 @@ export default function Cart() {
             <div className="lg:w-1/3 w-full mt-8 lg:mt-0">
               <div className="bg-white border shadow-sm p-6 rounded-xl sticky top-28">
                 <h3 className="text-xl font-bold border-b pb-4 mb-4">
-                  Order Summary
+                  Захиалгын хураангуй
                 </h3>
                 <div className="space-y-3 text-gray-600">
                   <div className="flex justify-between items-center">
-                    <span>Subtotal ({cart.length} items)</span>
+                    <span>Үндсэн үнэ ({cart.length} бараа)</span>
                     <span className="font-medium">₮{subtotal.toFixed(2)}</span>
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between items-center text-green-600">
-                      <span>Discount ({discount * 100}%)</span>
+                      <span>Хөнгөлөлт ({discount * 100}%)</span>
                       <span>- ₮{discountAmount.toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between items-center">
-                    <span>Delivery Fee</span>
+                    <span>Хүргэлтийн төлбөр</span>
                     <span className="font-medium">
                       ₮{deliveryFee.toFixed(2)}
                     </span>
                   </div>
                   <div className="border-t my-3 pt-3"></div>
                   <div className="flex justify-between text-lg font-bold">
-                    <span>Total</span>
+                    <span>Нийт</span>
                     <span>₮{total.toFixed(2)}</span>
                   </div>
                 </div>
@@ -169,7 +169,7 @@ export default function Cart() {
                   <div className="flex items-center">
                     <Input
                       type="text"
-                      placeholder="Add promo code"
+                      placeholder="Promo код оруулах"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value)}
                       className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -181,17 +181,17 @@ export default function Cart() {
                       variant="outline"
                       size="sm"
                     >
-                      Apply
+                      Идэвхжүүлэх
                     </Button>
                   </div>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  Use promo code <b>Pineshop</b> for 20% discount
+                  <b>Pineshop</b> Promo код ашиглан 20% хөнгөлөлт аваарай.
                 </p>
 
                 <Link href="/payment">
                   <Button className="w-full mt-6 py-6 bg-black hover:bg-gray-800 rounded-xl text-lg">
-                    Proceed to Checkout
+                    Төлбөр төлөх
                   </Button>
                 </Link>
               </div>

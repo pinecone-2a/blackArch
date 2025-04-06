@@ -29,7 +29,7 @@ export default function CategoryComp() {
     <div className="min-h-screen flex flex-col bg-white">
       <HomeHeader />
       <div className="mt-24 pt-4 pb-16 max-w-7xl mx-auto w-full">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6 px-6">Shop Collection</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 px-6">Бүх хувцас</h1>
         
         <div className="flex flex-col md:flex-row gap-6 px-4">
           <div className="md:w-1/4 w-full">
@@ -65,7 +65,7 @@ export default function CategoryComp() {
                       </div>
                       <div className="absolute bottom-0 w-full">
                         <Button className="opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-in-out w-full rounded-t-none rounded-b-xl shadow-lg bg-black text-white hover:bg-gray-800">
-                          View Product
+                          Дэлгэрэнгүй
                         </Button>
                       </div>
                     </div>

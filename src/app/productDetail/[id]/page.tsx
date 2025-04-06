@@ -130,11 +130,11 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                 <Breadcrumb>
                     <BreadcrumbList className='text-2xl flex text-gray-300 items-center'>
                         <BreadcrumbItem>
-                            <BreadcrumbLink className='hover:underline' href="/">Home</BreadcrumbLink>
+                            <BreadcrumbLink className='hover:underline' href="/">Нүүр</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink className='hover:underline' href="/category">Shop</BreadcrumbLink>
+                            <BreadcrumbLink className='hover:underline' href="/category">Бүх хувцас</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
@@ -203,7 +203,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                                 {product?.description}
                             </p>
 
-                            <p className='text-lg font-bold mt-18'>Select Colors</p>
+                            <p className='text-lg font-bold mt-18'>Өнгө</p>
 
                             <div className='flex gap-2 mt-2 '>
                                 {[
@@ -226,7 +226,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                                 ))}
                             </div>
 
-                            <p className='text-lg font-bold mt-18'>Choose Size</p>
+                            <p className='text-lg font-bold mt-18'>Хэмжээ</p>
 
                             <div className='flex gap-5 mt-2'>
                                 {['Small', 'Medium', 'Large', 'X-Large'].map((size) => (
@@ -271,7 +271,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                                     ${shake ? 'animate-shake' : ''}`}
                                     onClick={handleClick}
                                 >
-                                    Add to Cart
+                                    Сагсанд нэмэх
                                     {ripple && (
                                         <span className="absolute inset-0 flex items-center justify-center">
                                             <span className="w-20 h-20 bg-white opacity-30 rounded-full animate-ping"></span>
@@ -284,7 +284,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                 </div>
             </div>
 
-            <h2 className='text-2xl font-bold text-center mt-10'>YOU MIGHT ALSO LIKE</h2>
+            <h2 className='text-2xl font-bold text-center mt-10'>Төстэй бараанууд</h2>
             <div className="w-full overflow-x-auto">
                 <div className="flex gap-6 mt-6 pl-4">
                     {isLoading ? (

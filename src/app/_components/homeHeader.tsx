@@ -93,7 +93,7 @@ export default function Navbar() {
                 href={"/category"}
                 className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
               >
-                Shop
+                Бүх хувцас
               </Link>
 
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
@@ -103,7 +103,7 @@ export default function Navbar() {
                 href={"/category"}
                 className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
               >
-                New Arrivals
+                Шинээр нэмэгдсэн
               </Link>
 
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
@@ -113,19 +113,11 @@ export default function Navbar() {
                 href={"/category"}
                 className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
               >
-                Top Selling
+                Хувцасны төрлүүд
               </Link>
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
             </p>
-            <p className="relative group">
-              <Link
-                href={"/category"}
-                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
-              >
-                On Sale
-              </Link>
-              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
-            </p>
+         
 
 
           </div>
@@ -226,16 +218,13 @@ export default function Navbar() {
     <div className="my-1.5 ">
         <div className="flex flex-col text-lg gap-8">
           <Link href={"/category"}><span>
-              Shop
+          Бүх хувцас
             </span></Link>
             <Link href={"/category"}><span>
-              New Arrivals
+            Шинээр нэмэгдсэн
             </span></Link>
             <Link href={"/category"}><span >
-              Top Selling
-            </span></Link>
-            <Link href={"/category"}><span>
-              On Sale
+            Хувцасны төрлүүд
             </span></Link>
             <Link href={"/profile"}><span>
               My Profile
