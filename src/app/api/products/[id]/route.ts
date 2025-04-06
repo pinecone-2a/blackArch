@@ -44,7 +44,7 @@ export const PUT = async (req: NextRequest, context: { params: { id: string } })
     }
 
     const body = await req.json();
-    const { name, description, price, quantity, categoryId, rating, image, color, size } = body;
+    const { name, description, price, quantity, categoryId, rating, image, color, size, images } = body;
 
     const product = await prisma.product.update({
       where: { id },
@@ -58,6 +58,7 @@ export const PUT = async (req: NextRequest, context: { params: { id: string } })
         image,
         color,
         size,
+        images,
       },
     });
 

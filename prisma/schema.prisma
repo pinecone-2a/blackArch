@@ -34,7 +34,8 @@ model Product {
   price       Int
   quantity    Int
   rating      Int
-  image       String
+  image       String   // Main image (keeping for backward compatibility)
+  images      String[] // Array of image URLs
   color       String[]
   size        String[]
   category    Category?   @relation(fields: [categoryId], references: [id])

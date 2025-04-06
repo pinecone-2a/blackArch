@@ -18,13 +18,31 @@ export async function GET(req: Request) {
       userData: { id: string; email: string; role: string };
     };
 
+    // Create access token with the same structure as in login route
     const accessToken = jwt.sign(
-      { userId: decoded.userData.id, email: decoded.userData.email, role: decoded.userData.role },
+      { userData: decoded.userData }, // Keeps the same userData structure
       ACCESS_TOKEN_SECRET,
       { expiresIn: '15m' } 
     );
 
-    return NextResponse.json({ accessToken });
+    // Create response with the access token
+    const response = NextResponse.json({ 
+      accessToken,
+      message: "Access token refreshed successfully" 
+    });
+
+    // Set the access token as a cookie
+    response.cookies.set({
+      name: "accessToken",
+      value: accessToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 15, // 15 minutes
+      path: "/"
+    });
+
+    return response;
   } catch (err) {
     return NextResponse.json({ error: 'Invalid refresh token' }, { status: 403 });
   }
