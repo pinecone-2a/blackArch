@@ -56,7 +56,7 @@ export default function AdminProductsComp() {
     const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
     const [sortBy, setSortBy] = useState("newest");
     const [loading, setLoading] = useState(true);
-    const [categories, setCategories] = useState<{id: string, name: string}[]>([]);
+    const [categories, setCategories] = useState<{ id: string, name: string }[]>([]);
     const [image, setImage] = useState<string | null>(null);
     const [croppedImage, setCroppedImage] = useState<string | null>(null);
     const [crop, setCrop] = useState<Crop>({ unit: '%', width: 50, height: 50, x: 0, y: 0 });
@@ -74,7 +74,7 @@ export default function AdminProductsComp() {
         color: [] as string[],
         size: [] as string[],
     });
-    
+
 
     const [editMode, setEditMode] = useState(false);
     const [editProductId, setEditProductId] = useState<string | null>(null);
@@ -83,18 +83,18 @@ export default function AdminProductsComp() {
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.target.value, 10);
         setPrice(isNaN(value) ? 0 : value);
-      };
+    };
 
     const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.target.value, 10);
         setQuantity(isNaN(value) ? 1 : value);
-    };      
+    };
 
     useEffect(() => {
         fetchProducts();
         fetchCategories();
     }, []);
-    
+
 
     const fetchProducts = async () => {
         setLoading(true);
@@ -124,7 +124,7 @@ export default function AdminProductsComp() {
             toast.error("Failed to load categories");
         }
     };
-    
+
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -209,7 +209,7 @@ export default function AdminProductsComp() {
             }
         }, 0);
     };
-    
+
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -222,29 +222,29 @@ export default function AdminProductsComp() {
 
     const handleColorChange = (colorValue: string, checked: boolean) => {
         if (checked) {
-            setProductForm(prev => ({ 
-                ...prev, 
-                color: [...prev.color, colorValue] 
+            setProductForm(prev => ({
+                ...prev,
+                color: [...prev.color, colorValue]
             }));
         } else {
-            setProductForm(prev => ({ 
-                ...prev, 
-                color: prev.color.filter(c => c !== colorValue) 
+            setProductForm(prev => ({
+                ...prev,
+                color: prev.color.filter(c => c !== colorValue)
             }));
         }
     };
-    
+
 
     const handleSizeChange = (size: string, checked: boolean) => {
         if (checked) {
-            setProductForm(prev => ({ 
-                ...prev, 
-                size: [...prev.size, size] 
+            setProductForm(prev => ({
+                ...prev,
+                size: [...prev.size, size]
             }));
         } else {
-            setProductForm(prev => ({ 
-                ...prev, 
-                size: prev.size.filter(s => s !== size) 
+            setProductForm(prev => ({
+                ...prev,
+                size: prev.size.filter(s => s !== size)
             }));
         }
     };
@@ -254,24 +254,24 @@ export default function AdminProductsComp() {
             toast.error("Please fill out all required fields");
             return;
         }
-        
+
         setSubmitting(true);
-        
+
         try {
             const productData = {
                 name: productForm.name,
                 description: productForm.description,
-                price: parseInt(productForm.price) ,
+                price: parseInt(productForm.price),
                 quantity: parseInt(productForm.quantity),
-                image: croppedImage || "/t-shirt.png", 
+                image: croppedImage || "/t-shirt.png",
                 categoryId: productForm.categoryId,
                 color: productForm.color,
                 size: productForm.size,
                 rating: 0,
             };
-            
+
             let response;
-            
+
             if (editMode && editProductId) {
                 // Update existing product
                 response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products/${editProductId}`, {
@@ -291,7 +291,7 @@ export default function AdminProductsComp() {
                     body: JSON.stringify(productData),
                 });
             }
-            
+
             if (response.ok) {
                 toast.success(editMode ? "Product updated successfully" : "Product added successfully");
                 fetchProducts();
@@ -308,7 +308,7 @@ export default function AdminProductsComp() {
             setSubmitting(false);
         }
     };
-    
+
     // Reset form
     const resetForm = () => {
         setProductForm({
@@ -327,11 +327,11 @@ export default function AdminProductsComp() {
         setEditMode(false);
         setEditProductId(null);
     };
-    
+
     const handleEdit = (productId: string) => {
         const productToEdit = products.find(p => p.id === productId);
         if (productToEdit) {
-            
+
             setEditMode(true);
             setEditProductId(productId);
             setProductForm({
@@ -349,14 +349,14 @@ export default function AdminProductsComp() {
 
         }
     };
-    
+
     const handleDelete = async (productId: string) => {
         if (confirm("Are you sure you want to delete this product?")) {
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products/${productId}`, {
                     method: "DELETE",
                 });
-                
+
                 if (response.ok) {
                     toast.success("Product deleted successfully");
                     fetchProducts();
@@ -369,7 +369,7 @@ export default function AdminProductsComp() {
             }
         }
     };
-    
+
     const handleSelectProduct = (productId: string, checked: boolean) => {
         if (checked) {
             setSelectedProducts([...selectedProducts, productId]);
@@ -377,7 +377,7 @@ export default function AdminProductsComp() {
             setSelectedProducts(selectedProducts.filter(id => id !== productId));
         }
     };
-    
+
     const handleSelectAll = (checked: boolean) => {
         if (checked) {
             setSelectedProducts(filteredProducts.map(p => p.id));
@@ -388,18 +388,18 @@ export default function AdminProductsComp() {
 
     const handleBulkDelete = async () => {
         if (selectedProducts.length === 0) return;
-        
+
         if (confirm(`Are you sure you want to delete ${selectedProducts.length} products?`)) {
             try {
                 // Sequential deletion for multiple products
-                const deletePromises = selectedProducts.map(productId => 
+                const deletePromises = selectedProducts.map(productId =>
                     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products/${productId}`, {
                         method: "DELETE",
                     })
                 );
-                
+
                 await Promise.all(deletePromises);
-                
+
                 toast.success(`${selectedProducts.length} products deleted successfully`);
                 fetchProducts();
                 setSelectedProducts([]);
@@ -409,15 +409,15 @@ export default function AdminProductsComp() {
             }
         }
     };
-    
+
     const filteredProducts = products.filter(product => {
-        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                            product.description?.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product.description?.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = categoryFilter ? product.category === categoryFilter.toLowerCase() : true;
         return matchesSearch && matchesCategory;
     });
-    
-    
+
+
     const sortedProducts = [...filteredProducts].sort((a, b) => {
         if (sortBy === "newest") {
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -439,7 +439,7 @@ export default function AdminProductsComp() {
         <div className="flex-1 p-6 bg-gray-50">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">Бүтээгдэхүүн</h1>
-              
+
 
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
@@ -447,14 +447,14 @@ export default function AdminProductsComp() {
                             <Plus className="w-4 h-4" /> Бүтээгдэхүүн нэмэх
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+                    <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-4">
                         <DialogHeader>
                             <DialogTitle>{editMode ? "Edit Product" : "Add New Product"}</DialogTitle>
                             <DialogDescription>
                                 Fill in the details to {editMode ? "update" : "create"} a product.
                             </DialogDescription>
                         </DialogHeader>
-                        
+
                         <div className="grid gap-4 py-4">
                             <div className="flex flex-col items-center gap-4">
                                 {image && !croppedImage ? (
@@ -487,12 +487,12 @@ export default function AdminProductsComp() {
                                         </div>
                                     </div>
                                 )}
-                                
+
                                 <div className="flex gap-2 w-full">
-                                    <Input 
-                                        type="file" 
-                                        accept="image/*" 
-                                        onChange={handleImageChange} 
+                                    <Input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageChange}
                                         className="flex-1"
                                     />
                                     {image && !croppedImage && (
@@ -507,7 +507,7 @@ export default function AdminProductsComp() {
                                     )}
                                 </div>
                             </div>
-                            
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label htmlFor="name" className="text-sm font-medium">
@@ -518,26 +518,26 @@ export default function AdminProductsComp() {
                                         name="name"
                                         value={productForm.name}
                                         onChange={handleInputChange}
-                                        placeholder="Enter product name"
+                                        placeholder="Бүтээгдэхүүний Нэр"
                                         required
                                     />
                                 </div>
-                                
+
                                 <div className="space-y-2">
                                     <label htmlFor="category" className="text-sm font-medium">
-                                        Category*
+                                        Төрөл*
                                     </label>
-                                    <Select 
-                                        value={productForm.categoryId} 
+                                    <Select
+                                        value={productForm.categoryId}
                                         onValueChange={(value) => handleSelectChange("categoryId", value)}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select category" />
+                                            <SelectValue placeholder="Төрөл сонгох" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {categories.map((category) => (
-                                                <SelectItem 
-                                                    key={category.id} 
+                                                <SelectItem
+                                                    key={category.id}
                                                     value={category.id}
                                                 >
                                                     {category.name}
@@ -546,10 +546,10 @@ export default function AdminProductsComp() {
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                
+
                                 <div className="space-y-2">
                                     <label htmlFor="price" className="text-sm font-medium">
-                                        Price ($)*
+                                        Үнэ ($)*
                                     </label>
                                     <Input
                                         id="price"
@@ -563,10 +563,10 @@ export default function AdminProductsComp() {
                                         required
                                     />
                                 </div>
-                                
+
                                 <div className="space-y-2">
                                     <label htmlFor="quantity" className="text-sm font-medium">
-                                        Quantity*
+                                        Тоо Хэмжээ*
                                     </label>
                                     <Input
                                         id="quantity"
@@ -580,7 +580,7 @@ export default function AdminProductsComp() {
                                     />
                                 </div>
                             </div>
-                            
+
                             <div className="space-y-2">
                                 <label htmlFor="description" className="text-sm font-medium">
                                     Нэмэлт мэдээлэл
@@ -590,11 +590,11 @@ export default function AdminProductsComp() {
                                     name="description"
                                     value={productForm.description}
                                     onChange={handleInputChange}
-                                    placeholder="Enter product description"
+                                    placeholder="Нэмэлт мэдээлэл оруулах"
                                     rows={3}
                                 />
                             </div>
-                            
+
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Өнгөнүүд*</label>
                                 <div className="grid grid-cols-3 gap-2">
@@ -603,15 +603,15 @@ export default function AdminProductsComp() {
                                             <Checkbox
                                                 id={`color-${color.value}`}
                                                 checked={productForm.color.includes(color.value)}
-                                                onCheckedChange={(checked) => 
+                                                onCheckedChange={(checked) =>
                                                     handleColorChange(color.value, checked as boolean)
                                                 }
                                             />
-                                            <label 
+                                            <label
                                                 htmlFor={`color-${color.value}`}
                                                 className="text-sm flex items-center gap-2"
                                             >
-                                                <span 
+                                                <span
                                                     className="w-4 h-4 rounded-full inline-block border border-gray-200"
                                                     style={{ backgroundColor: color.hex }}
                                                 ></span>
@@ -621,20 +621,20 @@ export default function AdminProductsComp() {
                                     ))}
                                 </div>
                             </div>
-                            
+
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Sizes*</label>
+                                <label className="text-sm font-medium">Хэмжээ*</label>
                                 <div className="grid grid-cols-4 gap-2">
                                     {sizes.map((size) => (
                                         <div key={size} className="flex items-center space-x-2">
                                             <Checkbox
                                                 id={`size-${size}`}
                                                 checked={productForm.size.includes(size)}
-                                                onCheckedChange={(checked) => 
+                                                onCheckedChange={(checked) =>
                                                     handleSizeChange(size, checked as boolean)
                                                 }
                                             />
-                                            <label 
+                                            <label
                                                 htmlFor={`size-${size}`}
                                                 className="text-sm"
                                             >
@@ -645,10 +645,10 @@ export default function AdminProductsComp() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <DialogFooter className="gap-2">
                             <Button variant="outline" onClick={resetForm} type="button" disabled={submitting}>
-                                Cancel
+                                Буцах
                             </Button>
                             <Button onClick={handleSubmit} disabled={submitting}>
                                 {submitting ? (
@@ -657,15 +657,15 @@ export default function AdminProductsComp() {
                                         {editMode ? "Updating..." : "Adding..."}
                                     </>
                                 ) : (
-                                    editMode ? "Update Product" : "Add Product"
+                                    editMode ? "Update Product" : "Нэмэх"
                                 )}
                             </Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
-               
+
             </div>
-            
+
             <div className="flex flex-col gap-6">
                 {/* Filters and search */}
                 <div className="flex flex-wrap gap-4 bg-white p-4 rounded-lg border shadow-sm">
@@ -678,7 +678,7 @@ export default function AdminProductsComp() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    
+
                     <div className="flex gap-2">
                         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                             <SelectTrigger className="w-[180px]">
@@ -686,7 +686,7 @@ export default function AdminProductsComp() {
                                 <SelectValue placeholder="All Categories" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">All Categories</SelectItem>
+                                <SelectItem value="all">Бүх Төрөл</SelectItem>
                                 {categories.map((category) => (
                                     <SelectItem key={category.id} value={category.id}>
                                         {category.name}
@@ -694,24 +694,24 @@ export default function AdminProductsComp() {
                                 ))}
                             </SelectContent>
                         </Select>
-                        
+
                         <Select value={sortBy} onValueChange={setSortBy}>
                             <SelectTrigger className="w-[180px]">
                                 <ArrowUpDown className="mr-2 h-4 w-4" />
                                 <SelectValue placeholder="Sort By" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="newest">Newest First</SelectItem>
-                                <SelectItem value="oldest">Oldest First</SelectItem>
-                                <SelectItem value="price-high">Price: High to Low</SelectItem>
-                                <SelectItem value="price-low">Price: Low to High</SelectItem>
-                                <SelectItem value="name-asc">Name: A to Z</SelectItem>
-                                <SelectItem value="name-desc">Name: Z to A</SelectItem>
+                                <SelectItem value="newest">Шинэ эхэнд</SelectItem>
+                                <SelectItem value="oldest">Хуучин эхэнд</SelectItem>
+                                <SelectItem value="price-high">Үнэ: Ихээс-багаруу</SelectItem>
+                                <SelectItem value="price-low">Үнэ: Багаас-ихрүү</SelectItem>
+                                <SelectItem value="name-asc">Нэр: A-Z</SelectItem>
+                                <SelectItem value="name-desc">Нэр: Z-A</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
                 </div>
-                
+
                 {/* Products table */}
                 <Card>
                     <CardContent className="p-0">
@@ -723,24 +723,24 @@ export default function AdminProductsComp() {
                                         <TabsTrigger value="table">Table View</TabsTrigger>
                                     </TabsList>
                                 </div>
-                                
+
                                 <div className="flex items-center gap-2">
                                     <span className="text-sm text-gray-500">
-                                        {filteredProducts.length} products
+                                        {filteredProducts.length} Бүтээгдэхүүн
                                     </span>
-                                    
+
                                     {selectedProducts.length > 0 && (
-                                        <Button 
-                                            variant="destructive" 
+                                        <Button
+                                            variant="destructive"
                                             size="sm"
                                             onClick={handleBulkDelete}
                                         >
-                                            Delete Selected ({selectedProducts.length})
+                                            Сонгосныг устгах ({selectedProducts.length})
                                         </Button>
                                     )}
                                 </div>
                             </div>
-                            
+
                             <TabsContent value="grid" className="m-0">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
                                     {loading ? (
@@ -763,7 +763,7 @@ export default function AdminProductsComp() {
                                                     <div className="absolute top-2 right-2 flex gap-1">
                                                         <Checkbox
                                                             checked={selectedProducts.includes(product.id)}
-                                                            onCheckedChange={(checked) => 
+                                                            onCheckedChange={(checked) =>
                                                                 handleSelectProduct(product.id, checked as boolean)
                                                             }
                                                             className="h-5 w-5 bg-white/80"
@@ -779,7 +779,7 @@ export default function AdminProductsComp() {
                                                             </p>
                                                         </div>
                                                         <Badge variant="outline" className="bg-gray-100 font-semibold text-[18px]">
-                                                        ₮{(product.price).toFixed(2)}
+                                                            ₮{(product.price).toFixed(2)}
                                                         </Badge>
                                                     </div>
                                                     <p className="text-sm text-gray-600 line-clamp-2 mb-2">
@@ -787,11 +787,11 @@ export default function AdminProductsComp() {
                                                     </p>
                                                     <div className="flex gap-1 mb-2">
                                                         {product.color.slice(0, 3).map((col: string) => (
-                                                            <span 
+                                                            <span
                                                                 key={col}
                                                                 className="w-4 h-4 rounded-full inline-block border border-gray-200"
-                                                                style={{ 
-                                                                    backgroundColor: colors.find((c: { value: string; hex: string }) => c.value === col)?.hex || col 
+                                                                style={{
+                                                                    backgroundColor: colors.find((c: { value: string; hex: string }) => c.value === col)?.hex || col
                                                                 }}
                                                                 title={colors.find((c: { value: string; name: string }) => c.value === col)?.name || col}
                                                             ></span>
@@ -816,26 +816,25 @@ export default function AdminProductsComp() {
                                                     </div>
                                                     <div className="mt-auto flex justify-between items-center">
                                                         <div className="text-sm">
-                                                            <span className={`${
-                                                                product.quantity > 10 
-                                                                    ? "text-green-600" 
-                                                                    : product.quantity > 0 
-                                                                        ? "text-yellow-600" 
+                                                            <span className={`${product.quantity > 10
+                                                                    ? "text-green-600"
+                                                                    : product.quantity > 0
+                                                                        ? "text-yellow-600"
                                                                         : "text-red-600"
-                                                            } font-medium`}>
+                                                                } font-medium`}>
                                                                 {product.quantity > 0 ? `${product.quantity} in stock` : "Out of stock"}
                                                             </span>
                                                         </div>
                                                         <div className="flex gap-1">
-                                                            <Button 
-                                                                variant="ghost" 
+                                                            <Button
+                                                                variant="ghost"
                                                                 size="icon"
                                                                 onClick={() => handleEdit(product.id)}
                                                             >
                                                                 <Pen className="h-4 w-4" />
                                                             </Button>
-                                                            <Button 
-                                                                variant="ghost" 
+                                                            <Button
+                                                                variant="ghost"
                                                                 size="icon"
                                                                 onClick={() => handleDelete(product.id)}
                                                             >
@@ -848,12 +847,12 @@ export default function AdminProductsComp() {
                                         ))
                                     ) : (
                                         <div className="col-span-4 py-8 text-center">
-                                            <p className="text-gray-500">No products found</p>
+                                            <p className="text-gray-500">Бүтээгдэхүүн олдсонгүй</p>
                                         </div>
                                     )}
                                 </div>
                             </TabsContent>
-                            
+
                             <TabsContent value="table" className="m-0">
                                 <div className="overflow-x-auto">
                                     <table className="w-full">
@@ -868,12 +867,12 @@ export default function AdminProductsComp() {
                                                         onCheckedChange={handleSelectAll}
                                                     />
                                                 </th>
-                                                <th className="px-4 py-3">Product</th>
-                                                <th className="px-4 py-3">Category</th>
-                                                <th className="px-4 py-3">Price</th>
-                                                <th className="px-4 py-3">Stock</th>
-                                                <th className="px-4 py-3">Created</th>
-                                                <th className="px-4 py-3 text-right">Actions</th>
+                                                <th className="px-4 py-3">Бүтээгдэхүүн</th>
+                                                <th className="px-4 py-3">Төрөл</th>
+                                                <th className="px-4 py-3">Үнэ</th>
+                                                <th className="px-4 py-3">Тоо хэмжээ</th>
+                                                <th className="px-4 py-3">Үүсгэсэн</th>
+                                                <th className="px-4 py-3 text-right">Үйлдлүүд</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-200">
@@ -890,7 +889,7 @@ export default function AdminProductsComp() {
                                                         <td className="px-4 py-3">
                                                             <Checkbox
                                                                 checked={selectedProducts.includes(product.id)}
-                                                                onCheckedChange={(checked) => 
+                                                                onCheckedChange={(checked) =>
                                                                     handleSelectProduct(product.id, checked as boolean)
                                                                 }
                                                             />
@@ -920,13 +919,12 @@ export default function AdminProductsComp() {
                                                             ${(product.price / 100).toFixed(2)}
                                                         </td>
                                                         <td className="px-4 py-3 text-sm">
-                                                            <span className={`px-2 py-1 rounded-full text-xs ${
-                                                                product.quantity > 10 
-                                                                    ? "bg-green-100 text-green-800" 
-                                                                    : product.quantity > 0 
-                                                                        ? "bg-yellow-100 text-yellow-800" 
+                                                            <span className={`px-2 py-1 rounded-full text-xs ${product.quantity > 10
+                                                                    ? "bg-green-100 text-green-800"
+                                                                    : product.quantity > 0
+                                                                        ? "bg-yellow-100 text-yellow-800"
                                                                         : "bg-red-100 text-red-800"
-                                                            }`}>
+                                                                }`}>
                                                                 {product.quantity > 0 ? `${product.quantity} in stock` : "Out of stock"}
                                                             </span>
                                                         </td>
@@ -935,20 +933,20 @@ export default function AdminProductsComp() {
                                                         </td>
                                                         <td className="px-4 py-3 text-right">
                                                             <div className="flex justify-end gap-2">
-                                                                <Button 
-                                                                    variant="outline" 
+                                                                <Button
+                                                                    variant="outline"
                                                                     size="sm"
                                                                     onClick={() => handleEdit(product.id)}
                                                                 >
-                                                                    <Pen className="h-4 w-4 mr-1" /> Edit
+                                                                    <Pen className="h-4 w-4 mr-1" /> Засах
                                                                 </Button>
-                                                                <Button 
-                                                                    variant="outline" 
+                                                                <Button
+                                                                    variant="outline"
                                                                     size="sm"
                                                                     onClick={() => handleDelete(product.id)}
                                                                     className="text-red-600 border-red-200 hover:bg-red-50"
                                                                 >
-                                                                    <Trash className="h-4 w-4 mr-1" /> Delete
+                                                                    <Trash className="h-4 w-4 mr-1" /> Устгах
                                                                 </Button>
                                                             </div>
                                                         </td>
@@ -957,7 +955,7 @@ export default function AdminProductsComp() {
                                             ) : (
                                                 <tr>
                                                     <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
-                                                        No products found
+                                                        Бүтээгдэхүүн олдсонгүй
                                                     </td>
                                                 </tr>
                                             )}

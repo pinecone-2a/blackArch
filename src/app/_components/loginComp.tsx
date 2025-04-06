@@ -97,19 +97,19 @@ export default function LoginComp() {
  
       <TransitionLink href="/">
         <Button className="bg-white text-black border absolute top-4 left-4 rounded-2xl duration-200 hover:bg-gray-100">
-          <ChevronLeft /> Back
+          <ChevronLeft /> Буцах
         </Button>
       </TransitionLink>
  
       <TransitionLink href="/signup">
         <Button className="bg-black text-white absolute top-4 right-4 rounded-2xl py-2 px-4 hover:bg-gray-900">
-          Sign up
+          Бүртгүүлэх
         </Button>
       </TransitionLink>
  
       <div className="text-center mb-6">
         <h1 className="text-2xl md:text-3xl">PineShop</h1>
-        <p className="text-base md:text-lg text-gray-600">Enjoy your special time with your specials.</p>
+        <p className="text-base md:text-lg text-gray-600">Нэвтрэн орж хүссэн бараагаа худалдан аваарай.</p>
       </div>
  
       <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6 w-full max-w-xs">
@@ -138,13 +138,13 @@ export default function LoginComp() {
             onClick={() => setShowPassword((prev) => !prev)}
             disabled={isLoading}
           >
-            {showPassword ? "Hide" : "Show"}
+            {showPassword ? "Харах" : "Нуух"}
           </button>
         </div>
  
         <TransitionLink href="/forgotpassword">
           <div className="text-sm text-gray-600 hover:underline">
-            Forgot password?
+            Нууц үгээ мартсан уу?
           </div>
         </TransitionLink>
  
@@ -156,11 +156,11 @@ export default function LoginComp() {
           {isLoading ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin" />
-              Logging in...
+              Уншиж байнөө...
             </>
           ) : (
             <>
-              Continue <ChevronRight />
+              Үргэлжлүүлэх <ChevronRight />
             </>
           )}
         </Button>
