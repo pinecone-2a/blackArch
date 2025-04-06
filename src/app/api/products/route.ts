@@ -24,7 +24,7 @@ export const POST = async (req: Request) => {
     const body = await req.json();
     const { name, description, price, quantity, categoryId, rating, image, color, size } = body;
 
-    // ✅ Create product in Prisma
+
     const product = await prisma.product.create({
       data: {
         name,
