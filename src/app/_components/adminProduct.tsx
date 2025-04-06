@@ -46,6 +46,27 @@ const colors = [
 
 const sizes = ["XS", "S", "M", "L", "XL", "XXL", "One Size"];
 
+// Helper function for API URLs to handle both development and production
+const getApiUrl = (path: string): string => {
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+        const isLocalhost = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1';
+        
+        if (isLocalhost) {
+            // Use environment variable in local development
+            return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+        } else {
+            // In production, use absolute URL to API
+            const origin = window.location.origin;
+            return `${origin}/api/${path.replace(/^\//, '')}`;
+        }
+    } else {
+        // Server-side rendering - use the environment variable
+        return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+    }
+};
+
 export default function AdminProductsComp() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [price, setPrice] = useState(0);
@@ -99,9 +120,17 @@ export default function AdminProductsComp() {
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products`);
+            // Always use absolute URL with origin
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            const url = `${origin}/api/products`;
+            console.log("Fetching products from:", url);
+            
+            const response = await fetch(url);
             const data = await response.json();
-            if (data.message && Array.isArray(data.message)) {
+            
+            console.log("Products response:", data);
+            
+            if (data && data.message) {
                 setProducts(data.message);
             }
         } catch (error) {
@@ -114,8 +143,16 @@ export default function AdminProductsComp() {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}category`);
+            // Always use absolute URL with origin
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            const url = `${origin}/api/category`;
+            console.log("Fetching categories from:", url);
+            
+            const response = await fetch(url);
             const data = await response.json();
+            
+            console.log("Categories response:", data);
+            
             if (data.message && Array.isArray(data.message)) {
                 setCategories(data.message);
             }
@@ -384,33 +421,36 @@ export default function AdminProductsComp() {
                 rating: 0,
             };
             
-            let response;
+            // Always use absolute URL with origin
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            let url = `${origin}/api/products`;
+            let method = "POST";
+            let requestBody: any = productData;
             
             if (editMode && editProductId) {
                 console.log("Updating product with ID:", editProductId);
                 console.log("Image being sent:", productData.image);
-                
-                // Update existing product using our internal API to handle Algolia
-                response = await fetch(`/api/products`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        id: editProductId,
-                        ...productData
-                    }),
-                });
+                method = "PUT";
+                requestBody = {
+                    id: editProductId,
+                    ...productData
+                };
             } else {
-                // Add new product
-                response = await fetch(`/api/products`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(productData),
-                });
+                console.log("Creating new product");
             }
+            
+            console.log("Product API request to:", url);
+            console.log("Method:", method);
+            console.log("Request body:", requestBody);
+            
+            // Make the API request
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestBody),
+            });
             
             if (response.ok) {
                 const responseData = await response.json();
@@ -481,8 +521,12 @@ export default function AdminProductsComp() {
     const handleDelete = async (productId: string) => {
         if (confirm("Are you sure you want to delete this product?")) {
             try {
-                // Use our internal API that handles Algolia deletion correctly
-                const response = await fetch(`/api/products?id=${productId}`, {
+                // Always use absolute URL with origin
+                const origin = typeof window !== 'undefined' ? window.location.origin : '';
+                const url = `${origin}/api/products?id=${productId}`;
+                console.log("Deleting product at:", url);
+                
+                const response = await fetch(url, {
                     method: "DELETE",
                 });
                 
@@ -521,12 +565,18 @@ export default function AdminProductsComp() {
         
         if (confirm(`Are you sure you want to delete ${selectedProducts.length} products?`)) {
             try {
-                // Sequential deletion using our internal API that handles Algolia
-                const deletePromises = selectedProducts.map(productId => 
-                    fetch(`/api/products?id=${productId}`, {
+                // Always use absolute URL with origin
+                const origin = typeof window !== 'undefined' ? window.location.origin : '';
+                
+                // Sequential deletion using our internal API
+                const deletePromises = selectedProducts.map(productId => {
+                    const url = `${origin}/api/products?id=${productId}`;
+                    console.log("Bulk deleting product at:", url);
+                    
+                    return fetch(url, {
                         method: "DELETE",
-                    })
-                );
+                    });
+                });
                 
                 const results = await Promise.all(deletePromises);
                 const allSuccessful = results.every(response => response.ok);

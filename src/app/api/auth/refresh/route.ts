@@ -6,7 +6,6 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET!;
 
 export async function GET(req: Request) {
-  // Get cookie using headers API instead of cookies()
   const refreshToken = req.headers.get('cookie')?.match(/refreshToken=([^;]+)/)?.[1];
 
   if (!refreshToken) {
@@ -18,7 +17,6 @@ export async function GET(req: Request) {
       userData: { id: string; email: string; role: string };
     };
 
-    // Create access token with the same structure as in login route
     const accessToken = jwt.sign(
       { userData: decoded.userData }, // Keeps the same userData structure
       ACCESS_TOKEN_SECRET,

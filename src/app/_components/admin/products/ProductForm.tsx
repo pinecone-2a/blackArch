@@ -49,6 +49,27 @@ interface ProductFormProps {
     onProductSaved: () => void;
 }
 
+// Helper function for API URLs to handle both development and production
+const getApiUrl = (path: string): string => {
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+        const isLocalhost = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1';
+        
+        if (isLocalhost) {
+            // Use environment variable in local development
+            return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+        } else {
+            // In production, use absolute URL to API
+            const origin = window.location.origin;
+            return `${origin}/api/${path.replace(/^\//, '')}`;
+        }
+    } else {
+        // Server-side rendering - use the environment variable
+        return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+    }
+};
+
 const ProductForm = ({
     isOpen,
     setIsOpen,
@@ -177,20 +198,19 @@ const ProductForm = ({
             let response;
             
             if (editMode && editProductId) {
-                // Update existing product
-                response = await fetch(`/api/products`, {
+                // Update existing product - use window.location.origin to ensure absolute path
+                const origin = typeof window !== 'undefined' ? window.location.origin : '';
+                response = await fetch(`${origin}/api/products/${editProductId}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                        id: editProductId,
-                        ...productData
-                    }),
+                    body: JSON.stringify(productData),
                 });
             } else {
-                // Create new product
-                response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products`, {
+                // Create new product - use window.location.origin to ensure absolute path
+                const origin = typeof window !== 'undefined' ? window.location.origin : '';
+                response = await fetch(`${origin}/api/products`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

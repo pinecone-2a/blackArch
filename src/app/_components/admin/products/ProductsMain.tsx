@@ -9,6 +9,27 @@ import ProductTable from "./ProductTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
 
+// Helper function for API URLs to handle both development and production
+const getApiUrl = (path: string): string => {
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+        const isLocalhost = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1';
+        
+        if (isLocalhost) {
+            // Use environment variable in local development
+            return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+        } else {
+            // In production, use absolute URL to API
+            const origin = window.location.origin;
+            return `${origin}/api/${path.replace(/^\//, '')}`;
+        }
+    } else {
+        // Server-side rendering - use the environment variable
+        return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+    }
+};
+
 const ProductsMain = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [products, setProducts] = useState<any[]>([]);
@@ -30,7 +51,9 @@ const ProductsMain = () => {
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products`);
+            // Use window.location.origin to ensure absolute path
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            const response = await fetch(`${origin}/api/products`);
             const data = await response.json();
             if (data.message && Array.isArray(data.message)) {
                 setProducts(data.message);
@@ -45,7 +68,9 @@ const ProductsMain = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}category`);
+            // Use window.location.origin to ensure absolute path
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            const response = await fetch(`${origin}/api/category`);
             const data = await response.json();
             if (data.message && Array.isArray(data.message)) {
                 setCategories(data.message);
@@ -98,7 +123,9 @@ const ProductsMain = () => {
 
     const handleDelete = async (productId: string) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products/${productId}`, {
+            // Use window.location.origin to ensure absolute path
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            const response = await fetch(`${origin}/api/products/${productId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -137,8 +164,10 @@ const ProductsMain = () => {
         if (selectedProducts.length === 0) return;
         
         try {
+            // Use window.location.origin to ensure absolute path
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
             const promises = selectedProducts.map(id => 
-                fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products/${id}`, {
+                fetch(`${origin}/api/products/${id}`, {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
