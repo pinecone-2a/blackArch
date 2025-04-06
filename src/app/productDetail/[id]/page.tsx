@@ -25,7 +25,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ params }) => {
 
   return (
     <ProductLayout>
-      {/* Breadcrumb navigation */}
+
       <ProductBreadcrumb 
         isLoading={isLoading}
         productName={product?.name}
@@ -33,9 +33,9 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ params }) => {
         categoryId={product?.categoryId}
       />
 
-      {/* Product details grid */}
+
       <div className='grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12'>
-        {/* Product images */}
+
         <ProductImageGallery 
           isLoading={isLoading}
           mainImage={mainImage}
@@ -47,7 +47,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ params }) => {
           onImageChange={handleImageChange}
         />
 
-        {/* Product details */}
+
         <ProductInfo 
           isLoading={isLoading}
           product={product || {}}
@@ -56,7 +56,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ params }) => {
         />
       </div>
 
-      {/* Similar products section */}
+
       <SimilarProducts 
         isLoading={isLoading}
         products={similarProducts}
