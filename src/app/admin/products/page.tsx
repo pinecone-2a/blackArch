@@ -1,12 +1,12 @@
 "use client";
 
 import AdminLayout from "@/app/_components/AdminLayout";
-import AdminProductsComp from "@/app/_components/adminProduct";
+import ProductsMain from "@/app/_components/admin/products/ProductsMain";
 
 export default function AdminProducts() {
     return (
         <AdminLayout>
-            <AdminProductsComp />
+            <ProductsMain />
         </AdminLayout>
     );
 }

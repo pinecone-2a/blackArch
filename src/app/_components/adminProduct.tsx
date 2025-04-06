@@ -46,6 +46,27 @@ const colors = [
 
 const sizes = ["XS", "S", "M", "L", "XL", "XXL", "One Size"];
 
+// Helper function for API URLs to handle both development and production
+const getApiUrl = (path: string): string => {
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+        const isLocalhost = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1';
+        
+        if (isLocalhost) {
+            // Use environment variable in local development
+            return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+        } else {
+            // In production, use absolute URL to API
+            const origin = window.location.origin;
+            return `${origin}/api/${path.replace(/^\//, '')}`;
+        }
+    } else {
+        // Server-side rendering - use the environment variable
+        return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+    }
+};
+
 export default function AdminProductsComp() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [price, setPrice] = useState(0);
@@ -59,7 +80,7 @@ export default function AdminProductsComp() {
     const [categories, setCategories] = useState<{ id: string, name: string }[]>([]);
     const [image, setImage] = useState<string | null>(null);
     const [croppedImage, setCroppedImage] = useState<string | null>(null);
-    const [crop, setCrop] = useState<Crop>({ unit: '%', width: 50, height: 50, x: 0, y: 0 });
+    const [crop, setCrop] = useState<Crop>({ unit: '%', width: 80, height: 80, x: 10, y: 10 });
     const [imageRef, setImageRef] = useState<HTMLImageElement | null>(null);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
     
@@ -99,9 +120,17 @@ export default function AdminProductsComp() {
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products`);
+            // Always use absolute URL with origin
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            const url = `${origin}/api/products`;
+            console.log("Fetching products from:", url);
+            
+            const response = await fetch(url);
             const data = await response.json();
-            if (data.message && Array.isArray(data.message)) {
+            
+            console.log("Products response:", data);
+            
+            if (data && data.message) {
                 setProducts(data.message);
             }
         } catch (error) {
@@ -114,8 +143,16 @@ export default function AdminProductsComp() {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}category`);
+            // Always use absolute URL with origin
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            const url = `${origin}/api/category`;
+            console.log("Fetching categories from:", url);
+            
+            const response = await fetch(url);
             const data = await response.json();
+            
+            console.log("Categories response:", data);
+            
             if (data.message && Array.isArray(data.message)) {
                 setCategories(data.message);
             }
@@ -130,84 +167,192 @@ export default function AdminProductsComp() {
         const file = event.target.files?.[0];
         if (file && file.type.startsWith("image/")) {
             const reader = new FileReader();
-            reader.onloadend = () => setImage(reader.result as string);
+            reader.onloadend = () => {
+                setImage(reader.result as string);
+                // Reset crop state when new image is uploaded
+                setCrop({ unit: '%', width: 80, height: 80, x: 10, y: 10 });
+            };
             reader.readAsDataURL(file);
         }
     };
 
-    const onCropComplete = (croppedArea: any, croppedPixels: any) => {
-        setCroppedAreaPixels(croppedPixels);
+    // This is called when the user has finished drawing the crop box
+    const onCropComplete = (crop: Crop) => {
+        if (crop.width && crop.height) {
+            console.log("Crop complete:", crop);
+            setCrop(crop);
+        }
     };
 
     const uploadToCloudinary = async (blob: Blob) => {
         const formData = new FormData();
         formData.append("file", blob);
-        formData.append("upload_preset", "unsigned_pineshop");
-
+        
+        // The upload preset should start with "unsigned_" for client-side uploads
+        const uploadPreset = "unsigned_pineshop";
+        console.log("Using upload preset:", uploadPreset);
+        formData.append("upload_preset", uploadPreset);
+        
         try {
-            const res = await fetch("https://api.cloudinary.com/v1_1/dkfnzxaid/image/upload", {
+            console.log("Starting Cloudinary upload...");
+            
+            const cloudName = "dkfnzxaid";
+            console.log("Cloud name:", cloudName);
+            
+            const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+            console.log("Upload URL:", uploadUrl);
+            
+            // Log blob details
+            console.log("Uploading blob:", {
+                type: blob.type,
+                size: Math.round(blob.size / 1024) + "KB"
+            });
+            
+            const res = await fetch(uploadUrl, {
                 method: "POST",
                 body: formData,
             });
 
+            // Check response status
+            console.log("Cloudinary response status:", res.status);
+            
+            if (!res.ok) {
+                try {
+                    const errorText = await res.text();
+                    console.error("Cloudinary upload error text:", errorText);
+                    
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        console.error("Cloudinary error details:", errorData);
+                        throw new Error(`Failed to upload image to Cloudinary: ${errorData.error?.message || JSON.stringify(errorData)}`);
+                    } catch (jsonError) {
+                        console.error("Error parsing Cloudinary error response:", jsonError);
+                        throw new Error(`Failed to upload image to Cloudinary. Status: ${res.status}`);
+                    }
+                } catch (textError) {
+                    console.error("Error getting response text:", textError);
+                    throw new Error(`Failed to upload image to Cloudinary. Status: ${res.status}`);
+                }
+            }
+
             const data = await res.json();
+            console.log("Cloudinary upload successful:", data.secure_url);
             setCroppedImage(data.secure_url);
+            return data.secure_url;
         } catch (error) {
-            console.error("Upload failed:", error);
+            console.error("Upload to Cloudinary failed:", error);
+            toast.error("Image upload failed. Please try again.");
+            throw error;
         }
     };
 
     const getCroppedImage = async () => {
-        if (!imageRef || !image) return;
+        if (!imageRef || !image) {
+            console.error("Missing image reference or source image");
+            toast.error("Image processing failed. Please try again.");
+            return;
+        }
         
         // Set a loading state for the crop operation
         setSubmitting(true);
         
-        // Use setTimeout to allow the UI to update with loading state
-        setTimeout(async () => {
-            try {
-                const canvas = document.createElement("canvas");
-                const scaleX = imageRef.naturalWidth / imageRef.width;
-                const scaleY = imageRef.naturalHeight / imageRef.height;
+        try {
+            console.log("Starting image crop...");
+            console.log("Current crop:", crop);
+            console.log("Image dimensions:", {
+                naturalWidth: imageRef.naturalWidth,
+                naturalHeight: imageRef.naturalHeight,
+                displayWidth: imageRef.width,
+                displayHeight: imageRef.height
+            });
             
-                const cropWidth = crop.width ? crop.width * scaleX : 0;
-                const cropHeight = crop.height ? crop.height * scaleY : 0;
+            // Create a canvas element for the cropped image
+            const canvas = document.createElement("canvas");
             
-                canvas.width = cropWidth;
-                canvas.height = cropHeight;
+            // Calculate scaling factors between displayed size and natural size
+            const scaleX = imageRef.naturalWidth / imageRef.width;
+            const scaleY = imageRef.naturalHeight / imageRef.height;
             
-                const ctx = canvas.getContext("2d");
-                if (!ctx) {
-                    setSubmitting(false);
-                    return;
-                }
-            
-                ctx.drawImage(
-                    imageRef,
-                    crop.x * scaleX,
-                    crop.y * scaleY,
-                    cropWidth,
-                    cropHeight,
-                    0,
-                    0,
-                    cropWidth,
-                    cropHeight
-                );
-            
-                canvas.toBlob(async (blob) => {
-                    if (blob) {
-                        await uploadToCloudinary(blob);
-                        setSubmitting(false);
-                    } else {
-                        setSubmitting(false);
-                    }
-                }, "image/jpeg");
-            } catch (error) {
-                console.error("Error cropping image:", error);
-                toast.error("Failed to crop image");
-                setSubmitting(false);
+            // Calculate crop dimensions in pixels based on the unit
+            let pixelCrop;
+            if (crop.unit === '%') {
+                // Convert percentage to pixels
+                pixelCrop = {
+                    x: (crop.x * imageRef.naturalWidth) / 100,
+                    y: (crop.y * imageRef.naturalHeight) / 100,
+                    width: (crop.width * imageRef.naturalWidth) / 100,
+                    height: (crop.height * imageRef.naturalHeight) / 100
+                };
+            } else {
+                // Convert display pixels to actual pixels
+                pixelCrop = {
+                    x: crop.x * scaleX,
+                    y: crop.y * scaleY,
+                    width: crop.width * scaleX,
+                    height: crop.height * scaleY
+                };
             }
-        }, 0);
+            
+            console.log("Calculated crop in pixels:", pixelCrop);
+            
+            // Ensure the crop dimensions don't exceed the image boundaries
+            pixelCrop.x = Math.max(0, pixelCrop.x);
+            pixelCrop.y = Math.max(0, pixelCrop.y);
+            pixelCrop.width = Math.min(pixelCrop.width, imageRef.naturalWidth - pixelCrop.x);
+            pixelCrop.height = Math.min(pixelCrop.height, imageRef.naturalHeight - pixelCrop.y);
+            
+            console.log("Adjusted crop (after boundary checks):", pixelCrop);
+            
+            // Set canvas size to match the crop size (use actual dimensions, not percentages)
+            canvas.width = pixelCrop.width;
+            canvas.height = pixelCrop.height;
+            
+            const ctx = canvas.getContext("2d");
+            if (!ctx) {
+                throw new Error("Failed to get canvas context");
+            }
+            
+            // Draw only the cropped portion of the image to the canvas
+            ctx.drawImage(
+                imageRef,
+                pixelCrop.x,
+                pixelCrop.y,
+                pixelCrop.width,
+                pixelCrop.height,
+                0,
+                0,
+                pixelCrop.width,
+                pixelCrop.height
+            );
+            
+            // Convert canvas to a data URL (JPEG format with 90% quality)
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+            
+            try {
+                // Convert data URL to blob
+                const response = await fetch(dataUrl);
+                const blob = await response.blob();
+                
+                console.log("Created blob:", {
+                    type: blob.type,
+                    size: (blob.size / 1024).toFixed(2) + "KB"
+                });
+                
+                // Upload the blob to Cloudinary
+                const imageUrl = await uploadToCloudinary(blob);
+                console.log("Successfully uploaded to Cloudinary:", imageUrl);
+                
+                toast.success("Image cropped and uploaded successfully");
+            } catch (error) {
+                console.error("Failed to process or upload image:", error);
+                toast.error("Failed to upload image. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error cropping image:", error);
+            toast.error("Failed to crop image. Please try again.");
+        } finally {
+            setSubmitting(false);
+        }
     };
 
 
@@ -252,57 +397,7 @@ export default function AdminProductsComp() {
     const handleSubmit = async () => {
         if (!productForm.name || !productForm.price || !productForm.quantity || !productForm.categoryId || productForm.color.length === 0 || productForm.size.length === 0) {
             toast.error("Please fill out all required fields");
-            return;
-        }
-
-        setSubmitting(true);
-
-        try {
-            const productData = {
-                name: productForm.name,
-                description: productForm.description,
-                price: parseInt(productForm.price),
-                quantity: parseInt(productForm.quantity),
-                image: croppedImage || "/t-shirt.png",
-                categoryId: productForm.categoryId,
-                color: productForm.color,
-                size: productForm.size,
-                rating: 0,
-            };
-
-            let response;
-
-            if (editMode && editProductId) {
-                // Update existing product
-                response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products/${editProductId}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(productData),
-                });
-            } else {
-                // Add new product
-                response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(productData),
-                });
-            }
-
-            if (response.ok) {
-                toast.success(editMode ? "Product updated successfully" : "Product added successfully");
-                fetchProducts();
-                // Reset form
-                resetForm();
-            } else {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Failed to process product");
-            }
-        } catch (error) {
-            console.error("Error submitting product:", error);
+    error);
             toast.error(editMode ? "Failed to update product" : "Failed to add product");
         } finally {
             setSubmitting(false);
@@ -344,16 +439,26 @@ export default function AdminProductsComp() {
                 color: Array.isArray(productToEdit.color) ? [...productToEdit.color] : [],
                 size: Array.isArray(productToEdit.size) ? [...productToEdit.size] : [],
             });
-            setCroppedImage(productToEdit.image as string);
+            
+            // Set the cropped image state to the current product image
+            setCroppedImage(productToEdit.image || null);
+            
+            // Clear the image upload state to avoid conflicts
+            setImage(null);
+            
             setIsDialogOpen(true);
-
         }
     };
 
     const handleDelete = async (productId: string) => {
         if (confirm("Are you sure you want to delete this product?")) {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products/${productId}`, {
+                // Always use absolute URL with origin
+                const origin = typeof window !== 'undefined' ? window.location.origin : '';
+                const url = `${origin}/api/products?id=${productId}`;
+                console.log("Deleting product at:", url);
+                
+                const response = await fetch(url, {
                     method: "DELETE",
                 });
 
@@ -361,7 +466,8 @@ export default function AdminProductsComp() {
                     toast.success("Product deleted successfully");
                     fetchProducts();
                 } else {
-                    throw new Error("Failed to delete product");
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Failed to delete product");
                 }
             } catch (error) {
                 console.error("Error deleting product:", error);
@@ -386,31 +492,6 @@ export default function AdminProductsComp() {
         }
     };
 
-    const handleBulkDelete = async () => {
-        if (selectedProducts.length === 0) return;
-
-        if (confirm(`Are you sure you want to delete ${selectedProducts.length} products?`)) {
-            try {
-                // Sequential deletion for multiple products
-                const deletePromises = selectedProducts.map(productId =>
-                    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}products/${productId}`, {
-                        method: "DELETE",
-                    })
-                );
-
-                await Promise.all(deletePromises);
-
-                toast.success(`${selectedProducts.length} products deleted successfully`);
-                fetchProducts();
-                setSelectedProducts([]);
-            } catch (error) {
-                console.error("Error deleting products:", error);
-                toast.error("Failed to delete some products");
-            }
-        }
-    };
-
-    const filteredProducts = products.filter(product => {
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             product.description?.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = categoryFilter ? product.category === categoryFilter.toLowerCase() : true;
@@ -458,18 +539,44 @@ export default function AdminProductsComp() {
                         <div className="grid gap-4 py-4">
                             <div className="flex flex-col items-center gap-4">
                                 {image && !croppedImage ? (
-                                    <ReactCrop
-                                        crop={crop}
-                                        onChange={(c) => setCrop(c)}
-                                        aspect={1}
-                                    >
-                                        <img
-                                            src={image}
-                                            alt="Product Preview"
-                                            ref={(img) => setImageRef(img)}
-                                            className="max-h-[300px] rounded-md"
-                                        />
-                                    </ReactCrop>
+                                    <div className="flex flex-col items-center gap-3">
+                                        <p className="text-sm text-gray-500">
+                                            Drag to create a crop area or adjust the corners. Click Crop when ready.
+                                        </p>
+                                        <ReactCrop
+                                            crop={crop}
+                                            onChange={(c) => setCrop(c)}
+                                            onComplete={onCropComplete}
+                                            aspect={1}
+                                            circularCrop={false}
+                                        >
+                                            <img
+                                                src={image}
+                                                alt="Product Preview"
+                                                ref={(img) => setImageRef(img)}
+                                                className="max-h-[300px] rounded-md"
+                                                onLoad={(e) => {
+                                                    // Save reference to the image element
+                                                    const img = e.currentTarget;
+                                                    setImageRef(img);
+                                                    
+                                                    // Center the initial crop
+                                                    const width = Math.min(70, (img.width / img.height) * 70);
+                                                    const height = Math.min(70, (img.height / img.width) * 70);
+                                                    const x = (100 - width) / 2;
+                                                    const y = (100 - height) / 2;
+                                                    
+                                                    setCrop({
+                                                        unit: '%',
+                                                        width,
+                                                        height,
+                                                        x,
+                                                        y
+                                                    });
+                                                }}
+                                            />
+                                        </ReactCrop>
+                                    </div>
                                 ) : croppedImage ? (
                                     <div className="w-full flex justify-center">
                                         <Image
@@ -496,7 +603,11 @@ export default function AdminProductsComp() {
                                         className="flex-1"
                                     />
                                     {image && !croppedImage && (
-                                        <Button onClick={getCroppedImage} type="button" disabled={submitting}>
+                                        <Button 
+                                            onClick={getCroppedImage} 
+                                            type="button" 
+                                            disabled={submitting || !crop.width || !crop.height}
+                                        >
                                             {submitting ? (
                                                 <>
                                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

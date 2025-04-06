@@ -2,17 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import ProductImageUploader from '@/app/_components/admin/ProductImageUploader';
 
-interface EditProductProps {
+// Using proper Next.js page props type
+interface PageProps {
   params: {
     id: string;
   };
 }
 
-export default function EditProduct({ params }: EditProductProps) {
+export default function EditProduct({ params }: PageProps) {
   const router = useRouter();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -23,14 +23,37 @@ export default function EditProduct({ params }: EditProductProps) {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`/api/products/${params.id}`);
-        setProduct(response.data);
+        console.log('Fetching product with ID:', params.id);
+        const response = await fetch(`/api/products/${params.id}`);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Failed to fetch product:', errorData);
+          throw new Error(errorData.error || 'Failed to fetch product');
+        }
+        
+        const productData = await response.json();
+        console.log('Product data:', productData);
+        setProduct(productData);
         
         // Initialize images array with the main image and any additional images
-        const productImages = [response.data.image];
-        if (response.data.images && response.data.images.length > 0) {
-          productImages.push(...response.data.images);
+        const productImages = [];
+        
+        // Add main image if exists
+        if (productData.image) {
+          console.log('Main image found:', productData.image);
+          productImages.push(productData.image);
+        } else {
+          console.warn('No main image found for product');
         }
+        
+        // Add additional images if they exist
+        if (productData.images && Array.isArray(productData.images) && productData.images.length > 0) {
+          console.log('Additional images found:', productData.images);
+          productImages.push(...productData.images);
+        }
+        
+        console.log('Setting images array:', productImages);
         setImages(productImages);
       } catch (error) {
         console.error('Error fetching product:', error);
@@ -63,8 +86,11 @@ export default function EditProduct({ params }: EditProductProps) {
       const formData = new FormData(e.target as HTMLFormElement);
       const formJson = Object.fromEntries(formData.entries());
       
-      // Update the product with the new data and images
-      await axios.put(`/api/products/${params.id}`, {
+      console.log('Submitting with images:', images);
+      
+      // Create the request data
+      const updateData = {
+        id: params.id,
         ...formJson,
         price: parseInt(formJson.price as string),
         rating: parseInt(formJson.rating as string),
@@ -72,7 +98,27 @@ export default function EditProduct({ params }: EditProductProps) {
         images: images.slice(1), // Rest of the images as additional images
         color: product.color, // Keep existing values for these arrays
         size: product.size
+      };
+      
+      console.log('Update payload:', updateData);
+      
+      // Use the global products API endpoint with our internal API
+      const response = await fetch('/api/products', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updateData)
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Update failed:', errorData);
+        throw new Error(errorData.error || 'Failed to update product');
+      }
+      
+      const result = await response.json();
+      console.log('Update successful:', result);
       
       router.push('/admin/products');
       router.refresh();
@@ -96,7 +142,7 @@ export default function EditProduct({ params }: EditProductProps) {
     return (
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-        <p>The product you're looking for doesn't exist or has been removed.</p>
+        <p>The product you are looking for does not exist or has been removed.</p>
         <button 
           onClick={() => router.push('/admin/products')}
           className="mt-4 px-4 py-2 bg-black text-white rounded-md"

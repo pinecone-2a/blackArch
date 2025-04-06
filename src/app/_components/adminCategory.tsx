@@ -28,6 +28,27 @@ type Category = {
   products?: any[];
 };
 
+// Helper function for API URLs to handle both development and production
+const getApiUrl = (path: string): string => {
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+        const isLocalhost = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1';
+        
+        if (isLocalhost) {
+            // Use environment variable in local development
+            return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+        } else {
+            // In production, use absolute URL to API
+            const origin = window.location.origin;
+            return `${origin}/api/${path.replace(/^\//, '')}`;
+        }
+    } else {
+        // Server-side rendering - use the environment variable
+        return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+    }
+};
+
 export default function AdminCategoryComp() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,8 +71,16 @@ export default function AdminCategoryComp() {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}category`);
+      // Always use absolute URL with origin
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const url = `${origin}/api/category`;
+      console.log("Fetching categories from:", url);
+      
+      const response = await fetch(url);
       const data = await response.json();
+      
+      console.log("Categories response:", data);
+      
       if (data.message && Array.isArray(data.message)) {
         setCategories(data.message);
       }
@@ -70,17 +99,27 @@ export default function AdminCategoryComp() {
   };
 
   // Handle form submission for adding/editing category
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
     if (!formData.name.trim()) {
       toast.error("Category name is required");
       return;
     }
-
+    
     setSubmitting(true);
+    
     try {
+      // Always use absolute URL with origin
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      let url;
+      
       if (editMode && editCategoryId) {
         // Update existing category
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}category/${editCategoryId}`, {
+        url = `${origin}/api/category/${editCategoryId}`;
+        console.log("Updating category at:", url);
+        
+        const response = await fetch(url, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -96,7 +135,10 @@ export default function AdminCategoryComp() {
         }
       } else {
         // Create new category
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}category`, {
+        url = `${origin}/api/category`;
+        console.log("Creating category at:", url);
+        
+        const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -136,7 +178,12 @@ export default function AdminCategoryComp() {
   // Handle deleting a category
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}category/${id}`, {
+      // Always use absolute URL with origin
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const url = `${origin}/api/category/${id}`;
+      console.log("Deleting category at:", url);
+      
+      const response = await fetch(url, {
         method: "DELETE",
       });
 
