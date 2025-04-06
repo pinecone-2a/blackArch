@@ -140,28 +140,60 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     <div className="space-y-6">
       {isLoading ? (
         <>
-          <Skeleton className="h-10 w-4/5" />
+          {/* Product title */}
+          <Skeleton className="h-10 w-4/5 rounded-md" />
+          
+          {/* Ratings */}
           <div className="flex items-center space-x-2">
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-16" />
+            <div className="flex">
+              {Array(5).fill(0).map((_, index) => (
+                <Skeleton key={index} className="h-4 w-4 mx-0.5 rounded" />
+              ))}
+            </div>
+            <Skeleton className="h-4 w-28 rounded" />
           </div>
-          <Skeleton className="h-12 w-32" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-6 w-40" />
-          <div className="flex gap-2">
-            {Array(6).fill(0).map((_, index) => (
-              <Skeleton key={index} className="w-10 h-10 rounded-full" />
-            ))}
+          
+          {/* Price section */}
+          <div className="flex items-center space-x-4">
+            <Skeleton className="h-8 w-28 rounded-md" />
+            <Skeleton className="h-6 w-24 rounded-md" />
+            <Skeleton className="h-6 w-20 rounded-full" />
           </div>
-          <Skeleton className="h-6 w-36" />
-          <div className="flex gap-4">
-            {Array(4).fill(0).map((_, index) => (
-              <Skeleton key={index} className="w-24 h-10 rounded-lg" />
-            ))}
+          
+          {/* Tabs */}
+          <div>
+            <div className="flex mb-4 border-b">
+              {Array(3).fill(0).map((_, index) => (
+                <Skeleton key={index} className="h-8 w-28 mx-2 rounded" />
+              ))}
+            </div>
+            <Skeleton className="h-24 w-full rounded-md" />
           </div>
-          <div className="flex space-x-4">
-            <Skeleton className="h-12 w-32" />
-            <Skeleton className="h-12 w-full" />
+          
+          {/* Color selection */}
+          <div>
+            <Skeleton className="h-6 w-40 mb-3 rounded" />
+            <div className="flex gap-2">
+              {Array(6).fill(0).map((_, index) => (
+                <Skeleton key={index} className="w-10 h-10 rounded-full" />
+              ))}
+            </div>
+          </div>
+          
+          {/* Size selection */}
+          <div>
+            <Skeleton className="h-6 w-36 mb-3 rounded" />
+            <div className="flex gap-4">
+              {Array(4).fill(0).map((_, index) => (
+                <Skeleton key={index} className="w-24 h-10 rounded-lg" />
+              ))}
+            </div>
+          </div>
+          
+          {/* Quantity and add to cart */}
+          <div className="flex space-x-4 pt-2">
+            <Skeleton className="h-12 w-32 rounded-lg" />
+            <Skeleton className="h-12 w-full rounded-lg" />
           </div>
         </>
       ) : (
@@ -251,18 +283,22 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                 <span className="text-xs text-red-500">Required</span>
               )}
             </div>
-            
-            <div className='flex flex-wrap gap-3'>
-              {colorOptions.map(({ color, label, bgColor, ringColor }) => (
+            <div className={`flex flex-wrap gap-3 ${!selectedColor && shake ? 'animate-shake' : ''}`}>
+              {colorOptions.map((option) => (
                 <button
-                  key={color}
-                  aria-label={`Select ${label} color`}
-                  className={`relative w-10 h-10 rounded-full ${bgColor} hover:ring-4 transition duration-300 flex items-center justify-center
-                      ${selectedColor === color ? 'ring-4 ring-black/30' : ''} ${ringColor}`}
-                  onClick={() => handleColorClick(color)}
+                  key={option.color}
+                  type="button"
+                  className={`w-10 h-10 rounded-full border transition-all ${option.bgColor} ${
+                    selectedColor === option.color
+                      ? 'ring-2 ring-offset-2 ring-black scale-110'
+                      : `ring-0 ${option.ringColor} hover:ring-1 hover:ring-offset-2`
+                  }`}
+                  onClick={() => handleColorClick(option.color)}
+                  title={option.label}
+                  aria-label={`Select ${option.label} color`}
                 >
-                  {selectedColor === color && (
-                    <Check className="text-white" />
+                  {selectedColor === option.color && (
+                    <Check className="h-5 w-5 text-white mx-auto" />
                   )}
                 </button>
               ))}
@@ -278,18 +314,17 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
               {!selectedSize && (
                 <span className="text-xs text-red-500">Required</span>
               )}
-              <button className="text-xs text-blue-600 underline">Size guide</button>
             </div>
-            
-            <div className='flex flex-wrap gap-3'>
+            <div className={`flex flex-wrap gap-3 ${!selectedSize && shake ? 'animate-shake' : ''}`}>
               {sizeOptions.map((size) => (
                 <button
                   key={size}
-                  className={`px-4 py-2 border rounded-lg transition-all duration-300 ease-out
-                  hover:bg-gray-100
-                  ${selectedSize === size 
-                      ? 'bg-black text-white border-black' 
-                      : 'border-gray-300 text-gray-700'}`}
+                  type="button"
+                  className={`min-w-20 py-2 px-4 border rounded-lg text-sm transition-all ${
+                    selectedSize === size
+                      ? 'border-black bg-black text-white font-medium'
+                      : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                  }`}
                   onClick={() => handleSizeClick(size)}
                 >
                   {size}
@@ -298,61 +333,41 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             </div>
           </div>
           
-          {/* Quantity selector and add to cart */}
-          <div className='flex flex-wrap gap-4 items-center pt-4'>
-            <div className='flex items-center border border-gray-300 rounded-lg overflow-hidden'>
+          {/* Quantity and add to cart */}
+          <div className="pt-4 flex flex-col sm:flex-row gap-4">
+            <div className="flex h-12 w-full sm:w-32 border rounded-lg overflow-hidden divide-x">
               <button
-                className='px-3 py-2 text-gray-500 hover:bg-gray-100 transition-colors'
+                type="button"
+                className="flex-1 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors"
                 onClick={() => handleQuantityChange('decrease')}
-                disabled={quantity <= 1}
                 aria-label="Decrease quantity"
+                disabled={quantity <= 1}
               >
-                <Minus className="w-4 h-4" />
+                <Minus className="h-4 w-4" />
               </button>
-              
-              <span className='w-12 text-center font-medium'>{quantity}</span>
-              
+              <div className="flex-1 flex items-center justify-center font-medium">
+                {quantity}
+              </div>
               <button
-                className='px-3 py-2 text-gray-500 hover:bg-gray-100 transition-colors'
+                type="button"
+                className="flex-1 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors"
                 onClick={() => handleQuantityChange('increase')}
                 aria-label="Increase quantity"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="h-4 w-4" />
               </button>
             </div>
             
             <Button
-              className={`relative flex-1 gap-2 py-6 font-medium bg-black text-white hover:bg-gray-800 shadow-lg
-              transition-all duration-300 ${shake ? 'animate-shake' : ''}`}
               onClick={handleAddToCartClick}
+              className={`w-full h-12 text-base font-medium relative overflow-hidden ${
+                ripple ? 'after:animate-ripple' : ''
+              }`}
+              disabled={!selectedColor || !selectedSize}
             >
-              <ShoppingCart className="w-5 h-5" />
+              <ShoppingCart className="mr-2 h-5 w-5" />
               Add to Cart
-              {ripple && (
-                <span className="absolute inset-0 flex items-center justify-center">
-                  <span className="w-20 h-20 bg-white opacity-30 rounded-full animate-ping"></span>
-                </span>
-              )}
             </Button>
-            
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="p-2.5" 
-              aria-label="Share product"
-            >
-              <Share2 className="w-5 h-5" />
-            </Button>
-          </div>
-          
-          {/* Product tags */}
-          <div className="pt-4">
-            <div className="flex flex-wrap gap-2 text-xs text-gray-600">
-              <span className="px-2 py-1 bg-gray-100 rounded-full">Streetwear</span>
-              <span className="px-2 py-1 bg-gray-100 rounded-full">Casual</span>
-              <span className="px-2 py-1 bg-gray-100 rounded-full">Fashion</span>
-              <span className="px-2 py-1 bg-gray-100 rounded-full">Urban</span>
-            </div>
           </div>
         </>
       )}

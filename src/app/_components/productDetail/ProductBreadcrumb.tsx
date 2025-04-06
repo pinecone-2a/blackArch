@@ -35,27 +35,40 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({
           <BreadcrumbItem>
             <BreadcrumbLink className='hover:underline text-gray-600' href="/category">Shop</BreadcrumbLink>
           </BreadcrumbItem>
-          {categoryName && categoryId && (
+          {isLoading ? (
             <>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbLink 
-                  className='hover:underline text-gray-600' 
-                  href={`/category?cat=${categoryId}`}
-                >
-                  {categoryName}
-                </BreadcrumbLink>
+                <Skeleton className="h-5 w-20 rounded" />
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <Skeleton className="h-5 w-24 rounded" />
+              </BreadcrumbItem>
+            </>
+          ) : (
+            <>
+              {categoryName && categoryId && (
+                <>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbLink 
+                      className='hover:underline text-gray-600' 
+                      href={`/category?cat=${categoryId}`}
+                    >
+                      {categoryName}
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                </>
+              )}
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className='text-black font-medium'>
+                  {productName || 'Product'}
+                </BreadcrumbPage>
               </BreadcrumbItem>
             </>
           )}
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage className='text-black font-medium'>
-              {isLoading ? (
-                <Skeleton className="h-5 w-20" />
-              ) : productName || 'Product'}
-            </BreadcrumbPage>
-          </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
     </div>
