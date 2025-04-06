@@ -1,123 +1,124 @@
 "use client"
-import React from 'react';
-import Footer from '@/app/_components/homeFooter';
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import Header from '@/app/_components/homeHeader';
-import { Skeleton } from "@/components/ui/skeleton";
-import { liteClient as algoliasearch } from 'algoliasearch/lite';
-import { FC } from 'react';
-import { use } from "react"
-import { useContext } from "react";
-import { UserContext } from "@/lib/userContext";
-import { InstantSearch } from 'react-instantsearch';
-import { LookingSimilar } from 'react-instantsearch';
-import { toast, Toaster } from 'sonner';
-
-import { Check } from 'lucide-react';
-
-
-type ProductDetailProps = {
-    params: Promise<{ id: string }>;
-}
-
-type Product = {
-    id: string,
-    name: string,
-    price: number,
-    discount: number,
-    rating: number,
-    image: string,
-    colors: string[],
-    sizes: string[],
-    description: string
-}
-
-const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
-
-    const { id } = use(params)
-    const [selectedColor, setSelectedColor] = useState('');
-    const [selectedSize, setSelectedSize] = useState('');
-    const [quantity, setQuantity] = useState(1);
-    const [ripple, setRipple] = useState(false);
-    const [shake, setShake] = useState(false);
-
-    const handleClick = () => {
-        setRipple(true);
-        setShake(true);
-        handleSumbit();
-
-        setTimeout(() => setRipple(false), 600);
-        setTimeout(() => setShake(false), 300);
-    };
-
-
-    const handleColorClick = (color: any) => {
-        setSelectedColor(color);
-        console.log(`Selected color: ${color}`);
-    };
-
-    const handleSizeClick = (size: any) => {
-        setSelectedSize(size);
-        console.log(`Selected size: ${size}`);
-    };
-
-    const handleQuantityChange = (type: any) => {
-        if (type === 'increase') {
-            setQuantity(quantity + 1);
-        } else if (type === 'decrease' && quantity > 1) {
-            setQuantity(quantity - 1);
-        }
-    };
-
-
-    const [product, setProduct] = useState<Product | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    useEffect(() => {
-        setIsLoading(true);
-        axios.get(`/api/products/${id}`)
-            .then(response => {
-                setProduct(response.data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                setIsLoading(false);
-            });
-    }, [id]);
-    console.log(product);
-
-
-
-
-
-    const handleSumbit = () => {
-      
-
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            cart.push({
-                productId: product?.id,
-                size: selectedSize,
-                quantity: quantity,
-                image: product?.image,
-                name: product?.name,
-                price: product?.price,
-                description: product?.description
-
-            });
-            localStorage.setItem("cart", JSON.stringify(cart));
-            toast.success("Сагсанд амжилттай нэмэгдлээ!");
-
-        
-    }
+ import React from 'react';
+ import Footer from '@/app/_components/homeFooter';
+ import {
+     Breadcrumb,
+     BreadcrumbItem,
+     BreadcrumbLink,
+     BreadcrumbList,
+     BreadcrumbPage,
+     BreadcrumbSeparator,
+ } from "@/components/ui/breadcrumb";
+ import axios from 'axios';
+ import { useState, useEffect } from 'react';
+ import Header from '@/app/_components/homeHeader';
+ import { Skeleton } from "@/components/ui/skeleton";
+ import { liteClient as algoliasearch } from 'algoliasearch/lite';
+ import { FC } from 'react';
+ import { use } from "react"
+ import { useContext } from "react";
+ import { UserContext } from "@/lib/userContext";
+ import { InstantSearch } from 'react-instantsearch';
+ import { LookingSimilar } from 'react-instantsearch';
+ import { toast, Toaster } from 'sonner';
+ 
+ import { Check } from 'lucide-react';
+ 
+ 
+ type ProductDetailProps = {
+     params: Promise<{ id: string }>;
+ }
+ 
+ type Product = {
+     id: string,
+     name: string,
+     price: number,
+     discount: number,
+     rating: number,
+     image: string,
+     colors: string[],
+     sizes: string[],
+     description: string
+ }
+ 
+ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
+ 
+     const { id } = use(params)
+     const [selectedColor, setSelectedColor] = useState('');
+     const [selectedSize, setSelectedSize] = useState('');
+     const [quantity, setQuantity] = useState(1);
+     const [ripple, setRipple] = useState(false);
+     const [shake, setShake] = useState(false);
+ 
+     const handleClick = () => {
+         setRipple(true);
+         setShake(true);
+         handleSumbit();
+ 
+         setTimeout(() => setRipple(false), 600);
+         setTimeout(() => setShake(false), 300);
+     };
+ 
+ 
+     const handleColorClick = (color: any) => {
+         setSelectedColor(color);
+         console.log(`Selected color: ${color}`);
+     };
+ 
+     const handleSizeClick = (size: any) => {
+         setSelectedSize(size);
+         console.log(`Selected size: ${size}`);
+     };
+ 
+     const handleQuantityChange = (type: any) => {
+         if (type === 'increase') {
+             setQuantity(quantity + 1);
+         } else if (type === 'decrease' && quantity > 1) {
+             setQuantity(quantity - 1);
+         }
+     };
+ 
+ 
+     const [product, setProduct] = useState<Product | null>(null);
+     const [isLoading, setIsLoading] = useState(true);
+     useEffect(() => {
+         setIsLoading(true);
+         axios.get(`/api/products/${id}`)
+             .then(response => {
+                 setProduct(response.data);
+                 setIsLoading(false);
+             })
+             .catch(error => {
+                 console.error("Error:", error);
+                 setIsLoading(false);
+             });
+     }, [id]);
+     console.log(product);
+ 
+ 
+ 
+ 
+ 
+     const handleSumbit = () => {
+ 
+ 
+             let cart = JSON.parse(localStorage.getItem("cart")) || [];
+             cart.push({
+                 productId: product?.id,
+                 size: selectedSize,
+                 quantity: quantity,
+                 image: product?.image,
+                 name: product?.name,
+                 price: product?.price,
+                 description: product?.description
+ 
+             });
+             localStorage.setItem("cart", JSON.stringify(cart));
+             toast.success("Сагсанд амжилттай нэмэгдлээ!");
+ 
+ 
+     }
+ 
 
     return (
         <div className='p-4 max-w-7xl mx-auto'>
@@ -127,14 +128,14 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
 
             <Toaster position='top-center'/>
             <div className="mt-28 pt-8">
-                <Breadcrumb>
+                <Breadcrumb> 
                     <BreadcrumbList className='text-2xl flex text-gray-300 items-center'>
                         <BreadcrumbItem>
-                            <BreadcrumbLink className='hover:underline' href="/">Home</BreadcrumbLink>
+                            <BreadcrumbLink className='hover:underline' href="/">Нүүр</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink className='hover:underline' href="/category">Shop</BreadcrumbLink>
+                            <BreadcrumbLink className='hover:underline' href="/category">Бүх хувцас</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
@@ -203,7 +204,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                                 {product?.description}
                             </p>
 
-                            <p className='text-lg font-bold mt-18'>Select Colors</p>
+                            <p className='text-lg font-bold mt-18'>Өнгө</p>
 
                             <div className='flex gap-2 mt-2 '>
                                 {[
@@ -226,7 +227,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                                 ))}
                             </div>
 
-                            <p className='text-lg font-bold mt-18'>Choose Size</p>
+                            <p className='text-lg font-bold mt-18'>Хэмжээ</p>
 
                             <div className='flex gap-5 mt-2'>
                                 {['Small', 'Medium', 'Large', 'X-Large'].map((size) => (
@@ -271,7 +272,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                                     ${shake ? 'animate-shake' : ''}`}
                                     onClick={handleClick}
                                 >
-                                    Add to Cart
+                                    Сагсанд нэмэх
                                     {ripple && (
                                         <span className="absolute inset-0 flex items-center justify-center">
                                             <span className="w-20 h-20 bg-white opacity-30 rounded-full animate-ping"></span>
@@ -284,7 +285,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
                 </div>
             </div>
 
-            <h2 className='text-2xl font-bold text-center mt-10'>YOU MIGHT ALSO LIKE</h2>
+            <h2 className='text-2xl font-bold text-center mt-10'>Төстэй бараанууд</h2>
             <div className="w-full overflow-x-auto">
                 <div className="flex gap-6 mt-6 pl-4">
                     {isLoading ? (
@@ -323,7 +324,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ params }) => {
             </div>
             <div id="recommend-container"></div>
         </div>
-    );
+    )
 }
 
 export default ProductDetail;

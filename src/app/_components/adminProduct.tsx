@@ -135,39 +135,6 @@ export default function AdminProductsComp() {
         }
     };
 
-<<<<<<< HEAD
-
-    const getCroppedImage = async () => {
-        if (!imageRef || !image) return;
-
-        const canvas = document.createElement("canvas");
-        const scaleX = imageRef.naturalWidth / imageRef.width;
-        const scaleY = imageRef.naturalHeight / imageRef.height;
-
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-
-        const croppedWidth = crop.width ? crop.width * scaleX : 0;
-        const croppedHeight = crop.height ? crop.height * scaleY : 0;
-
-        canvas.width = croppedWidth;
-        canvas.height = croppedHeight;
-
-        ctx.drawImage(
-            imageRef,
-            crop.x * scaleX,
-            crop.y * scaleY,
-            croppedWidth,
-            croppedHeight,
-            0,
-            0,
-            croppedWidth,
-            croppedHeight
-        );
-
-        const croppedImageURL = canvas.toDataURL("image/png");
-        setCroppedImage(croppedImageURL);
-=======
     const onCropComplete = (croppedArea: any, croppedPixels: any) => {
         setCroppedAreaPixels(croppedPixels);
     };
@@ -241,7 +208,6 @@ export default function AdminProductsComp() {
                 setSubmitting(false);
             }
         }, 0);
->>>>>>> main
     };
 
 

@@ -72,11 +72,7 @@ export default function Cart() {
       {cart.length > 0 ? (
         <>
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-<<<<<<< HEAD
-            Сагсалсан бараа
-=======
             Таны сагсанд байгаа бүтээгдэхүүнүүд
->>>>>>> main
           </h2>
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-2/3 space-y-4 w-full">
@@ -168,19 +164,11 @@ export default function Cart() {
             <div className="lg:w-1/3 w-full mt-8 lg:mt-0">
               <div className="bg-white border shadow-sm p-6 rounded-xl sticky top-28">
                 <h3 className="text-xl font-bold border-b pb-4 mb-4">
-<<<<<<< HEAD
-                  Захиалгын хураангуй
-                </h3>
-                <div className="space-y-3 text-gray-600">
-                  <div className="flex justify-between items-center">
-                    <span>Үндсэн үнэ ({cart.length} бараа)</span>
-=======
                   Төлбөрийн мэдээлэл
                 </h3>
                 <div className="space-y-3 text-gray-600">
                   <div className="flex justify-between items-center">
                     <span>Тоо болон үнэ: ({cart.length})</span>
->>>>>>> main
                     <span className="font-medium">₮{subtotal.toFixed(2)}</span>
                   </div>
                   {discount > 0 && (
@@ -223,21 +211,13 @@ export default function Cart() {
                   </div>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-<<<<<<< HEAD
-                  <b>Pineshop</b> Promo код ашиглан 20% хөнгөлөлт аваарай.
-=======
                   <b>Pineshop</b> промо кодыг ашигласнаар 5% хөнгөлөлт авах
                   боломжтой.
->>>>>>> main
                 </p>
 
                 <Link href="/cart/payment">
                   <Button className="w-full mt-6 py-6 bg-black hover:bg-gray-800 rounded-xl text-lg">
-<<<<<<< HEAD
-                    Төлбөр төлөх
-=======
                     Үргэлжлүүлэх
->>>>>>> main
                   </Button>
                 </Link>
               </div>

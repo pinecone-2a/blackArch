@@ -2,20 +2,6 @@
 
 import { useProfile } from "@/lib/customHooks/useProfile";
 import { useRouter } from "next/navigation";
-<<<<<<< HEAD
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
-
-import HomeFooter from "../_components/homeFooter";
-
-
-
-import Navbar from "../_components/homeHeader";
-=======
->>>>>>> main
 
 
 import ProfileLayout from "../_components/profile/ProfileLayout";

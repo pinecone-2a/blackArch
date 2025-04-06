@@ -119,14 +119,9 @@ export default function HomePage() {
 
           <div className="mt-10 flex justify-center lg:justify-start">
             <TransitionLink href="/category">
-<<<<<<< HEAD
               <Button className="w-[300px] flex h-[40px] rounded-2xl relative py-3 text-lg bg-white text-black shadow-[0_10px_20px_-8px_rgba(0,0,0,.7)] transition-all border hover:px-6 hover:pl-2 hover:pr-6 cursor-pointer">
                 Худалдаж авах
                 <span className="absolute top-[14px] right-[-20px] opacity-0 transition-all duration-500 text-red-500 group-hover:opacity-100 group-hover:right-2">»</span>
-=======
-              <Button className="w-[300px] flex h-[40px] rounded-2xl py-3 text-lg bg-white text-black  shadow-2xl border hover:text-white xl:mt-[100px]">
-                Shop Now
->>>>>>> main
               </Button>
             </TransitionLink>
           </div>
