@@ -13,12 +13,12 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['res.cloudinary.com'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**.cloudinary.com',
-      },
+    domains: [
+      "cdnp.cody.mn",
+      "s3-alpha-sig.figma.com",
+      "encrypted-tbn0.gstatic.com",
+      "freshcleantees.com",
+      "res.cloudinary.com",
     ],
   },
   experimental: {

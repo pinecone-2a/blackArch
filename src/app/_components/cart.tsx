@@ -194,7 +194,7 @@ export default function Cart() {
                   <div className="flex items-center">
                     <Input
                       type="text"
-                      placeholder="Add promo code"
+                      placeholder="Promo код оруулах"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value)}
                       className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -206,7 +206,7 @@ export default function Cart() {
                       variant="outline"
                       size="sm"
                     >
-                      Apply
+                      Идэвхжүүлэх
                     </Button>
                   </div>
                 </div>
