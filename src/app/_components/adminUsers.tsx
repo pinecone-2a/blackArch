@@ -8,7 +8,8 @@ import {
   Edit,
   Trash2,
   Filter,
-  Download
+  Download,
+  Loader2
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,77 +40,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useFetchData from '@/lib/customHooks/useFetch';
-import type { User } from '@/lib/constants/types';
+import { useFetchData } from '@/lib/customHooks/useFetch';
+import { toast } from 'sonner';
 
-// Sample data for demonstration
-const sampleUsers = [
-  {
-    id: "u1",
-    name: "Buyka Bakhytbek",
-    email: "buyka@example.com",
-    role: "admin",
-    lastActive: "2025-04-01T12:30:00",
-    status: "active",
-    orders: 15
-  },
-  {
-    id: "u2",
-    name: "Arman Kenzhebek",
-    email: "arman@example.com",
-    role: "user",
-    lastActive: "2025-04-01T09:45:00",
-    status: "active",
-    orders: 7
-  },
-  {
-    id: "u3",
-    name: "Sasha Kim",
-    email: "sasha@example.com",
-    role: "user",
-    lastActive: "2025-03-30T16:20:00",
-    status: "inactive",
-    orders: 3
-  },
-  {
-    id: "u4",
-    name: "Kaysar Zhiger",
-    email: "kaysar@example.com",
-    role: "user",
-    lastActive: "2025-03-29T14:15:00",
-    status: "active",
-    orders: 9
-  },
-  {
-    id: "u5",
-    name: "Madina Bekzat",
-    email: "madina@example.com",
-    role: "user",
-    lastActive: "2025-03-28T11:05:00",
-    status: "blocked",
-    orders: 0
-  }
-];
+// Define extended User type for our admin interface
+interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  role: "admin" | "user";
+  lastActive: string;
+  status: "active" | "inactive" | "blocked";
+  orders: number;
+}
+
+interface UserFormData {
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+}
 
 export default function AdminUsersComp() {
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [users, setUsers] = useState(sampleUsers);
-  const [editUser, setEditUser] = useState(null);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
+  const [formProcessing, setFormProcessing] = useState(false);
   
-  // Replace with real data when API is ready
-  // const { data, loading, error } = useFetchData('/api/users');
+  const { data, loading, error, refetch } = useFetchData<AdminUser[]>('/api/admin/users');
   
-  // useEffect(() => {
-  //   if (data) {
-  //     setUsers(data);
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data && Array.isArray(data)) {
+      setUsers(data);
+    } else if (error) {
+      toast.error("Failed to fetch users data");
+      console.error("API Error:", error);
+    }
+  }, [data, error]);
 
   const filteredUsers = users.filter(user => {
     // Apply search filter
@@ -126,32 +98,107 @@ export default function AdminUsersComp() {
     return matchesSearch && matchesRole && matchesStatus;
   });
 
-  const handleAddUser = (userData) => {
-    // In a real app, you would make an API call here
-    const newUser = {
-      id: `u${users.length + 1}`,
-      ...userData,
-      lastActive: new Date().toISOString(),
-      orders: 0
-    };
+  const handleAddUser = async (userData: UserFormData) => {
+    setFormProcessing(true);
     
-    setUsers([...users, newUser]);
-    setIsAddDialogOpen(false);
+    try {
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create user');
+      }
+      
+      const newUser = await response.json();
+      
+      // Update local state with the new user from API
+      setUsers(prevUsers => [...prevUsers, newUser]);
+      toast.success('User created successfully');
+    } catch (error) {
+      console.error('Error creating user:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to create user');
+    } finally {
+      setFormProcessing(false);
+      setIsAddDialogOpen(false);
+    }
   };
 
-  const handleEditUser = (userData) => {
-    // In a real app, you would make an API call here
-    setUsers(users.map(user => 
-      user.id === selectedUser.id ? { ...user, ...userData } : user
-    ));
-    setIsEditDialogOpen(false);
+  const handleEditUser = async (userData: UserFormData) => {
+    if (!selectedUser) return;
+    
+    setFormProcessing(true);
+    
+    try {
+      const response = await fetch(`/api/admin/users/${selectedUser.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update user');
+      }
+      
+      const updatedUser = await response.json();
+      
+      // Update local state with the updated user from API
+      setUsers(prevUsers => 
+        prevUsers.map(user => user.id === selectedUser.id ? updatedUser : user)
+      );
+      
+      toast.success('User updated successfully');
+    } catch (error) {
+      console.error('Error updating user:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to update user');
+    } finally {
+      setFormProcessing(false);
+      setIsEditDialogOpen(false);
+    }
   };
 
-  const handleDeleteUser = () => {
-    // In a real app, you would make an API call here
-    setUsers(users.filter(user => user.id !== selectedUser.id));
-    setIsDeleteDialogOpen(false);
+  const handleDeleteUser = async () => {
+    if (!selectedUser) return;
+    
+    setFormProcessing(true);
+    
+    try {
+      const response = await fetch(`/api/admin/users/${selectedUser.id}`, {
+        method: 'DELETE'
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete user');
+      }
+      
+      // Remove user from local state
+      setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
+      toast.success('User deleted successfully');
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to delete user');
+    } finally {
+      setFormProcessing(false);
+      setIsDeleteDialogOpen(false);
+    }
   };
+
+  // Render loading state
+  if (loading && users.length === 0) {
+    return (
+      <div className="flex-1 p-6 bg-gray-50 flex items-center justify-center min-h-[500px]">
+        <div className="flex flex-col items-center">
+          <Loader2 className="h-10 w-10 text-primary animate-spin mb-4" />
+          <p className="text-gray-500">Loading users data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-6 bg-gray-50">
@@ -165,6 +212,15 @@ export default function AdminUsersComp() {
           <Plus className="mr-2 h-4 w-4" /> Шинэ Хэрэглэгч
         </Button>
       </div>
+
+      {error && (
+        <div className="mb-6 p-4 border border-red-300 bg-red-50 rounded-md">
+          <p className="text-red-800">Error loading users: {typeof error === 'string' ? error : 'Unknown error occurred'}</p>
+          <Button variant="outline" size="sm" className="mt-2" onClick={() => refetch()}>
+            Try Again
+          </Button>
+        </div>
+      )}
 
       {/* Filters and search */}
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -206,7 +262,7 @@ export default function AdminUsersComp() {
             <Filter className="h-4 w-4" />
           </Button>
           
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" onClick={() => refetch()}>
             <Download className="h-4 w-4" />
           </Button>
         </div>
@@ -218,7 +274,7 @@ export default function AdminUsersComp() {
           <div className="flex justify-between items-center">
             <CardTitle className="text-base font-medium">Бүх Хэрэглэгчид</CardTitle>
             <span className="text-sm text-muted-foreground">
-              {filteredUsers.length} users
+              {filteredUsers.length} users {loading && "(refreshing...)"}
             </span>
           </div>
         </CardHeader>
@@ -237,68 +293,83 @@ export default function AdminUsersComp() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {filteredUsers.map((user) => (
-                  <tr key={user.id} className="bg-white hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 text-sm font-medium">{user.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{user.email}</td>
-                    <td className="px-6 py-4 text-sm">
-                      <Badge variant={user.role === 'admin' ? 'default' : 'outline'}>
-                        {user.role === 'admin' ? 'Admin' : 'User'}
-                      </Badge>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      {new Date(user.lastActive).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 text-sm">
-                      <Badge 
-                        variant="outline" 
-                        className={
-                          user.status === 'active' ? 'bg-green-100 text-green-800 border-green-300' : 
-                          user.status === 'inactive' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : 
-                          'bg-red-100 text-red-800 border-red-300'
-                        }
-                      >
-                        {user.status === 'active' ? 'Active' : 
-                         user.status === 'inactive' ? 'Inactive' : 'Blocked'}
-                      </Badge>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-center">
-                      {user.orders}
-                    </td>
-                    <td className="px-6 py-4 text-sm">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreHorizontal size={16} />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem 
-                            onClick={() => {
-                              setSelectedUser(user);
-                              setIsEditDialogOpen(true);
-                            }}
-                          >
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem 
-                            className="text-red-600"
-                            onClick={() => {
-                              setSelectedUser(user);
-                              setIsDeleteDialogOpen(true);
-                            }}
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                {filteredUsers.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                      {loading ? (
+                        <div className="flex justify-center items-center">
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" /> 
+                          Loading users...
+                        </div>
+                      ) : (
+                        "No users found matching your filters"
+                      )}
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  filteredUsers.map((user) => (
+                    <tr key={user.id} className="bg-white hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium">{user.name}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500">{user.email}</td>
+                      <td className="px-6 py-4 text-sm">
+                        <Badge variant={user.role === 'admin' ? 'default' : 'outline'}>
+                          {user.role === 'admin' ? 'Admin' : 'User'}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {new Date(user.lastActive).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 text-sm">
+                        <Badge 
+                          variant="outline" 
+                          className={
+                            user.status === 'active' ? 'bg-green-100 text-green-800 border-green-300' : 
+                            user.status === 'inactive' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : 
+                            'bg-red-100 text-red-800 border-red-300'
+                          }
+                        >
+                          {user.status === 'active' ? 'Active' : 
+                           user.status === 'inactive' ? 'Inactive' : 'Blocked'}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-center">
+                        {user.orders}
+                      </td>
+                      <td className="px-6 py-4 text-sm">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <MoreHorizontal size={16} />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem 
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setIsEditDialogOpen(true);
+                              }}
+                            >
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem 
+                              className="text-red-600"
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setIsDeleteDialogOpen(true);
+                              }}
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -318,10 +389,10 @@ export default function AdminUsersComp() {
             e.preventDefault();
             const formData = new FormData(e.currentTarget);
             handleAddUser({
-              name: formData.get('name'),
-              email: formData.get('email'),
-              role: formData.get('role'),
-              status: formData.get('status')
+              name: formData.get('name') as string,
+              email: formData.get('email') as string,
+              role: formData.get('role') as string,
+              status: formData.get('status') as string
             });
           }}>
             <div className="grid gap-4 py-4">
@@ -368,10 +439,17 @@ export default function AdminUsersComp() {
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+              <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} disabled={formProcessing}>
                 Cancel
               </Button>
-              <Button type="submit">Save User</Button>
+              <Button type="submit" disabled={formProcessing}>
+                {formProcessing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" /> 
+                    Saving...
+                  </>
+                ) : 'Save User'}
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -391,10 +469,10 @@ export default function AdminUsersComp() {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
               handleEditUser({
-                name: formData.get('name'),
-                email: formData.get('email'),
-                role: formData.get('role'),
-                status: formData.get('status')
+                name: formData.get('name') as string,
+                email: formData.get('email') as string,
+                role: formData.get('role') as string,
+                status: formData.get('status') as string
               });
             }}>
               <div className="grid gap-4 py-4">
@@ -454,10 +532,17 @@ export default function AdminUsersComp() {
                 </div>
               </div>
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)} disabled={formProcessing}>
                   Cancel
                 </Button>
-                <Button type="submit">Save Changes</Button>
+                <Button type="submit" disabled={formProcessing}>
+                  {formProcessing ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" /> 
+                      Saving...
+                    </>
+                  ) : 'Save Changes'}
+                </Button>
               </DialogFooter>
             </form>
           )}
@@ -480,11 +565,16 @@ export default function AdminUsersComp() {
                 <p className="text-sm"><strong>Email:</strong> {selectedUser.email}</p>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+                <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} disabled={formProcessing}>
                   Cancel
                 </Button>
-                <Button variant="destructive" onClick={handleDeleteUser}>
-                  Delete User
+                <Button variant="destructive" onClick={handleDeleteUser} disabled={formProcessing}>
+                  {formProcessing ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" /> 
+                      Deleting...
+                    </>
+                  ) : 'Delete User'}
                 </Button>
               </DialogFooter>
             </>

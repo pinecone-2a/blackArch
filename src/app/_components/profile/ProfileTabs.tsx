@@ -19,7 +19,7 @@ export default function ProfileTabs({
   accountTab
 }: ProfileTabsProps) {
   return (
-    <div className="max-w-6xl mx-auto w-full px-6 py-8 -mt-6">
+    <div className="max-w-6xl mx-auto w-full px-6 py-4 relative z-0">
       <Tabs defaultValue={defaultTab} className="w-full">
         <Card className="mb-8 overflow-hidden border-0 shadow-md">
           <TabsList className="w-full justify-start p-0 h-auto bg-transparent border-b rounded-none">
@@ -28,21 +28,21 @@ export default function ProfileTabs({
               className="flex items-center gap-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:shadow-none rounded-none px-6 py-4"
             >
               <PackageOpen className="h-4 w-4" />
-              Orders
+              Захиалгууд
             </TabsTrigger>
             <TabsTrigger 
               value="address" 
               className="flex items-center gap-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:shadow-none rounded-none px-6 py-4"
             >
               <MapPin className="h-4 w-4" />
-              Addresses
+              Хаягууд
             </TabsTrigger>
             <TabsTrigger 
               value="account" 
               className="flex items-center gap-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:shadow-none rounded-none px-6 py-4"
             >
               <User className="h-4 w-4" />
-              Account
+              Бүртгэл
             </TabsTrigger>
           </TabsList>
         </Card>

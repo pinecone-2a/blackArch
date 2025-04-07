@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 
 const Footer = () => {
   return (
-    <footer className="bg-black text-white pt-16 pb-8">
+    <footer className="bg-black text-white pt-16 pb-8 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top section with newsletter */}
         <div className="flex flex-col md:flex-row sm:flex-row sm:justify-between justify-between items-start mb-12 gap-8">

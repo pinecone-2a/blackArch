@@ -9,6 +9,8 @@ export type Product = {
   rating: number;
   categoryId?: string;
   categoryName?: string;
+  color?: string[];
+  size?: string[];
 };
 
 export type SimilarProduct = {

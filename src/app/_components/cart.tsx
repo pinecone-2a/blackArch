@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import Reveal from "./Reavel";
 import Link from "next/link";
 
-const initialCart = [{}];
+const initialCart: CartItem[] = [];
 
 interface CartItem {
   productId: string;
@@ -46,8 +46,10 @@ export default function Cart() {
     });
   };
 
+  const isCartEmpty = !cart.length || !cart.some(item => item.productId);
+  
   const subtotal = cart.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + (item.price || 0) * (item.quantity || 1),
     0
   );
   const discountAmount = subtotal * discount;
@@ -69,14 +71,14 @@ export default function Cart() {
   }
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 mt-24">
-      {cart.length > 0 ? (
+      {!isCartEmpty ? (
         <>
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
             Таны сагсанд байгаа бүтээгдэхүүнүүд
           </h2>
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-2/3 space-y-4 w-full">
-              {cart.map((item: CartItem) => (
+              {cart.filter(item => item.productId).map((item: CartItem) => (
                 <Card
                   key={item.productId}
                   className="flex flex-col sm:flex-row items-center p-4 sm:p-6 gap-6 rounded-xl border shadow-sm hover:shadow-md transition-shadow duration-200 relative w-full group"
@@ -125,7 +127,7 @@ export default function Cart() {
                         </button>
                       </div>
                       <p className="font-bold text-xl sm:text-2xl">
-                        ₮{item.price}
+                        ₮{item.price.toLocaleString()}
                       </p>
                     </div>
                   </CardContent>
@@ -168,25 +170,25 @@ export default function Cart() {
                 </h3>
                 <div className="space-y-3 text-gray-600">
                   <div className="flex justify-between items-center">
-                    <span>Тоо болон үнэ: ({cart.length})</span>
-                    <span className="font-medium">₮{subtotal.toFixed(2)}</span>
+                    <span>Тоо болон үнэ: ({cart.filter(item => item.productId).length})</span>
+                    <span className="font-medium">₮{subtotal.toLocaleString()}</span>
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between items-center text-green-600">
                       <span>Хөнгөлөлт ({discount * 100}%)</span>
-                      <span>- ₮{discountAmount.toFixed(2)}</span>
+                      <span>- ₮{discountAmount.toLocaleString()}</span>
                     </div>
                   )}
                   <div className="flex justify-between items-center">
                     <span>Хүргэлтийн төлбөр</span>
                     <span className="font-medium">
-                      ₮{deliveryFee.toFixed(2)}
+                      ₮{deliveryFee.toLocaleString()}
                     </span>
                   </div>
                   <div className="border-t my-3 pt-3"></div>
                   <div className="flex justify-between text-lg font-bold">
                     <span>Нийт</span>
-                    <span>₮{total.toFixed(2)}</span>
+                    <span>₮{total.toLocaleString()}</span>
                   </div>
                 </div>
 

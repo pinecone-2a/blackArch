@@ -31,10 +31,27 @@ export const getUserFromToken = (): {
     if (!accessToken) return null;
     
     const decoded = jwtDecode<DecodedToken>(accessToken);
+    
+    // Sync user ID to localStorage if available
+    syncUserIdToLocalStorage(decoded.userData);
+    
     return decoded.userData;
   } catch (error) {
     console.error("Error extracting user from token:", error);
     return null;
+  }
+};
+
+// Sync user ID to localStorage
+export const syncUserIdToLocalStorage = (userData: { id: string; email: string; role: string; } | null): void => {
+  if (typeof window === 'undefined') return;
+  
+  if (userData && userData.id) {
+    localStorage.setItem("userId", userData.id);
+    console.log("Synced user ID to localStorage:", userData.id);
+  } else {
+    localStorage.removeItem("userId");
+    console.log("Removed user ID from localStorage");
   }
 };
 
@@ -86,6 +103,12 @@ export const refreshAccessToken = async (): Promise<boolean> => {
 export const logout = async (): Promise<boolean> => {
   try {
     await axios.post('/api/auth/logout');
+    
+    // Clear localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("userId");
+    }
+    
     window.location.href = '/login'; // Redirect to login
     return true;
   } catch (error) {
