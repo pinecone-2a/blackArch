@@ -8,7 +8,10 @@ require('dotenv').config()
 
 export const GET = async () => {
   try {
-    const products = await prisma.product.findMany();
+    console.time("product-fetch");
+const products = await prisma.product.findMany();
+console.timeEnd("product-fetch");
+
     return NextResponse.json({ message: products, status: 200 });
   } catch (error) {
     console.error("Error fetching products:", error);

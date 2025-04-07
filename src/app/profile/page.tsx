@@ -3,7 +3,6 @@
 import { useProfile } from "@/lib/customHooks/useProfile";
 import { useRouter } from "next/navigation";
 
-
 import ProfileLayout from "../_components/profile/ProfileLayout";
 import LoginPrompt from "../_components/profile/LoginPrompt";
 import ProfileHeader from "../_components/profile/ProfileHeader";
