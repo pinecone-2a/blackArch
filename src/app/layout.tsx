@@ -18,10 +18,6 @@ const geistMono = Geist_Mono({
 });
  
 
-<<<<<<< HEAD
-=======
-
->>>>>>> main
 
 export default function RootLayout({
   children,
@@ -31,10 +27,6 @@ export default function RootLayout({
 
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> main
   return (
     <html lang="en">
       <UserProvider> 

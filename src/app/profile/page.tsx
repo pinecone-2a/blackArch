@@ -10,11 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-<<<<<<< HEAD
-import HomeFooter from "../_components/homeFooter";
-=======
-import Footer from "../_components/homeFooter";
->>>>>>> main
+import MinimalistFooter from "../_components/homeFooter";
 import Navbar from "../_components/homeHeader";
 
 const ProfilePage = () => {
@@ -80,7 +76,7 @@ const ProfilePage = () => {
             </Button>
           </motion.div>
         </div>
-        <HomeFooter />
+        <MinimalistFooter />
       </div>
     );
   }
@@ -430,7 +426,7 @@ const ProfilePage = () => {
           </TabsContent>
         </Tabs>
       </motion.div>
-      <HomeFooter />
+      <MinimalistFooter />
     </div>
   );
 };

@@ -52,7 +52,7 @@ export default function MinimalistFooter() {
         </div>
 
     
-        <p className="text-white text-5xl text-sm">
+        <p className="text-white text-5xl">
           © 2025 Pineshop. All rights reserved.
         </p>
 
