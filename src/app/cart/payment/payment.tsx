@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Home, Plus, CreditCard, MapPin, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Toaster, toast } from "sonner";
 
 interface CartItem {
   productId: string;
@@ -175,13 +176,13 @@ export default function Payment() {
   const handleSubmitOrder = async () => {
     // Check if address is selected
     if (!selectedAddressId) {
-      alert("Хүргэлтийн хаяг сонгоно уу!");
+      toast("Хүргэлтийн хаяг сонгоно уу!");
       return;
     }
 
     // Check if user is logged in
     if (!isLoggedIn) {
-      alert("Захиалга хийхийн тулд та нэвтэрсэн байх шаардлагатай!");
+      toast.warning("Захиалга хийхийн тулд та нэвтэрсэн байх шаардлагатай!");
       if (typeof window !== 'undefined') {
         window.location.href = "/login?redirect=/cart/payment";
       }
@@ -236,7 +237,7 @@ export default function Payment() {
       if (!orderId) {
         console.error("No order ID received from server:", data);
         // Still show success to user but provide fallback
-        alert("Захиалга амжилттай хийгдлээ!");
+        toast.success("Захиалга амжилттай хийгдлээ!");
         
         if (typeof window !== 'undefined') {
           localStorage.removeItem("cart");
@@ -248,7 +249,7 @@ export default function Payment() {
       }
       
       // Show success message and clear cart
-      alert("Захиалга амжилттай хийгдлээ!");
+      toast.success("Захиалга амжилттай хийгдлээ!");
       
       if (typeof window !== 'undefined') {
         localStorage.removeItem("cart");
@@ -270,7 +271,7 @@ export default function Payment() {
       }
     } catch (error) {
       console.error("Error creating order:", error);
-      alert("Захиалга үүсгэхэд алдаа гарлаа. Дахин оролдоно уу.");
+      toast.error("Захиалга үүсгэхэд алдаа гарлаа. Дахин оролдоно уу.");
     }
   };
 
@@ -284,6 +285,7 @@ export default function Payment() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 mt-24">
+      <Toaster position="top-center"/>
       <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
         Хүргэлт ба төлбөр
       </h2>
