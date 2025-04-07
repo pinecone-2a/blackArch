@@ -10,7 +10,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Home, Plus, CreditCard, MapPin, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+import QPAY from "@togtokh.dev/qpay"
+
 import { Toaster, toast } from "sonner";
+
 
 interface CartItem {
   productId: string;
@@ -39,6 +43,24 @@ export default function Payment() {
   const [paymentMethod, setPaymentMethod] = useState<string>("card");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
+
+
+//   async function fetchQPay() {
+
+//   const res = await fetch("/api/qpay", {
+//     method: "POST",
+//   });
+  
+//   const data = await res.json();
+//   console.log(data);
+// }
+
+
+  
+
+
+
+
   
   // New address form state
   const [newAddress, setNewAddress] = useState<Omit<Address, "id" | "isDefault">>({
@@ -167,37 +189,38 @@ export default function Payment() {
     }));
     setAddresses(updatedAddresses);
     
-    // Client-side only
+
     if (typeof window !== 'undefined') {
       localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
     }
   };
 
   const handleSubmitOrder = async () => {
-    // Check if address is selected
+
     if (!selectedAddressId) {
       toast("Хүргэлтийн хаяг сонгоно уу!");
       return;
     }
 
-    // Check if user is logged in
+  
     if (!isLoggedIn) {
       toast.warning("Захиалга хийхийн тулд та нэвтэрсэн байх шаардлагатай!");
       if (typeof window !== 'undefined') {
-        window.location.href = "/login?redirect=/cart/payment";
+  
+        // window.location.href = "/login?redirect=/cart/payment";
       }
       return;
     }
 
     try {
-      // Get the selected address
+    
       const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
       
       if (!selectedAddress) {
         throw new Error("Selected address not found");
       }
 
-      // Format the address for the database
+ 
       const shippingAddress = {
         street: selectedAddress.address,
         city: selectedAddress.city,

@@ -7,12 +7,10 @@ import { FaCheckCircle } from "react-icons/fa";
 import Template from "@/app/_components/template";
 import Navbar from "@/app/_components/homeHeader";
 
-// Create a separate component for the content that uses searchParams
 function OrderConfirmationContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const [orderDetails, setOrderDetails] = useState<any>(null);
-  const [localOrderDetails, setLocalOrderDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -24,9 +22,8 @@ function OrderConfirmationContent() {
       setError("Захиалгын дугаар олдсонгүй");
     }
     
-    // Try to get order details from localStorage as fallback
-    const details = getLocalStorageOrderDetails();
-    setLocalOrderDetails(details);
+    // const details = getLocalStorageOrderDetails();
+    // setLocalOrderDetails(details);
   }, [orderId]);
 
   const fetchOrderDetails = async () => {
@@ -51,6 +48,7 @@ function OrderConfirmationContent() {
       }
       
       setOrderDetails(data.message);
+      console.log(data.message)
     } catch (error) {
       console.error("Error fetching order details:", error);
       setError(error instanceof Error ? error.message : "Захиалгын дэлгэрэнгүй мэдээлэл авахад алдаа гарлаа");
@@ -59,18 +57,17 @@ function OrderConfirmationContent() {
     }
   };
 
-  // Add function to attempt to fetch order from localStorage if the server request fails
-  const getLocalStorageOrderDetails = () => {
-    try {
-      const storedDetails = localStorage.getItem("lastOrderDetails");
-      if (storedDetails) {
-        return JSON.parse(storedDetails);
-      }
-    } catch (e) {
-      console.error("Error reading from localStorage:", e);
-    }
-    return null;
-  };
+  // const getLocalStorageOrderDetails = () => {
+  //   try {
+  //     const storedDetails = localStorage.getItem("lastOrderDetails");
+  //     if (storedDetails) {
+  //       return JSON.parse(storedDetails);
+  //     }
+  //   } catch (e) {
+  //     console.error("Error reading from localStorage:", e);
+  //   }
+  //   return null;
+  // };
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -84,7 +81,7 @@ function OrderConfirmationContent() {
             <p className="text-lg font-medium mb-4">{error}</p>
             
             {/* Add fallback to display local order details if available */}
-            {localOrderDetails && (
+            {/* {localOrderDetails && (
               <div className="bg-yellow-50 border border-yellow-300 p-4 rounded-md mt-4 mb-6">
                 <p className="font-medium text-yellow-800 mb-2">Локал хадгалагдсан захиалгын мэдээлэл:</p>
                 <p className="text-left text-sm mb-2"><span className="font-medium">Захиалгын дугаар:</span> {localOrderDetails.orderId}</p>
@@ -102,7 +99,7 @@ function OrderConfirmationContent() {
                   Тэмдэглэл: Энэ мэдээлэл нь таны вэб хөтчийн локал санах ойд хадгалагдсан бөгөөд серверийн хамгийн сүүлийн мэдээллийг агуулаагүй байж болно.
                 </p>
               </div>
-            )}
+            )} */}
             
             <Link href="/" className="text-blue-600 hover:text-blue-800 underline">
               Нүүр хуудас руу буцах
