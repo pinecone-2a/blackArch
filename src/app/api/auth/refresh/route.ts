@@ -6,7 +6,6 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET!;
 
 export async function GET(req: Request) {
-  // Get cookie using headers API instead of cookies()
   const refreshToken = req.headers.get('cookie')?.match(/refreshToken=([^;]+)/)?.[1];
 
   if (!refreshToken) {
@@ -19,12 +18,29 @@ export async function GET(req: Request) {
     };
 
     const accessToken = jwt.sign(
-      { userId: decoded.userData.id, email: decoded.userData.email, role: decoded.userData.role },
+      { userData: decoded.userData }, // Keeps the same userData structure
       ACCESS_TOKEN_SECRET,
       { expiresIn: '15m' } 
     );
 
-    return NextResponse.json({ accessToken });
+    // Create response with the access token
+    const response = NextResponse.json({ 
+      accessToken,
+      message: "Access token refreshed successfully" 
+    });
+
+    // Set the access token as a cookie
+    response.cookies.set({
+      name: "accessToken",
+      value: accessToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 15, // 15 minutes
+      path: "/"
+    });
+
+    return response;
   } catch (err) {
     return NextResponse.json({ error: 'Invalid refresh token' }, { status: 403 });
   }

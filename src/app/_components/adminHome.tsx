@@ -77,10 +77,10 @@ const sampleOrders = [
 
 // Time periods for filtering
 const timePeriods = [
-  { value: 'today', label: 'Today' },
-  { value: 'week', label: 'This Week' },
-  { value: 'month', label: 'This Month' },
-  { value: 'year', label: 'This Year' }
+  { value: 'today', label: 'Өнөөдөр' },
+  { value: 'week', label: '7хоног' },
+  { value: 'month', label: 'Сар' },
+  { value: 'year', label: 'Жил' }
 ];
 
 export default function AdminHome() {
@@ -113,7 +113,7 @@ export default function AdminHome() {
   
   const stats = [
     { 
-      title: "Total Revenue", 
+      title: "Нийт Орлого", 
       value: `₮${(revenueData.total).toFixed(2)}`, 
       change: `${revenueData.increasing ? '+' : '-'}${revenueData.percentage}%`, 
       increasing: revenueData.increasing,
@@ -121,7 +121,7 @@ export default function AdminHome() {
       color: "bg-green-100 text-green-600" 
     },
     { 
-      title: "Total Orders", 
+      title: "Нийт Захиалга", 
       value: data ? data.totalOrders: 0, 
       change: "0", 
       increasing: true,
@@ -129,7 +129,7 @@ export default function AdminHome() {
       color: "bg-blue-100 text-blue-600" 
     },
     { 
-      title: "Total Customers", 
+      title: "Хэрэглэгчийн Тоо", 
       value: data ? data.userCount: 0, 
       change: "0", 
       increasing: true,
@@ -137,7 +137,7 @@ export default function AdminHome() {
       color: "bg-purple-100 text-purple-600" 
     },
     { 
-      title: "Avg. Order Value", 
+      title: "Захиалгын Тоо", 
       value: "₮0.00", 
       change: "0", 
       increasing: false,
@@ -152,7 +152,7 @@ export default function AdminHome() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Самбар</h1>
-          <p className="text-gray-500">Эргэн тавтай морилно уу, Admin User</p>
+          <p className="text-gray-500">Эргэн тавтай морилно уу, Admin Azaa!</p>
         </div>
         <div className="flex items-center gap-3">
           <Select value={timePeriod} onValueChange={setTimePeriod}>
@@ -199,13 +199,13 @@ export default function AdminHome() {
         <Card>
           <CardHeader>
             <CardTitle>Бүтээгдэхүүн Менежмент</CardTitle>
-            <CardDescription>Бүтээгдэхүүндыг Хянах</CardDescription>
+            <CardDescription>Бүтээгдэхүүнүүдийг Хянах</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
                 <ShoppingBag className="text-gray-500" size={18} />
-                <span className="font-medium">Бүх Бүтээгдэхүүн</span>
+                <span className="font-medium">Бүх бүтээгдэхүүн</span>
               </div>
               <Link href="/admin/products">
                 <Button size="sm" variant="ghost">
@@ -220,7 +220,7 @@ export default function AdminHome() {
               </div>
               <Link href="/admin/products">
                 <Button size="sm">
-                  Add <Plus size={16} />
+                  Нэмэх <Plus size={16} />
                 </Button>
               </Link>
             </div>
@@ -230,17 +230,17 @@ export default function AdminHome() {
         <Card>
           <CardHeader>
             <CardTitle>Ангилал Менежмент</CardTitle>
-            <CardDescription>Organize your store's categories</CardDescription>
+            <CardDescription>Бүтээгдэхүүнүүдийг Хянах</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
                 <Tag className="text-gray-500" size={18} />
-                <span className="font-medium">All Categories</span>
+                <span className="font-medium">Бүх бүтээгдэхүүн</span>
               </div>
               <Link href="/admin/categories">
                 <Button size="sm" variant="ghost">
-                  Manage <ChevronRight size={16} />
+                  Хянах <ChevronRight size={16} />
                 </Button>
               </Link>
             </div>
@@ -251,7 +251,7 @@ export default function AdminHome() {
               </div>
               <Link href="/admin/categories">
                 <Button size="sm">
-                  Add <Plus size={16} />
+                  Нэмэх <Plus size={16} />
                 </Button>
               </Link>
             </div>
@@ -272,7 +272,7 @@ export default function AdminHome() {
             </TabsList>
             <Link href="/admin/orders" className="ml-4">
               <Button variant="outline" size="sm" className="gap-1">
-                View All <ChevronRight size={16} />
+                Бүгдийг Харах <ChevronRight size={16} />
               </Button>
             </Link>
           </div>

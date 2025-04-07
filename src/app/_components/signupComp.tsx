@@ -112,25 +112,25 @@ export default function SignupComp() {
       
       <TransitionLink href="/">
         <Button className="bg-white text-black border absolute top-4 left-4 rounded-2xl duration-200 hover:bg-gray-100">
-          <ChevronLeft /> Back
+          <ChevronLeft /> Буцах
         </Button>
       </TransitionLink>
       
       <TransitionLink href="/login">
         <Button className="bg-black text-white absolute top-4 right-4 rounded-2xl py-2 px-4 hover:bg-gray-900">
-          Login
+          Нэвтрэх
         </Button>
       </TransitionLink>
 
       <div className="text-center mb-6">
         <h1 className="text-2xl md:text-3xl">PineShop</h1>
-        <p className="text-base md:text-lg text-gray-600">Sign up and enjoy your time.</p>
+        <p className="text-base md:text-lg text-gray-600">Бүртгүүлэн орж хүссэн бараагаа худалдан аваарай.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6 w-full max-w-xs">
         <Input
           className={`w-full rounded-2xl p-3 bg-gray-100 border-2 ${errors.username ? "border-red-500" : "border-transparent"}`}
-          placeholder="Full Name"
+          placeholder="Нэр"
           value={username}
           onChange={(e) => setUserName(e.target.value)}
           disabled={isLoading}
@@ -148,7 +148,7 @@ export default function SignupComp() {
           <Input
             type={showPassword ? "text" : "password"}
             className={`w-full rounded-2xl p-3 bg-gray-100 border-2 ${errors.password ? "border-red-500" : "border-transparent"}`}
-            placeholder="Password"
+            placeholder="Нууц үг"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={isLoading}
@@ -159,7 +159,7 @@ export default function SignupComp() {
             onClick={() => setShowPassword((prev) => !prev)}
             disabled={isLoading}
           >
-            {showPassword ? "Hide" : "Show"}
+            {showPassword ? "Харах" : "Нуух"}
           </button>
         </div>
 
@@ -167,7 +167,7 @@ export default function SignupComp() {
           <Input
             type={showConfirmPassword ? "text" : "password"}
             className={`w-full rounded-2xl p-3 bg-gray-100 border-2 ${errors.confirmPassword ? "border-red-500" : "border-transparent"}`}
-            placeholder="Confirm Password"
+            placeholder="Нууц үг давтах"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             disabled={isLoading}
@@ -178,7 +178,7 @@ export default function SignupComp() {
             onClick={() => setShowConfirmPassword((prev) => !prev)}
             disabled={isLoading}
           >
-            {showConfirmPassword ? "Hide" : "Show"}
+            {showConfirmPassword ? "Харах" : "Нуух"}
           </button>
         </div>
 
@@ -190,11 +190,11 @@ export default function SignupComp() {
           {isLoading ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin" />
-              Signing up...
+              Уншиж байнөө...
             </>
           ) : (
             <>
-              Sign up <ChevronRight />
+              Бүртгүүлэх <ChevronRight />
             </>
           )}
         </Button>

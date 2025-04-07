@@ -25,8 +25,19 @@ import {
 } from "@/components/ui/select";
 import useFetchData from '@/lib/customHooks/useFetch';
 
+// Define types for chart components
+interface ChartProps {
+  data: number[];
+  labels: string[];
+  title: string;
+}
+
+interface DonutChartProps extends ChartProps {
+  colors?: string[];
+}
+
 // Chart component (placeholder with mock data)
-function BarChart({ data, labels, title }) {
+function BarChart({ data, labels, title }: ChartProps) {
   // This is a simple placeholder for a real chart component
   // In a real application, you would use a chart library like Chart.js, Recharts, etc.
   const maxValue = Math.max(...data);
@@ -35,7 +46,7 @@ function BarChart({ data, labels, title }) {
     <div className="w-full">
       <h3 className="text-sm font-medium mb-2">{title}</h3>
       <div className="flex flex-col space-y-2">
-        {data.map((value, index) => (
+        {data.map((value: number, index: number) => (
           <div key={index} className="space-y-1">
             <div className="flex justify-between text-xs">
               <span>{labels[index]}</span>
@@ -55,7 +66,7 @@ function BarChart({ data, labels, title }) {
 }
 
 // Line chart placeholder
-function LineChart({ data, labels, title }) {
+function LineChart({ data, labels, title }: ChartProps) {
   // Mock SVG line chart
   const maxValue = Math.max(...data);
   const minValue = Math.min(...data);
@@ -63,7 +74,7 @@ function LineChart({ data, labels, title }) {
   const chartHeight = 100;
   
   // Create points for SVG path
-  const points = data.map((value, index) => {
+  const points = data.map((value: number, index: number) => {
     const x = (index / (data.length - 1)) * 100; // Convert to percentage
     const y = chartHeight - ((value - minValue) / range) * chartHeight;
     return `${x},${y}`;
@@ -90,7 +101,7 @@ function LineChart({ data, labels, title }) {
           />
           
           {/* Data points */}
-          {data.map((value, index) => {
+          {data.map((value: number, index: number) => {
             const x = (index / (data.length - 1)) * 100;
             const y = chartHeight - ((value - minValue) / range) * chartHeight;
             return (
@@ -105,7 +116,7 @@ function LineChart({ data, labels, title }) {
           })}
         </svg>
         <div className="flex justify-between text-xs text-gray-500 mt-2">
-          {labels.map((label, index) => (
+          {labels.map((label: string, index: number) => (
             <span key={index}>{label}</span>
           ))}
         </div>
@@ -114,13 +125,21 @@ function LineChart({ data, labels, title }) {
   );
 }
 
+// Define a type for donut chart segments
+interface DonutSegment {
+  percentage: number;
+  startAngle: number;
+  endAngle: number;
+  color: string;
+}
+
 // Donut chart placeholder
-function DonutChart({ data, labels, title, colors = ['#000000', '#333333', '#666666', '#999999'] }) {
-  const total = data.reduce((acc, curr) => acc + curr, 0);
+function DonutChart({ data, labels, title, colors = ['#000000', '#333333', '#666666', '#999999'] }: DonutChartProps) {
+  const total = data.reduce((acc: number, curr: number) => acc + curr, 0);
   let cumulativePercentage = 0;
   
   // Calculate percentages and create segments
-  const segments = data.map((value, index) => {
+  const segments = data.map((value: number, index: number) => {
     const percentage = (value / total) * 100;
     const startAngle = cumulativePercentage;
     cumulativePercentage += percentage;
@@ -144,7 +163,7 @@ function DonutChart({ data, labels, title, colors = ['#000000', '#333333', '#666
             <circle cx="50" cy="50" r="50" fill="white" />
             
             {/* Donut segments */}
-            {segments.map((segment, index) => {
+            {segments.map((segment: DonutSegment, index: number) => {
               // Convert percentages to radians
               const startAngle = (segment.startAngle / 100) * 2 * Math.PI - (Math.PI / 2);
               const endAngle = (segment.endAngle / 100) * 2 * Math.PI - (Math.PI / 2);
@@ -180,7 +199,7 @@ function DonutChart({ data, labels, title, colors = ['#000000', '#333333', '#666
           </svg>
         </div>
         <div className="ml-4 space-y-2 flex-1">
-          {data.map((value, index) => (
+          {data.map((value: number, index: number) => (
             <div key={index} className="flex items-center">
               <div 
                 className="w-3 h-3 mr-2 rounded-sm" 
@@ -198,8 +217,57 @@ function DonutChart({ data, labels, title, colors = ['#000000', '#333333', '#666
   );
 }
 
+// Define types for analytics data
+interface Revenue {
+  total: number;
+  previousPeriod: number;
+  percentageChange: number;
+  byMonth: number[];
+}
+
+interface Orders {
+  total: number;
+  previousPeriod: number;
+  percentageChange: number;
+  byStatus: number[];
+  byMonth: number[];
+}
+
+interface Customers {
+  total: number;
+  previousPeriod: number;
+  percentageChange: number;
+  newByMonth: number[];
+  returningRate: number;
+}
+
+interface Product {
+  name: string;
+  sales: number;
+  revenue: number;
+}
+
+interface Products {
+  total: number;
+  topCategories: number[];
+  topSelling: Product[];
+}
+
+interface Payments {
+  byMethod: number[];
+  byStatus: number[];
+}
+
+interface Analytics {
+  revenue: Revenue;
+  orders: Orders;
+  customers: Customers;
+  products: Products;
+  payments: Payments;
+}
+
 // Sample data for demonstration
-const sampleAnalytics = {
+const sampleAnalytics: Analytics = {
   // Revenue data
   revenue: {
     total: 1350000,
@@ -246,8 +314,14 @@ const sampleAnalytics = {
   }
 };
 
+// Define time period interface
+interface TimePeriod {
+  value: string;
+  label: string;
+}
+
 // Time periods for filtering
-const timePeriods = [
+const timePeriods: TimePeriod[] = [
   { value: 'day', label: 'Today' },
   { value: 'week', label: 'This Week' },
   { value: 'month', label: 'This Month' },
@@ -256,9 +330,9 @@ const timePeriods = [
 ];
 
 export default function AdminAnalyticsComp() {
-  const [timePeriod, setTimePeriod] = useState('month');
-  const [activeTab, setActiveTab] = useState('overview');
-  const [analytics, setAnalytics] = useState(sampleAnalytics);
+  const [timePeriod, setTimePeriod] = useState<string>('month');
+  const [activeTab, setActiveTab] = useState<string>('overview');
+  const [analytics, setAnalytics] = useState<Analytics>(sampleAnalytics);
   
   // Replace with real data when API is ready
   // const { data, loading, error } = useFetchData('/api/analytics');
@@ -270,7 +344,7 @@ export default function AdminAnalyticsComp() {
   // }, [data]);
 
   // Generate month labels for charts
-  const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const monthLabels: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
   
   return (
     <div className="flex-1 p-6 bg-gray-50">

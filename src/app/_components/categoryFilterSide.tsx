@@ -68,7 +68,7 @@ export default function CategoryFilterSide() {
       className="overflow-hidden w-full border bg-white rounded-xl shadow-sm p-5 sticky top-28 mt-4"
     >
       <div className="flex items-center justify-between mb-4">
-        <h1 className="font-bold text-2xl">Filters</h1>
+        <h1 className="font-bold text-2xl">Ангилал</h1>
         <SlidersHorizontal
           className="cursor-pointer"
           onClick={toggleFilterVisibility}
@@ -82,7 +82,7 @@ export default function CategoryFilterSide() {
               className="flex items-center justify-between cursor-pointer"
               onClick={() => toggleSection("type")}
             >
-              <h1 className="font-bold text-xl">Type</h1>
+              <h1 className="font-bold text-xl">Төрөл</h1>
               {openSections.type ? <ChevronUp /> : <ChevronDown />}
             </div>
             <motion.div
@@ -95,7 +95,7 @@ export default function CategoryFilterSide() {
               className="overflow-hidden"
             >
               <div className="flex flex-col text-lg font-medium gap-2 mt-2">
-                {["T-shirts", "Shirts", "Jeans", "Shorts"].map((item) => (
+                {["Футболкa & Майк", "Гадуур хувцас", "Өмд & Шорт", "Свитер & Малгайтай цамц",].map((item) => (
                   <label key={item} className="flex justify-between mx-1 gap-2">
                     {item}
                     <Checkbox
@@ -114,7 +114,7 @@ export default function CategoryFilterSide() {
               className="flex items-center justify-between cursor-pointer"
               onClick={() => toggleSection("price")}
             >
-              <h1 className="font-bold text-xl">Price</h1>
+              <h1 className="font-bold text-xl">Үнэ</h1>
               {openSections.price ? <ChevronUp /> : <ChevronDown />}
             </div>
             <motion.div
@@ -157,7 +157,7 @@ export default function CategoryFilterSide() {
                     onClick={applyFilters}
                     className="w-[65%] text-md rounded-2xl"
                   >
-                    Apply
+                    Хайх
                   </Button>
                 </div>
               </div>

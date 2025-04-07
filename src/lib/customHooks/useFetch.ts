@@ -10,6 +10,29 @@ interface FetchResult<T> {
 }
 
 /**
+ * Helper function to get the correct API URL based on environment
+ */
+const getApiUrl = (path: string): string => {
+  // Check if we're in a browser environment
+  if (typeof window !== 'undefined') {
+    const isLocalhost = window.location.hostname === 'localhost' || 
+                        window.location.hostname === '127.0.0.1';
+    
+    if (isLocalhost) {
+      // Use environment variable in local development
+      return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+    } else {
+      // In production, use absolute URL to API
+      const origin = window.location.origin;
+      return `${origin}/api/${path.replace(/^\//, '')}`;
+    }
+  } else {
+    // Server-side rendering - use the environment variable
+    return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+  }
+};
+
+/**
  * Custom hook for data fetching with auto token refresh
  * @param path - API endpoint path
  * @param options - Axios request options
@@ -38,10 +61,30 @@ export function useFetchData<T>(
         }
       }
 
+      // Create an absolute URL that works on all devices
+      let apiUrl;
+      
+      // Always use absolute URL with origin for both development and production
+      if (typeof window !== 'undefined') {
+        const origin = window.location.origin;
+        
+        if (path.startsWith('/api/') || path.startsWith('api/')) {
+          // Path already includes /api/, use it directly
+          apiUrl = `${origin}/${path.startsWith('/') ? path.slice(1) : path}`;
+        } else {
+          // Add /api/ prefix if not present
+          apiUrl = `${origin}/api/${path.replace(/^\//, '')}`;
+        }
+      } else {
+        // Server-side rendering fallback
+        apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
+      }
+
+      console.log("Fetching from URL:", apiUrl);
+
       // Make the API request
-      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "";
       const response = await axios({
-        url: `${baseUrl}${path}`,
+        url: apiUrl,
         method: "GET",
         ...options,
       });

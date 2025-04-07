@@ -84,7 +84,7 @@ export default function AdminSideBar() {
       <div className="p-4 m-4 mb-6 rounded-lg bg-gray-50">
         <div className="flex items-center gap-3 px-3 py-2.5 text-gray-700 rounded-lg hover:bg-gray-100 cursor-pointer">
           <LogOut size={18} />
-          <span>Logout</span>
+          <span>Гарах</span>
         </div>
       </div>
     </div>

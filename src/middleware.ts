@@ -9,9 +9,7 @@ interface DecodedToken extends JwtPayload {
   };
 }
 
-/**
- * Decodes a JWT token without verifying its signature
- */
+
 export const decodeToken = (token: string): DecodedToken | null => {
   try {
     return jwtDecode<DecodedToken>(token);
@@ -21,39 +19,34 @@ export const decodeToken = (token: string): DecodedToken | null => {
   }
 };
 
-/**
- * Checks if a token is expired based on its exp claim
- */
+
 export const isTokenExpired = (token: string): boolean => {
   const decoded = decodeToken(token);
   if (!decoded?.exp) return true;
   
-  // Add a 30-second buffer to allow for clock skew
+
   const currentTime = Math.floor(Date.now() / 1000);
   return currentTime >= decoded.exp - 30;
 };
 
-/**
- * Middleware function to protect routes and handle token refresh
- */
+
 export async function middleware(request: NextRequest) {
-  // Get cookies
+ 
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
   
-  // Path for redirecting unauthenticated users
+
   const loginUrl = new URL("/login", request.url);
   
-  // If no tokens at all, redirect to login
+
   if (!accessToken && !refreshToken) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // If access token exists and isn't expired, verify admin role
+
   if (accessToken && !isTokenExpired(accessToken)) {
     const decoded = decodeToken(accessToken);
-    
-    // Check for admin role
+   
     if (!decoded?.userData || decoded.userData.role !== "admin") {
       return NextResponse.redirect(new URL("/", request.url));
     }
@@ -95,7 +88,8 @@ export async function middleware(request: NextRequest) {
       // Create response that allows the request to continue
       const nextResponse = NextResponse.next();
       
-      // Add the new access token to the response
+      // Since the middleware can't see cookies set by the API route immediately,
+      // we need to set the cookie here as well
       nextResponse.cookies.set({
         name: "accessToken",
         value: data.accessToken,
