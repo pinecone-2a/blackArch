@@ -33,7 +33,7 @@ type Stats = {
 }
 
 export default function AdminDashboard() {
-  const {data, loading} = useFetchData<Stats>("/admin");
+  const {data, loading, error, refetch} = useFetchData<Stats>("/admin");
   const [orders, setOrders] = useState([]);
   const [timePeriod, setTimePeriod] = useState('week');
   
@@ -43,17 +43,22 @@ export default function AdminDashboard() {
     }
   }, [data]);
   
+  // Format currency with toLocaleString
+  const formatCurrency = (amount: number) => {
+    return `₮${amount ? amount.toLocaleString() : '0'}`;
+  };
+  
   const stats = [
     { 
-      title: "Total Revenue", 
-      value: `₮${data ? data.totalPendingRevenue.toLocaleString() : '0'}`, 
+      title: "Нийт Орлого", 
+      value: formatCurrency(data?.totalPendingRevenue || 0), 
       change: "8%", 
       increasing: true,
       icon: <DollarSign size={20} />, 
       color: "bg-green-100 text-green-600" 
     },
     { 
-      title: "Total Orders", 
+      title: "Нийт Захиалга", 
       value: data ? data.totalPendingOrders : 0, 
       change: "14%", 
       increasing: true,
@@ -61,7 +66,7 @@ export default function AdminDashboard() {
       color: "bg-blue-100 text-blue-600" 
     },
     { 
-      title: "Total Customers", 
+      title: "Нийт Хэрэглэгч", 
       value: data ? data.userCount : 0, 
       change: "5%", 
       increasing: true,
@@ -69,8 +74,10 @@ export default function AdminDashboard() {
       color: "bg-purple-100 text-purple-600" 
     },
     { 
-      title: "Avg. Order Value", 
-      value: "₮25,000", 
+      title: "Дундаж Захиалгын Дүн", 
+      value: formatCurrency(data?.totalPendingRevenue && data?.totalPendingOrders 
+        ? data.totalPendingRevenue / data.totalPendingOrders 
+        : 0), 
       change: "3%", 
       increasing: false,
       icon: <TrendingUp size={20} />, 
@@ -125,20 +132,47 @@ export default function AdminDashboard() {
         onTimePeriodChange={setTimePeriod}
       />
 
-      {/* Stats cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat, i) => (
-          <StatsCard 
-            key={i}
-            title={stat.title}
-            value={stat.value}
-            change={stat.change}
-            increasing={stat.increasing}
-            icon={stat.icon}
-            color={stat.color}
-          />
-        ))}
-      </div>
+      {/* Error message if failed to load data */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+          <p className="text-red-700 font-medium">Өгөгдөл ачаалахад алдаа гарлаа</p>
+          <p className="text-red-600 text-sm mt-1">{error}</p>
+          <button 
+            onClick={() => refetch()} 
+            className="mt-2 px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors text-sm"
+          >
+            Дахин оролдох
+          </button>
+        </div>
+      )}
+
+      {/* Loading state */}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white p-6 rounded-lg shadow-sm animate-pulse">
+              <div className="h-6 bg-gray-200 rounded w-1/2 mb-2"></div>
+              <div className="h-8 bg-gray-300 rounded w-1/3 mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        /* Stats cards */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {stats.map((stat, i) => (
+            <StatsCard 
+              key={i}
+              title={stat.title}
+              value={stat.value}
+              change={stat.change}
+              increasing={stat.increasing}
+              icon={stat.icon}
+              color={stat.color}
+            />
+          ))}
+        </div>
+      )}
       
       {/* Quick actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -150,7 +184,7 @@ export default function AdminDashboard() {
         
         <ActionCard
           title="Ангилал Менежмент"
-          description="Organize your store's categories"
+          description="Дэлгүүрийн ангилалыг зохион байгуулах"
           items={categoryActions}
         />
       </div>
@@ -168,42 +202,57 @@ export default function AdminDashboard() {
             </TabsList>
             <Link href="/admin/orders" className="ml-4">
               <Button variant="outline" size="sm" className="gap-1">
-                View All <ChevronRight size={16} />
+                Бүгдийг Харах <ChevronRight size={16} />
               </Button>
             </Link>
           </div>
         </div>
 
-        <TabsContent value="all" className="m-0">
-          <OrdersTable
-            orders={orders}
-            onUpdateStatus={updateOrderStatus}
-          />
-        </TabsContent>
+        {loading ? (
+          <div className="bg-white rounded-lg shadow-sm p-6 min-h-[200px] flex items-center justify-center">
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-gray-500">Захиалгуудыг ачаалж байна...</span>
+            </div>
+          </div>
+        ) : orders.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-sm p-6 min-h-[200px] flex items-center justify-center">
+            <p className="text-gray-500">Захиалга олдсонгүй</p>
+          </div>
+        ) : (
+          <>
+            <TabsContent value="all" className="m-0">
+              <OrdersTable
+                orders={orders}
+                onUpdateStatus={updateOrderStatus}
+              />
+            </TabsContent>
 
-        <TabsContent value="pending" className="m-0">
-          <OrdersTable
-            orders={orders}
-            filteredStatus="pending"
-            readOnly={true}
-          />
-        </TabsContent>
+            <TabsContent value="pending" className="m-0">
+              <OrdersTable
+                orders={orders}
+                filteredStatus="pending"
+                readOnly={true}
+              />
+            </TabsContent>
 
-        <TabsContent value="processing" className="m-0">
-          <OrdersTable
-            orders={orders}
-            filteredStatus="processing"
-            readOnly={true}
-          />
-        </TabsContent>
+            <TabsContent value="processing" className="m-0">
+              <OrdersTable
+                orders={orders}
+                filteredStatus="processing"
+                readOnly={true}
+              />
+            </TabsContent>
 
-        <TabsContent value="completed" className="m-0">
-          <OrdersTable
-            orders={orders}
-            filteredStatus="delivered"
-            readOnly={true}
-          />
-        </TabsContent>
+            <TabsContent value="completed" className="m-0">
+              <OrdersTable
+                orders={orders}
+                filteredStatus="delivered"
+                readOnly={true}
+              />
+            </TabsContent>
+          </>
+        )}
       </Tabs>
     </div>
   );
