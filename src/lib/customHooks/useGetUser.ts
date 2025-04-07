@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { getUserFromToken, isAccessTokenExpired, refreshAccessToken } from '../auth/tokenService';
+import { getUserFromToken, isAccessTokenExpired, refreshAccessToken, syncUserIdToLocalStorage } from '../auth/tokenService';
 
 interface User {
   id: string;
@@ -33,6 +33,7 @@ export default function useGetUser() {
             // If refresh failed, clear state and exit
             if (isMounted) {
               setUser(null);
+              syncUserIdToLocalStorage(null); // Clear localStorage user ID
               setError('Session expired. Please log in again.');
               setLoading(false);
             }
@@ -45,6 +46,7 @@ export default function useGetUser() {
         
         if (tokenUser && isMounted) {
           setUser(tokenUser);
+          syncUserIdToLocalStorage(tokenUser); // Ensure localStorage is in sync
           setError(null);
           setLoading(false);
           return;
@@ -55,12 +57,14 @@ export default function useGetUser() {
         
         if (isMounted) {
           setUser(response.data.user);
+          syncUserIdToLocalStorage(response.data.user); // Ensure localStorage is in sync
           setError(null);
         }
       } catch (err) {
         console.error('Error fetching user:', err);
         if (isMounted) {
           setUser(null);
+          syncUserIdToLocalStorage(null); // Clear localStorage user ID
           setError(err instanceof Error ? err.message : 'Failed to fetch user');
         }
       } finally {

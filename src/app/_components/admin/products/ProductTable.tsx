@@ -88,7 +88,7 @@ const ProductTable = ({
                                 {categories.find(c => c.id === product.categoryId)?.name || "Unknown Category"}
                             </td>
                             <td className="px-4 py-3 text-sm">
-                                ₮{product.price.toFixed(2)}
+                                ₮{product.price.toLocaleString()}
                             </td>
                             <td className="px-4 py-3 text-sm">
                                 <span className={`px-2 py-1 rounded-full text-xs ${

@@ -38,10 +38,11 @@ export default function OrdersList({
   refreshUserData,
   formatDate
 }: OrdersListProps) {
+  
   return (
     <div className="space-y-6 mt-0">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold">My Orders</h2>
+        <h2 className="text-2xl font-semibold">Миний Захиалгууд</h2>
         <Button 
           variant="outline" 
           size="sm" 
@@ -52,11 +53,11 @@ export default function OrdersList({
           {loading ? 
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Refreshing</span>
+              <span>Ачаалж байна</span>
             </> : 
             <>
               <RefreshCcw className="h-4 w-4" />
-              Refresh Orders
+              Дахин ачаалах
             </>
           }
         </Button>
@@ -69,7 +70,10 @@ export default function OrdersList({
       ) : orders.length === 0 ? (
         <EmptyOrdersState />
       ) : (
-        <OrdersGrid orders={orders} formatDate={formatDate} />
+        <OrdersGrid 
+          orders={orders} 
+          formatDate={formatDate}
+        />
       )}
     </div>
   );
@@ -127,7 +131,7 @@ function ErrorDisplay({ error, onRetry }: { error: string, onRetry: () => void }
             onClick={onRetry}
           >
             <RefreshCcw className="h-4 w-4 mr-2" />
-            Try Again
+            Дахин оролдох
           </Button>
         </div>
       </CardContent>
@@ -146,12 +150,12 @@ function EmptyOrdersState() {
         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
           <ShoppingBag className="w-8 h-8 text-gray-400" />
         </div>
-        <h3 className="text-lg font-medium mb-2">No orders yet</h3>
-        <p className="text-gray-500 mb-6 text-center max-w-sm">Your order history will appear here once you've made a purchase.</p>
+        <h3 className="text-lg font-medium mb-2">Захиалга байхгүй байна</h3>
+        <p className="text-gray-500 mb-6 text-center max-w-sm">Таны захиалгын түүх энд харагдах болно. Та одоогоор захиалга хийгээгүй байна.</p>
         <Button asChild className="gap-2">
           <Link href="/category">
             <ShoppingBag className="h-4 w-4" />
-            Start Shopping
+            Дэлгүүрлэх
           </Link>
         </Button>
       </div>
@@ -159,7 +163,13 @@ function EmptyOrdersState() {
   );
 }
 
-function OrdersGrid({ orders, formatDate }: { orders: Order[], formatDate: (date: string) => string }) {
+function OrdersGrid({ 
+  orders, 
+  formatDate
+}: { 
+  orders: Order[], 
+  formatDate: (date: string) => string
+}) {
   return (
     <div className="space-y-4">
       {orders.map((order) => (
@@ -175,7 +185,7 @@ function OrdersGrid({ orders, formatDate }: { orders: Order[], formatDate: (date
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="bg-gray-100 border-0 text-gray-800 gap-1">
                     <PackageOpen className="h-3 w-3" /> 
-                    Order #{order.id.slice(-6)}
+                    Захиалга #{order.id.slice(-6)}
                   </Badge>
                   <span className="text-sm text-muted-foreground flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
@@ -184,13 +194,17 @@ function OrdersGrid({ orders, formatDate }: { orders: Order[], formatDate: (date
                 </div>
                 <div>
                   <Badge className={`${
-                    order.status === "completed" 
+                    order.status === "completed" || order.status === "delivered" 
                       ? "bg-green-100 text-green-800 hover:bg-green-100" 
                       : order.status === "pending" 
                         ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-100" 
                         : "bg-blue-100 text-blue-800 hover:bg-blue-100"
                   } border-0`}>
-                    {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                    {order.status === "pending" ? "Хүлээгдэж буй" :
+                     order.status === "processing" ? "Боловсруулж байгаа" :
+                     order.status === "delivered" || order.status === "completed" ? "Хүргэгдсэн" :
+                     order.status === "cancelled" ? "Цуцлагдсан" :
+                     order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                   </Badge>
                 </div>
               </div>
@@ -199,15 +213,15 @@ function OrdersGrid({ orders, formatDate }: { orders: Order[], formatDate: (date
             <CardContent className="pt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
                 <div>
-                  <h4 className="text-sm font-medium text-gray-500 mb-1">Total Amount</h4>
-                  <p className="text-2xl font-semibold">${(order.totalPrice / 100).toFixed(2)}</p>
+                  <h4 className="text-sm font-medium text-gray-500 mb-1">Нийт дүн</h4>
+                  <p className="text-2xl font-semibold">₮{order.totalPrice.toLocaleString()}</p>
                 </div>
                 
                 <div>
-                  <h4 className="text-sm font-medium text-gray-500 mb-1">Shipping Address</h4>
+                  <h4 className="text-sm font-medium text-gray-500 mb-1">Хүргэлтийн хаяг</h4>
                   <p className="font-medium">
-                    {order.shippingAddress?.street || "N/A"}, {order.shippingAddress?.city || "N/A"},
-                    {order.shippingAddress?.state || "N/A"} {order.shippingAddress?.zip || "N/A"}
+                    {order.shippingAddress?.street || "Байхгүй"}, {order.shippingAddress?.city || ""},
+                    {order.shippingAddress?.state || ""} {order.shippingAddress?.zip || ""}
                   </p>
                 </div>
               </div>
@@ -218,13 +232,13 @@ function OrdersGrid({ orders, formatDate }: { orders: Order[], formatDate: (date
                 <div className="flex items-center">
                   {order.items && (
                     <span className="text-sm">
-                      {order.items.length} {order.items.length === 1 ? "item" : "items"}
+                      {order.items.length} бүтээгдэхүүн
                     </span>
                   )}
                 </div>
                 <Button size="sm" variant="outline" className="gap-1">
                   <PackageOpen className="h-3.5 w-3.5" />
-                  View Details
+                  Дэлгэрэнгүй
                 </Button>
               </div>
             </CardFooter>

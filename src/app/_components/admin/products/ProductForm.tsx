@@ -86,7 +86,6 @@ const ProductForm = ({
         quantity: "",
         categoryId: "",
         image: "",
-        color: [] as string[],
         size: [] as string[],
     });
     
@@ -106,7 +105,6 @@ const ProductForm = ({
                         quantity: productToEdit.quantity.toString() || "",
                         categoryId: productToEdit.categoryId || "",
                         image: productToEdit.image || "",
-                        color: productToEdit.color || [],
                         size: productToEdit.size || [],
                     });
                     setCroppedImage(productToEdit.image);
@@ -125,7 +123,6 @@ const ProductForm = ({
             quantity: "",
             categoryId: "",
             image: "",
-            color: [],
             size: [],
         });
         setCroppedImage(null);
@@ -138,20 +135,6 @@ const ProductForm = ({
 
     const handleSelectChange = (name: string, value: string) => {
         setProductForm(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleColorChange = (colorValue: string, checked: boolean) => {
-        if (checked) {
-            setProductForm(prev => ({ 
-                ...prev, 
-                color: [...prev.color, colorValue] 
-            }));
-        } else {
-            setProductForm(prev => ({ 
-                ...prev, 
-                color: prev.color.filter(c => c !== colorValue) 
-            }));
-        }
     };
 
     const handleSizeChange = (size: string, checked: boolean) => {
@@ -169,7 +152,7 @@ const ProductForm = ({
     };
 
     const handleSubmit = async () => {
-        if (!productForm.name || !productForm.price || !productForm.quantity || !productForm.categoryId || productForm.color.length === 0 || productForm.size.length === 0) {
+        if (!productForm.name || !productForm.price || !productForm.quantity || !productForm.categoryId || productForm.size.length === 0) {
             toast.error("Please fill out all required fields");
             return;
         }
@@ -190,7 +173,6 @@ const ProductForm = ({
                 quantity: parseInt(productForm.quantity),
                 image: croppedImage || productForm.image, 
                 categoryId: productForm.categoryId,
-                color: productForm.color,
                 size: productForm.size,
                 rating: 0,
             };
@@ -312,33 +294,6 @@ const ProductForm = ({
                                     ))}
                                 </SelectContent>
                             </Select>
-                        </div>
-                        
-                        <div>
-                            <Label className="block mb-2">Colors <span className="text-red-500">*</span></Label>
-                            <div className="grid grid-cols-3 gap-2">
-                                {colors.map((color) => (
-                                    <div key={color.value} className="flex items-center space-x-2">
-                                        <Checkbox
-                                            id={`color-${color.value}`}
-                                            checked={productForm.color.includes(color.value)}
-                                            onCheckedChange={(checked) => 
-                                                handleColorChange(color.value, checked as boolean)
-                                            }
-                                        />
-                                        <Label
-                                            htmlFor={`color-${color.value}`}
-                                            className="flex items-center text-sm font-normal"
-                                        >
-                                            <span
-                                                className="w-4 h-4 mr-1 rounded-full inline-block border border-gray-200"
-                                                style={{ backgroundColor: color.hex }}
-                                            ></span>
-                                            {color.name}
-                                        </Label>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
                         
                         <div>

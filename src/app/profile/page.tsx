@@ -16,11 +16,17 @@ export default function ProfilePage() {
   const { user, orders, address, loading, error, updateAddress, refreshUserData } = useProfile();
   
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    const date = new Date(dateString);
+    
+    // Mongolian months
+    const months = [
+      'Нэгдүгээр сар', 'Хоёрдугаар сар', 'Гуравдугаар сар', 
+      'Дөрөвдүгээр сар', 'Тавдугаар сар', 'Зургадугаар сар', 
+      'Долдугаар сар', 'Наймдугаар сар', 'Есдүгээр сар', 
+      'Аравдугаар сар', 'Арван нэгдүгээр сар', 'Арван хоёрдугаар сар'
+    ];
+    
+    return `${date.getFullYear()} оны ${months[date.getMonth()]} ${date.getDate()}`;
   };
 
   if (!user) {
@@ -33,37 +39,43 @@ export default function ProfilePage() {
 
   return (
     <ProfileLayout>
-      <ProfileHeader 
-        user={user} 
-        ordersCount={orders.length} 
-        formatDate={formatDate} 
-      />
-      
-      <ProfileTabs
-        ordersTab={
-          <OrdersList
-            orders={orders}
-            loading={loading}
-            error={error}
-            refreshUserData={refreshUserData}
-            formatDate={formatDate}
+      <div className="flex flex-col w-full">
+        <div className="w-full">
+          <ProfileHeader 
+            user={user} 
+            ordersCount={orders.length} 
+            formatDate={formatDate} 
           />
-        }
-        addressesTab={
-          <AddressForm
-            address={address}
-            loading={loading}
-            refreshUserData={refreshUserData}
-            updateAddress={updateAddress}
+        </div>
+        
+        <div className="mt-8">
+          <ProfileTabs
+            ordersTab={
+              <OrdersList
+                orders={orders}
+                loading={loading}
+                error={error}
+                refreshUserData={refreshUserData}
+                formatDate={formatDate}
+              />
+            }
+            addressesTab={
+              <AddressForm
+                address={address}
+                loading={loading}
+                refreshUserData={refreshUserData}
+                updateAddress={updateAddress}
+              />
+            }
+            accountTab={
+              <AccountInfo
+                user={user}
+                formatDate={formatDate}
+              />
+            }
           />
-        }
-        accountTab={
-          <AccountInfo
-            user={user}
-            formatDate={formatDate}
-          />
-        }
-      />
+        </div>
+      </div>
     </ProfileLayout>
   );
 }

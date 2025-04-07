@@ -44,7 +44,7 @@ export function useFetchData<T>(
   deps: any[] = []
 ): FetchResult<T> {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
@@ -68,11 +68,16 @@ export function useFetchData<T>(
       if (typeof window !== 'undefined') {
         const origin = window.location.origin;
         
-        if (path.startsWith('/api/') || path.startsWith('api/')) {
-          // Path already includes /api/, use it directly
+        // Handle the special case for admin dashboard
+        if (path === '/admin') {
+          apiUrl = `${origin}/api/admin`;
+        } 
+        // Handle API paths with or without leading slashes
+        else if (path.startsWith('/api/') || path.startsWith('api/')) {
           apiUrl = `${origin}/${path.startsWith('/') ? path.slice(1) : path}`;
-        } else {
-          // Add /api/ prefix if not present
+        } 
+        // Add /api/ prefix if not present
+        else {
           apiUrl = `${origin}/api/${path.replace(/^\//, '')}`;
         }
       } else {
@@ -87,6 +92,11 @@ export function useFetchData<T>(
         url: apiUrl,
         method: "GET",
         ...options,
+        // Add timestamp to prevent caching
+        params: {
+          ...(options?.params || {}),
+          _t: new Date().getTime()
+        }
       });
 
       if (response.data) {

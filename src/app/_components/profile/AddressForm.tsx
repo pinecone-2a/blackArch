@@ -74,7 +74,7 @@ export default function AddressForm({
         <Card className="overflow-hidden border">
           <CardHeader>
             <div className="flex justify-between items-center">
-              <CardTitle>Shipping Address</CardTitle>
+              <CardTitle>Хүргэлтийн хаяг</CardTitle>
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -86,10 +86,10 @@ export default function AddressForm({
                   <Loader2 className="h-4 w-4 animate-spin" /> : 
                   <RefreshCcw className="h-4 w-4" />
                 }
-                <span className="sr-only md:not-sr-only">Refresh</span>
+                <span className="sr-only md:not-sr-only">Шинэчлэх</span>
               </Button>
             </div>
-            <CardDescription>Update your shipping information</CardDescription>
+            <CardDescription>Хүргэлтийн хаягаа шинэчлэх</CardDescription>
           </CardHeader>
           
           <CardContent>
@@ -99,52 +99,52 @@ export default function AddressForm({
               <form onSubmit={handleAddressSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label htmlFor="street" className="text-sm font-medium text-gray-700">Street Address</label>
+                    <label htmlFor="street" className="text-sm font-medium text-gray-700">Гудамж, байр, тоот</label>
                     <Input
                       id="street"
                       name="street"
                       value={addressForm.street}
                       onChange={handleAddressChange}
-                      placeholder="Enter your street address"
+                      placeholder="Гудамж, байр, тоотоо оруулна уу"
                       className="h-10"
                       required
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <label htmlFor="city" className="text-sm font-medium text-gray-700">City</label>
+                    <label htmlFor="city" className="text-sm font-medium text-gray-700">Хот</label>
                     <Input
                       id="city"
                       name="city"
                       value={addressForm.city}
                       onChange={handleAddressChange}
-                      placeholder="Enter your city"
+                      placeholder="Хотын нэр оруулна уу"
                       className="h-10"
                       required
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <label htmlFor="state" className="text-sm font-medium text-gray-700">State</label>
+                    <label htmlFor="state" className="text-sm font-medium text-gray-700">Дүүрэг</label>
                     <Input
                       id="state"
                       name="state"
                       value={addressForm.state}
                       onChange={handleAddressChange}
-                      placeholder="Enter your state"
+                      placeholder="Дүүрэг оруулна уу"
                       className="h-10"
                       required
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <label htmlFor="zip" className="text-sm font-medium text-gray-700">ZIP Code</label>
+                    <label htmlFor="zip" className="text-sm font-medium text-gray-700">Шуудангийн код</label>
                     <Input
                       id="zip"
                       name="zip"
                       value={addressForm.zip}
                       onChange={handleAddressChange}
-                      placeholder="Enter your ZIP code"
+                      placeholder="Шуудангийн код оруулна уу"
                       className="h-10"
                       required
                     />
@@ -160,7 +160,7 @@ export default function AddressForm({
                     <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
                     </svg>
-                    Address updated successfully!
+                    Хаяг амжилттай шинэчлэгдлээ!
                   </motion.div>
                 )}
                 <div className="pt-2">
@@ -172,11 +172,11 @@ export default function AddressForm({
                     {isUpdatingAddress ? 
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        Saving...
+                        Хадгалж байна...
                       </> : 
                       <>
                         <MapPin className="h-4 w-4" />
-                        Save Address
+                        Хаяг хадгалах
                       </>
                     }
                   </Button>
@@ -221,8 +221,8 @@ function AddressSummary({ address }: AddressSummaryProps) {
     <div>
       <Card className="border overflow-hidden h-full">
         <CardHeader>
-          <CardTitle>Recently Shipped To</CardTitle>
-          <CardDescription>Your default shipping address</CardDescription>
+          <CardTitle>Одоогийн хаяг</CardTitle>
+          <CardDescription>Таны үндсэн хүргэлтийн хаяг</CardDescription>
         </CardHeader>
         <CardContent>
           {address ? (
@@ -230,7 +230,7 @@ function AddressSummary({ address }: AddressSummaryProps) {
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-gray-500 mt-0.5" />
                 <div>
-                  <h4 className="font-medium">Default Address</h4>
+                  <h4 className="font-medium">Үндсэн хаяг</h4>
                   <p className="text-sm text-gray-600 mt-1">
                     {address.street}<br />
                     {address.city}, {address.state} {address.zip}
@@ -241,7 +241,7 @@ function AddressSummary({ address }: AddressSummaryProps) {
           ) : (
             <div className="flex flex-col items-center justify-center py-6 text-center space-y-2">
               <MapPin className="h-8 w-8 text-gray-300" />
-              <p className="text-gray-500">No address saved yet</p>
+              <p className="text-gray-500">Одоогоор хаяг хадгалаагүй байна</p>
             </div>
           )}
         </CardContent>
