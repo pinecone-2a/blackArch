@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import Reveal from "./Reavel";
 import Link from "next/link";
 
-const initialCart = [{}];
+const initialCart: CartItem[] = [];
 
 interface CartItem {
   productId: string;
@@ -46,23 +46,39 @@ export default function Cart() {
     });
   };
 
+  const isCartEmpty = !cart.length || !cart.some(item => item.productId);
+  
   const subtotal = cart.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + (item.price || 0) * (item.quantity || 1),
     0
   );
   const discountAmount = subtotal * discount;
   const total = subtotal - discountAmount + deliveryFee;
 
+  function updateQuantity(productId: string, action: string): void {
+    setCart((prevCart) => {
+      return prevCart.map((item) => {
+        if (item.productId === productId) {
+          if (action === "increase") {
+            return { ...item, quantity: item.quantity + 1 };
+          } else if (action === "decrease" && item.quantity > 1) {
+            return { ...item, quantity: item.quantity - 1 };
+          }
+        }
+        return item;
+      });
+    });
+  }
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 mt-20">
-      {cart.length > 0 ? (
+    <div className="max-w-6xl mx-auto px-4 py-8 mt-24">
+      {!isCartEmpty ? (
         <>
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-            Your Shopping Cart
+            Таны сагсанд байгаа бүтээгдэхүүнүүд
           </h2>
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-2/3 space-y-4 w-full">
-              {cart.map((item: CartItem) => (
+              {cart.filter(item => item.productId).map((item: CartItem) => (
                 <Card
                   key={item.productId}
                   className="flex flex-col sm:flex-row items-center p-4 sm:p-6 gap-6 rounded-xl border shadow-sm hover:shadow-md transition-shadow duration-200 relative w-full group"
@@ -89,25 +105,36 @@ export default function Cart() {
                     </div>
                     <div className="flex items-center justify-between mt-3">
                       <div className="flex items-center">
-                        <button className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100">
+                        <button
+                          className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100"
+                          onClick={() =>
+                            updateQuantity(item.productId, "decrease")
+                          }
+                        >
                           -
                         </button>
                         <span className="mx-3 font-medium">
                           {item.quantity}
                         </span>
-                        <button className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100">
+
+                        <button
+                          className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-100"
+                          onClick={() =>
+                            updateQuantity(item.productId, "increase")
+                          }
+                        >
                           +
                         </button>
                       </div>
                       <p className="font-bold text-xl sm:text-2xl">
-                        ₮{item.price}
+                        ₮{item.price.toLocaleString()}
                       </p>
                     </div>
                   </CardContent>
 
                   <Button
                     onClick={() => removeItem(item.productId)}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 p-0"
+                    className="absolute top-4 right-4 text-white rounded-full h-8 w-8 p-0"
                   >
                     <Trash2 size={16} />
                   </Button>
@@ -130,7 +157,7 @@ export default function Cart() {
                     >
                       <path d="m15 18-6-6 6-6" />
                     </svg>
-                    Continue Shopping
+                    Буцах
                   </Button>
                 </Link>
               </div>
@@ -139,29 +166,29 @@ export default function Cart() {
             <div className="lg:w-1/3 w-full mt-8 lg:mt-0">
               <div className="bg-white border shadow-sm p-6 rounded-xl sticky top-28">
                 <h3 className="text-xl font-bold border-b pb-4 mb-4">
-                  Order Summary
+                  Төлбөрийн мэдээлэл
                 </h3>
                 <div className="space-y-3 text-gray-600">
                   <div className="flex justify-between items-center">
-                    <span>Subtotal ({cart.length} items)</span>
-                    <span className="font-medium">₮{subtotal.toFixed(2)}</span>
+                    <span>Тоо болон үнэ: ({cart.filter(item => item.productId).length})</span>
+                    <span className="font-medium">₮{subtotal.toLocaleString()}</span>
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between items-center text-green-600">
-                      <span>Discount ({discount * 100}%)</span>
-                      <span>- ₮{discountAmount.toFixed(2)}</span>
+                      <span>Хөнгөлөлт ({discount * 100}%)</span>
+                      <span>- ₮{discountAmount.toLocaleString()}</span>
                     </div>
                   )}
                   <div className="flex justify-between items-center">
-                    <span>Delivery Fee</span>
+                    <span>Хүргэлтийн төлбөр</span>
                     <span className="font-medium">
-                      ₮{deliveryFee.toFixed(2)}
+                      ₮{deliveryFee.toLocaleString()}
                     </span>
                   </div>
                   <div className="border-t my-3 pt-3"></div>
                   <div className="flex justify-between text-lg font-bold">
-                    <span>Total</span>
-                    <span>₮{total.toFixed(2)}</span>
+                    <span>Нийт</span>
+                    <span>₮{total.toLocaleString()}</span>
                   </div>
                 </div>
 
@@ -169,7 +196,7 @@ export default function Cart() {
                   <div className="flex items-center">
                     <Input
                       type="text"
-                      placeholder="Add promo code"
+                      placeholder="Promo код оруулах"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value)}
                       className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -181,17 +208,18 @@ export default function Cart() {
                       variant="outline"
                       size="sm"
                     >
-                      Apply
+                      Идэвхжүүлэх
                     </Button>
                   </div>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  Use promo code <b>Pineshop</b> for 20% discount
+                  <b>Pineshop</b> промо кодыг ашигласнаар 5% хөнгөлөлт авах
+                  боломжтой.
                 </p>
 
-                <Link href="/payment">
+                <Link href="/cart/payment">
                   <Button className="w-full mt-6 py-6 bg-black hover:bg-gray-800 rounded-xl text-lg">
-                    Proceed to Checkout
+                    Үргэлжлүүлэх
                   </Button>
                 </Link>
               </div>
@@ -204,13 +232,14 @@ export default function Cart() {
             <div className="mx-auto w-28 h-28 bg-gray-50 rounded-full flex items-center justify-center mb-6">
               <ShoppingBag className="w-14 h-14 text-gray-400" />
             </div>
-            <h1 className="font-extrabold text-3xl">Your Cart is Empty</h1>
+            <h1 className="font-extrabold text-3xl">Таны сагс хоосон байна.</h1>
             <p className="mt-3 text-gray-500 mb-8">
-              Looks like you haven't added anything to your cart yet.
+              Одоогийн байдлаар таны сагсанд ямар нэгэн бүтээгдэхүүн байхгүй
+              байна.
             </p>
             <Link href="/category">
               <Button className="rounded-xl px-10 py-6 bg-black hover:bg-gray-800 text-white text-lg">
-                Explore Products
+                Бүтээгдэхүүн үзэх
               </Button>
             </Link>
           </div>

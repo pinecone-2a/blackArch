@@ -15,7 +15,6 @@ export default function CategoryFilterSide() {
   });
   const [isFilterVisible, setIsFilterVisible] = useState(true);
 
-  // State to hold the filter values
   const [selectedFilters, setSelectedFilters] = useState({
     type: [] as string[],
     price: { min: 0, max: 500 },
@@ -23,17 +22,14 @@ export default function CategoryFilterSide() {
     dressStyle: [] as string[],
   });
 
-  // Toggle the visibility of the filter section
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
-  // Toggle the filter visibility
   const toggleFilterVisibility = () => {
     setIsFilterVisible((prev) => !prev);
   };
 
-  // Handle filter value change
   const handleCheckboxChange = (category: string, value: string) => {
     setSelectedFilters((prev) => {
       const updatedCategory = prev[category as keyof typeof prev];
@@ -50,7 +46,6 @@ export default function CategoryFilterSide() {
     });
   };
 
-  // Handle price range change
   const handlePriceChange = (min: string, max: string) => {
     setSelectedFilters((prev) => ({
       ...prev,
@@ -61,10 +56,8 @@ export default function CategoryFilterSide() {
     }));
   };
 
-  // Apply the filter logic (you would use this to filter your product data)
   const applyFilters = () => {
     console.log("Filters applied:", selectedFilters);
-    // You would use selectedFilters here to filter your clothes data
   };
 
   return (
@@ -72,10 +65,10 @@ export default function CategoryFilterSide() {
       initial={{ height: 70 }}
       animate={{ height: isFilterVisible ? "auto" : 70 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="overflow-hidden w-full border bg-white rounded-xl shadow-sm p-5 sticky top-28"
+      className="overflow-hidden w-full border bg-white rounded-xl shadow-sm p-5 sticky top-28 mt-4"
     >
       <div className="flex items-center justify-between mb-4">
-        <h1 className="font-bold text-2xl">Filters</h1>
+        <h1 className="font-bold text-2xl">Ангилал</h1>
         <SlidersHorizontal
           className="cursor-pointer"
           onClick={toggleFilterVisibility}
@@ -89,7 +82,7 @@ export default function CategoryFilterSide() {
               className="flex items-center justify-between cursor-pointer"
               onClick={() => toggleSection("type")}
             >
-              <h1 className="font-bold text-xl">Type</h1>
+              <h1 className="font-bold text-xl">Төрөл</h1>
               {openSections.type ? <ChevronUp /> : <ChevronDown />}
             </div>
             <motion.div
@@ -102,7 +95,7 @@ export default function CategoryFilterSide() {
               className="overflow-hidden"
             >
               <div className="flex flex-col text-lg font-medium gap-2 mt-2">
-                {["T-shirts", "Shirts", "Jeans", "Shorts"].map((item) => (
+                {["Футболкa & Майк", "Гадуур хувцас", "Өмд & Шорт", "Свитер & Малгайтай цамц",].map((item) => (
                   <label key={item} className="flex justify-between mx-1 gap-2">
                     {item}
                     <Checkbox
@@ -121,7 +114,7 @@ export default function CategoryFilterSide() {
               className="flex items-center justify-between cursor-pointer"
               onClick={() => toggleSection("price")}
             >
-              <h1 className="font-bold text-xl">Price</h1>
+              <h1 className="font-bold text-xl">Үнэ</h1>
               {openSections.price ? <ChevronUp /> : <ChevronDown />}
             </div>
             <motion.div
@@ -164,7 +157,7 @@ export default function CategoryFilterSide() {
                     onClick={applyFilters}
                     className="w-[65%] text-md rounded-2xl"
                   >
-                    Apply
+                    Хайх
                   </Button>
                 </div>
               </div>

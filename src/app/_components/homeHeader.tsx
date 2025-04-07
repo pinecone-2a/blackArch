@@ -75,8 +75,8 @@ export default function Navbar() {
 
   const cartCount = cartData?.length || 0;
   return (
-    <div className="sticky z-20 w-full mx-auto flex px-10  top-0 bg-white  pb-4">
-      <nav className="bg-red w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
+    <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+      <nav className="container mx-auto p-4 flex items-center gap-12 justify-between">
         <span>
           <Link
             href={"/"}
@@ -93,39 +93,31 @@ export default function Navbar() {
                 href={"/category"}
                 className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
               >
-                Shop
+                Бүх хувцас
               </Link>
 
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
             </div>
-            <p className="relative group">
+            <div className="relative group">
               <Link
                 href={"/category"}
                 className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
               >
-                New Arrivals
+                Шинээр нэмэгдсэн
               </Link>
 
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
-            </p>
-            <p className="relative group">
+            </div>
+            <div className="relative group">
               <Link
                 href={"/category"}
                 className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
               >
-                Top Selling
+                Хувцасны төрлүүд
               </Link>
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
-            </p>
-            <p className="relative group">
-              <Link
-                href={"/category"}
-                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
-              >
-                On Sale
-              </Link>
-              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d94f5c] scale-x-0 transition-all duration-300 group-hover:scale-x-100"></span>
-            </p>
+            </div>
+         
 
 
           </div>
@@ -226,16 +218,13 @@ export default function Navbar() {
     <div className="my-1.5 ">
         <div className="flex flex-col text-lg gap-8">
           <Link href={"/category"}><span>
-              Shop
+          Бүх хувцас
             </span></Link>
             <Link href={"/category"}><span>
-              New Arrivals
+            Шинээр нэмэгдсэн
             </span></Link>
             <Link href={"/category"}><span >
-              Top Selling
-            </span></Link>
-            <Link href={"/category"}><span>
-              On Sale
+            Хувцасны төрлүүд
             </span></Link>
             <Link href={"/profile"}><span>
               My Profile
@@ -269,13 +258,9 @@ export default function Navbar() {
       onKeyDown={(e) => setIsOpen(true)} // Open dropdown on typing
       onBlur={() => setTimeout(() => setIsOpen(false), 200)} // Close on blur (with delay)
       submitIconComponent={() => (
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
-        >
+        <div className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 cursor-pointer">
           <Search className="w-5 h-5 text-gray-700" />
-        </motion.button>
+        </div>
       )}
     />
           <Configure hitsPerPage={6} distinct={true} getRankingInfo={true} />

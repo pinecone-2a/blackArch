@@ -103,12 +103,16 @@ export const useProfile = () => {
   };
 
   // Refresh all user data
-  const refreshUserData = () => {
-    Promise.all([fetchOrders(), fetchAddress()])
-      .catch(err => {
-        console.error("Error refreshing user data:", err);
-        setError("Failed to refresh user data");
-      });
+  const refreshUserData = async () => {
+    try {
+      setLoading(true);
+      await Promise.all([fetchOrders(), fetchAddress()]);
+    } catch (err) {
+      console.error("Error refreshing user data:", err);
+      setError("Failed to refresh user data");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Load data when user context is available
