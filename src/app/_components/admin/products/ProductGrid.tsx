@@ -68,7 +68,8 @@ const ProductGrid = ({
                             />
                         </div>
                     </div>
-                    <CardContent className="p-4 flex-1 flex flex-col">
+                    
+                    <CardContent className="p-4 flex flex-col flex-grow">
                         <div className="flex justify-between items-start mb-2">
                             <div>
                                 <h3 className="font-semibold truncate">{product.name}</h3>
@@ -77,30 +78,13 @@ const ProductGrid = ({
                                 </p>
                             </div>
                             <Badge variant="outline" className="bg-gray-100 font-semibold">
-                                ₮{(product.price).toFixed(2)}
+                                ₮{(product.price).toLocaleString()}
                             </Badge>
                         </div>
                         <p className="text-sm text-gray-600 line-clamp-2 mb-2">
                             {product.description || "No description available"}
                         </p>
                         <div className="flex gap-1 mb-2">
-                            {product.color.slice(0, 3).map((col: string) => (
-                                <span 
-                                    key={col}
-                                    className="w-4 h-4 rounded-full inline-block border border-gray-200"
-                                    style={{ 
-                                        backgroundColor: colors.find(c => c.value === col)?.hex || col 
-                                    }}
-                                    title={colors.find(c => c.value === col)?.name || col}
-                                ></span>
-                            ))}
-                            {product.color.length > 3 && (
-                                <span className="text-xs text-gray-500">
-                                    +{product.color.length - 3}
-                                </span>
-                            )}
-                        </div>
-                        <div className="flex gap-1 mb-3">
                             {product.size.slice(0, 4).map((s: string) => (
                                 <span key={s} className="text-xs border rounded px-1.5 py-0.5">
                                     {s}
@@ -124,18 +108,20 @@ const ProductGrid = ({
                                     {product.quantity > 0 ? `${product.quantity} in stock` : "Out of stock"}
                                 </span>
                             </div>
-                            <div className="flex gap-1">
-                                <Button 
-                                    variant="ghost" 
+                            <div className="flex gap-2">
+                                <Button
+                                    variant="ghost"
                                     size="icon"
                                     onClick={() => handleEdit(product.id)}
+                                    className="h-8 w-8"
                                 >
                                     <Pen className="h-4 w-4" />
                                 </Button>
-                                <Button 
-                                    variant="ghost" 
+                                <Button
+                                    variant="ghost"
                                     size="icon"
                                     onClick={() => handleDelete(product.id)}
+                                    className="h-8 w-8 text-red-500 hover:text-red-600"
                                 >
                                     <Trash className="h-4 w-4" />
                                 </Button>

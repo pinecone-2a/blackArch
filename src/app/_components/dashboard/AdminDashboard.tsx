@@ -25,8 +25,10 @@ import OrdersTable from './OrdersTable';
 type Stats = {
   totalRevenue: number;
   totalOrders: number;
+  totalPendingRevenue: number;
+  totalPendingOrders: number;
   ordersByMonth: Array<{ month: string; total: number }>;
-  lastOrders: Array<{ id: string; customer: string; address: string; amount: number; date: Date; product: string; status: string }> | [];
+  lastOrders: Array<{ id: string; customer: string; address: string; amount: number; date: string | null; product: string; status: string }> | [];
   userCount: number;
 }
 
@@ -44,7 +46,7 @@ export default function AdminDashboard() {
   const stats = [
     { 
       title: "Total Revenue", 
-      value: `₮${data ? data.totalRevenue.toLocaleString() : '0'}`, 
+      value: `₮${data ? data.totalPendingRevenue.toLocaleString() : '0'}`, 
       change: "8%", 
       increasing: true,
       icon: <DollarSign size={20} />, 
@@ -52,7 +54,7 @@ export default function AdminDashboard() {
     },
     { 
       title: "Total Orders", 
-      value: data ? data.totalOrders : 0, 
+      value: data ? data.totalPendingOrders : 0, 
       change: "14%", 
       increasing: true,
       icon: <ShoppingCart size={20} />, 
