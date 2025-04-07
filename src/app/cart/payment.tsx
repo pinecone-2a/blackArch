@@ -9,6 +9,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Home, Plus, CreditCard, MapPin } from "lucide-react";
 import Link from "next/link";
+import { toast, Toaster } from "sonner";
+
 
 interface CartItem {
   productId: string;
@@ -122,7 +124,7 @@ export default function Payment() {
   const handleSubmitOrder = () => {
     // Here you would typically send the order to your backend
     // For now, we'll simulate completion and clear the cart
-    alert("Захиалга амжилттай хийгдлээ!");
+    toast.success("Захиалга амжилттай хийгдлээ!");
     localStorage.removeItem("cart");
     localStorage.removeItem("promoCode");
     // Redirect to a confirmation page or home
