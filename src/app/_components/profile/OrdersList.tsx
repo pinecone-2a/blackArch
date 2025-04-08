@@ -237,7 +237,7 @@ function OrdersGrid({
                   )}
                 </div>
                 <Button size="sm" variant="outline" className="gap-1">
-                  <Link href={`/order-confirmation/${order.id}`} className="flex items-center gap-1">
+                  <Link href={`/order-confirmation?${order.id}`} className="flex items-center gap-1">
                     <ShoppingBag className="h-3.5 w-3.5" />
                     Захиалга харах
                   </Link>
