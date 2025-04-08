@@ -49,7 +49,6 @@ export async function GET(req: Request) {
         break;
     }
 
-    // Get 6 months for trend data
     let monthsLabels = [];
     let sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
@@ -60,8 +59,7 @@ export async function GET(req: Request) {
       monthsLabels.push(month.toLocaleString('default', { month: 'short' }));
     }
 
-    // REVENUE DATA
-    // Current period revenue
+ 
     const revenueCurrentPeriod = await prisma.order.aggregate({
       _sum: { totalPrice: true },
       where: {
@@ -69,7 +67,7 @@ export async function GET(req: Request) {
       }
     });
 
-    // Previous period revenue
+
     const revenuePreviousPeriod = await prisma.order.aggregate({
       _sum: { totalPrice: true },
       where: {
@@ -80,7 +78,7 @@ export async function GET(req: Request) {
       }
     });
 
-    // Monthly revenue for the past 6 months
+ 
     const revenueByMonth = [];
     for (let i = 0; i < 6; i++) {
       const monthStart = new Date(sixMonthsAgo);
@@ -104,15 +102,14 @@ export async function GET(req: Request) {
       revenueByMonth.push(monthRevenue._sum.totalPrice || 0);
     }
 
-    // ORDERS DATA
-    // Current period orders
+
     const ordersCurrentPeriod = await prisma.order.count({
       where: {
         createdAt: { gte: startDate }
       }
     });
 
-    // Previous period orders
+
     const ordersPreviousPeriod = await prisma.order.count({
       where: {
         createdAt: { 
@@ -122,7 +119,7 @@ export async function GET(req: Request) {
       }
     });
 
-    // Orders by status
+
     const ordersByStatus = await prisma.order.groupBy({
       by: ['status'],
       _count: true,
@@ -131,13 +128,13 @@ export async function GET(req: Request) {
       }
     });
 
-    // Map order status counts
+
     const pendingOrders = ordersByStatus.find(o => o.status === 'pending')?._count || 0;
     const processingOrders = ordersByStatus.find(o => o.status === 'processing')?._count || 0;
     const deliveredOrders = ordersByStatus.find(o => o.status === 'delivered' || o.status === 'completed')?._count || 0;
     const cancelledOrders = ordersByStatus.find(o => o.status === 'cancelled')?._count || 0;
 
-    // Monthly orders for the past 6 months
+ 
     const ordersByMonth = [];
     for (let i = 0; i < 6; i++) {
       const monthStart = new Date(sixMonthsAgo);
@@ -160,15 +157,14 @@ export async function GET(req: Request) {
       ordersByMonth.push(monthOrders);
     }
 
-    // CUSTOMERS DATA
-    // Total customers
+
     const totalCustomers = await prisma.user.count({
       where: {
         role: 'customer'
       }
     });
 
-    // New customers in current period
+
     const newCustomers = await prisma.user.count({
       where: {
         role: 'customer',
@@ -176,7 +172,7 @@ export async function GET(req: Request) {
       }
     });
 
-    // New customers in previous period
+
     const previousNewCustomers = await prisma.user.count({
       where: {
         role: 'customer',
@@ -187,7 +183,7 @@ export async function GET(req: Request) {
       }
     });
 
-    // New customers by month for the past 6 months
+
     const customersByMonth = [];
     for (let i = 0; i < 6; i++) {
       const monthStart = new Date(sixMonthsAgo);
@@ -211,11 +207,9 @@ export async function GET(req: Request) {
       customersByMonth.push(monthCustomers);
     }
 
-    // PRODUCTS DATA
-    // Total products
     const totalProducts = await prisma.product.count();
 
-    // Get product categories distribution
+
     const categoriesWithProducts = await prisma.category.findMany({
       include: {
         _count: {
@@ -229,16 +223,14 @@ export async function GET(req: Request) {
       count: category._count.products
     }));
 
-    // Get top selling products
-    // This is an estimation since we don't have direct product sales tracking
-    // We're using a sampling of orders to estimate product popularity
+
     const recentOrders = await prisma.order.findMany({
       take: 100,
       orderBy: { createdAt: 'desc' },
       select: { items: true, totalPrice: true }
     });
     
-    // Count item occurrences
+
     const productCounts: Record<string, number> = {};
     const productRevenue: Record<string, number> = {};
     
@@ -257,14 +249,14 @@ export async function GET(req: Request) {
       });
     });
     
-    // Convert to array and sort by count
+  
     const productPopularity = Object.keys(productCounts).map(id => ({
       id,
       sales: productCounts[id],
       revenue: productRevenue[id]
     })).sort((a, b) => b.sales - a.sales);
     
-    // Get top 5 product details
+ 
     const topProducts = await Promise.all(
       productPopularity.slice(0, 5).map(async (item) => {
         const product = await prisma.product.findUnique({
@@ -280,8 +272,7 @@ export async function GET(req: Request) {
       })
     );
 
-    // PAYMENT DATA
-    // Approximating payment methods since we don't have detailed payment tracking
+
     const paymentMethods = await prisma.order.groupBy({
       by: ['paymentMethod'],
       _count: true
@@ -291,10 +282,10 @@ export async function GET(req: Request) {
     const cashPayments = paymentMethods.find(p => p.paymentMethod === 'cash')?._count || 0;
     const otherPayments = paymentMethods.find(p => p.paymentMethod !== 'card' && p.paymentMethod !== 'cash')?._count || 0;
     
-    // Payment status distribution is simplified
-    const paymentsByStatus = [85, 10, 5]; // Assuming 85% paid, 10% pending, 5% failed
 
-    // Calculate percentage changes
+    const paymentsByStatus = [85, 10, 5]; 
+
+
     const currentRevenue = revenueCurrentPeriod._sum.totalPrice || 0;
     const previousRevenue = revenuePreviousPeriod._sum.totalPrice || 0;
     const revenueChange = previousRevenue === 0 
@@ -309,7 +300,7 @@ export async function GET(req: Request) {
       ? 100 
       : parseFloat((((newCustomers - previousNewCustomers) / previousNewCustomers) * 100).toFixed(1));
 
-    // Compile analytics data
+
     const analytics = {
       revenue: {
         total: currentRevenue,
@@ -329,7 +320,7 @@ export async function GET(req: Request) {
         previousPeriod: previousNewCustomers,
         percentageChange: customersChange,
         newByMonth: customersByMonth,
-        returningRate: 65 // This would require more complex analysis, using placeholder
+        returningRate: 65 
       },
       products: {
         total: totalProducts,

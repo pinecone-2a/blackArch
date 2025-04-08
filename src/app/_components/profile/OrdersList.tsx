@@ -155,7 +155,7 @@ function EmptyOrdersState() {
         <Button asChild className="gap-2">
           <Link href="/category">
             <ShoppingBag className="h-4 w-4" />
-            Дэлгүүрлэх
+            Худалдан авалт хийх
           </Link>
         </Button>
       </div>

@@ -252,10 +252,12 @@ export default function Payment() {
       }
 
       const data = await response.json();
-      console.log("Order creation response:", data);
+      console.log("Full order creation response:", JSON.stringify(data, null, 2));
       
-      // Get the order ID (either from the new format or fall back to old format)
-      const orderId = data.orderId || (data.message && data.message.id);
+      // Check both new and old response structures
+      const orderId = data.order?.id || data.orderId || (data.message && data.message.id);
+      
+      console.log("Extracted order ID:", orderId);
       
       if (!orderId) {
         console.error("No order ID received from server:", data);
