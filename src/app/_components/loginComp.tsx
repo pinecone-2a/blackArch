@@ -108,7 +108,7 @@ export default function LoginComp() {
       </TransitionLink>
  
       <div className="text-center mb-6">
-        <h1 className="text-2xl md:text-3xl">PineShop</h1>
+        <h1 className="text-2xl md:text-3xl mb-6 ">PineShop</h1>
         <p className="text-base md:text-lg text-gray-600">Нэвтрэн орж хүссэн бараагаа худалдан аваарай.</p>
       </div>
  
@@ -127,7 +127,7 @@ export default function LoginComp() {
           <Input
             type={showPassword ? "text" : "password"}
             className={`w-full rounded-2xl p-3 bg-gray-100 border-2 ${errors.password ? "border-red-500" : "border-transparent"}`}
-            placeholder="Password"
+            placeholder="Нууц үг"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={isLoading}
@@ -138,7 +138,7 @@ export default function LoginComp() {
             onClick={() => setShowPassword((prev) => !prev)}
             disabled={isLoading}
           >
-            {showPassword ? "Харах" : "Нуух"}
+            {showPassword ? "Нуух" : "Үзүүлэх"}
           </button>
         </div>
  

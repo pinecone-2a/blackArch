@@ -420,7 +420,7 @@ export default function AdminAnalyticsComp() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{analytics.orders.total}</div>
-                <p className="text-sm text-gray-500">Total Orders</p>
+                <p className="text-sm text-gray-500">Нийт захиалга</p>
               </CardContent>
             </Card>
             
@@ -438,7 +438,7 @@ export default function AdminAnalyticsComp() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{analytics.customers.total}</div>
-                <p className="text-sm text-gray-500">Total Customers</p>
+                <p className="text-sm text-gray-500">Нийт хэрэглэгч</p>
               </CardContent>
             </Card>
             
@@ -455,7 +455,7 @@ export default function AdminAnalyticsComp() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{analytics.products.total}</div>
-                <p className="text-sm text-gray-500">Total Products</p>
+                <p className="text-sm text-gray-500">Нийт бүтээгдэхүүн</p>
               </CardContent>
             </Card>
           </div>

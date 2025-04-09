@@ -92,7 +92,7 @@ export default function AdminSettingsComp() {
   ];
   
   // Handle form field changes
-  const handleChange = (field, value) => {
+  const handleChange = (field:any, value:any) => {
     setStoreSettings({
       ...storeSettings,
       [field]: value
@@ -100,7 +100,7 @@ export default function AdminSettingsComp() {
   };
   
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:any) => {
     e.preventDefault();
     // In a real app, you would save the settings to the server
     console.log('Saving settings:', storeSettings);
@@ -122,11 +122,11 @@ export default function AdminSettingsComp() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Тохиргоо</h1>
-          <p className="text-gray-500">Manage your store settings and preferences</p>
+          <p className="text-gray-500">Дэлгүүрийн тохиргоо, тохируулгыг удирдах.</p>
         </div>
         <Button type="submit" form="settings-form">
           <Save className="mr-2 h-4 w-4" />
-          Save Changes
+          Өөрчлөлтийг хадгалах
         </Button>
       </div>
 
@@ -144,15 +144,15 @@ export default function AdminSettingsComp() {
           <TabsContent value="general">
             <Card>
               <CardHeader>
-                <CardTitle>Store Information</CardTitle>
+                <CardTitle>Дэлгүүрийн мэдээлэл</CardTitle>
                 <CardDescription>
-                  Basic information about your store that will be displayed to customers.
+                Хэрэглэгчдэд үзүүлэх дэлгүүрийнхээ талаарх үндсэн мэдээлэл
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="store-name">Store Name</Label>
+                    <Label htmlFor="store-name">Дэлгүүр нэр</Label>
                     <div className="flex items-center">
                       <Store className="mr-2 h-4 w-4 text-gray-500" />
                       <Input 
@@ -164,7 +164,7 @@ export default function AdminSettingsComp() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="store-email">Store Email</Label>
+                    <Label htmlFor="store-email">Дэлгүүр имэйл</Label>
                     <div className="flex items-center">
                       <Mail className="mr-2 h-4 w-4 text-gray-500" />
                       <Input 
@@ -177,7 +177,7 @@ export default function AdminSettingsComp() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="store-phone">Store Phone</Label>
+                    <Label htmlFor="store-phone">Дэлгүүр утас</Label>
                     <div className="flex items-center">
                       <Phone className="mr-2 h-4 w-4 text-gray-500" />
                       <Input 
@@ -189,7 +189,7 @@ export default function AdminSettingsComp() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="store-address">Store Address</Label>
+                    <Label htmlFor="store-address">Дэлгүүр хаяг</Label>
                     <div className="flex items-center">
                       <MapPin className="mr-2 h-4 w-4 text-gray-500" />
                       <Input 
@@ -201,7 +201,7 @@ export default function AdminSettingsComp() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="store-description">Store Description</Label>
+                    <Label htmlFor="store-description">Дэлгүүр нэмэлт мэдээлэл</Label>
                     <Textarea 
                       id="store-description" 
                       rows={4}
@@ -215,9 +215,9 @@ export default function AdminSettingsComp() {
             
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle>Social Media Links</CardTitle>
+                <CardTitle>Сошиал хаягууд</CardTitle>
                 <CardDescription>
-                  Connect your store to social media platforms.
+                  Дэлгүүрийн сошиал хаягууд.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -269,14 +269,14 @@ export default function AdminSettingsComp() {
           <TabsContent value="payment">
             <Card>
               <CardHeader>
-                <CardTitle>Payment Settings</CardTitle>
+                <CardTitle>Төлбөрийн тохиргоо</CardTitle>
                 <CardDescription>
-                  Configure how customers can pay for their orders.
+                Үйлчлүүлэгчид захиалгаа хэрхэн төлөхийг тохируулна уу.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="currency">Currency</Label>
+                  <Label htmlFor="currency">Валют</Label>
                   <Select 
                     value={storeSettings.currency}
                     onValueChange={(value) => handleChange('currency', value)}
@@ -345,16 +345,16 @@ export default function AdminSettingsComp() {
           <TabsContent value="notifications">
             <Card>
               <CardHeader>
-                <CardTitle>Notification Settings</CardTitle>
+                <CardTitle>Мэдэгдлийн тохиргоо</CardTitle>
                 <CardDescription>
-                  Configure when and how you receive notifications.
+                Мэдэгдлийг хэзээ, хэрхэн хүлээн авахыг тохируулна уу.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <div className="space-y-0.5">
-                      <Label htmlFor="email-notifications">Email Notifications</Label>
+                      <Label htmlFor="email-notifications">Имэйлээр мэдэгдэл авах</Label>
                       <p className="text-sm text-gray-500">Receive notifications via email</p>
                     </div>
                     <Switch 
@@ -366,12 +366,12 @@ export default function AdminSettingsComp() {
                   
                   <Separator />
                   
-                  <h3 className="text-lg font-medium">Notification Types</h3>
+                  <h3 className="text-lg font-medium">Мэдэгдлийн төрлүүд</h3>
                   
                   <div className="flex justify-between items-center">
                     <div className="space-y-0.5">
                       <Label htmlFor="order-notifications">Order Notifications</Label>
-                      <p className="text-sm text-gray-500">Receive notifications when new orders are placed</p>
+                      <p className="text-sm text-gray-500">Шинэ захиалга хийгдсэн үед мэдэгдэл авах</p>
                     </div>
                     <Switch 
                       id="order-notifications" 
@@ -383,7 +383,7 @@ export default function AdminSettingsComp() {
                   <div className="flex justify-between items-center">
                     <div className="space-y-0.5">
                       <Label htmlFor="product-notifications">Product Notifications</Label>
-                      <p className="text-sm text-gray-500">Receive notifications when products are low in stock</p>
+                      <p className="text-sm text-gray-500">Бараа дуусах дөхсөн үед мэдэгдэл авах</p>
                     </div>
                     <Switch 
                       id="product-notifications" 
@@ -395,7 +395,7 @@ export default function AdminSettingsComp() {
                   <div className="flex justify-between items-center">
                     <div className="space-y-0.5">
                       <Label htmlFor="customer-notifications">Customer Notifications</Label>
-                      <p className="text-sm text-gray-500">Receive notifications when new customers register</p>
+                      <p className="text-sm text-gray-500">Шинэ хэрэглэгч бүртгүүлсэн үед мэдэгдэл авах</p>
                     </div>
                     <Switch 
                       id="customer-notifications" 
@@ -412,15 +412,15 @@ export default function AdminSettingsComp() {
           <TabsContent value="account">
             <Card>
               <CardHeader>
-                <CardTitle>Account Information</CardTitle>
+                <CardTitle>Аккаунт тохиргоо</CardTitle>
                 <CardDescription>
-                  Manage your administrator account settings.
+                  Админ аккаунт-ийн мэдээлэл, нууц үг солих
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="admin-name">Name</Label>
+                    <Label htmlFor="admin-name">Нэр</Label>
                     <div className="flex items-center">
                       <User className="mr-2 h-4 w-4 text-gray-500" />
                       <Input 
@@ -432,7 +432,7 @@ export default function AdminSettingsComp() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="admin-email">Email</Label>
+                    <Label htmlFor="admin-email">Имэйл</Label>
                     <div className="flex items-center">
                       <Mail className="mr-2 h-4 w-4 text-gray-500" />
                       <Input 
@@ -445,7 +445,7 @@ export default function AdminSettingsComp() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="admin-language">Language</Label>
+                    <Label htmlFor="admin-language">Хэл</Label>
                     <Select 
                       value={storeSettings.adminLanguage}
                       onValueChange={(value) => handleChange('adminLanguage', value)}
@@ -468,12 +468,12 @@ export default function AdminSettingsComp() {
                 <Separator className="my-4" />
                 
                 <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Security</h3>
+                  <h3 className="text-lg font-medium">Аюулгүй байдал</h3>
                   
                   <div className="flex justify-between items-center">
                     <div className="space-y-0.5">
-                      <Label htmlFor="two-factor">Two-Factor Authentication</Label>
-                      <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
+                      <Label htmlFor="two-factor">2 шатлалт хамгаалалт</Label>
+                      <p className="text-sm text-gray-500">Өөрийн бүртгэлд нэмэлт хамгаалалтын давхарга нэмнэ үү.</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Switch 
@@ -492,7 +492,7 @@ export default function AdminSettingsComp() {
                   <div className="mt-6">
                     <Button variant="outline" className="w-full">
                       <Lock className="mr-2 h-4 w-4" />
-                      Change Password
+                      Нууц үг солих
                     </Button>
                   </div>
                 </div>

@@ -159,7 +159,7 @@ export default function SignupComp() {
             onClick={() => setShowPassword((prev) => !prev)}
             disabled={isLoading}
           >
-            {showPassword ? "Харах" : "Нуух"}
+            {showPassword ? "Нуух" : "Үзүүлэх"}
           </button>
         </div>
 
@@ -178,7 +178,7 @@ export default function SignupComp() {
             onClick={() => setShowConfirmPassword((prev) => !prev)}
             disabled={isLoading}
           >
-            {showConfirmPassword ? "Харах" : "Нуух"}
+            {showConfirmPassword ? "Нуух" : "Үзүүлэх"}
           </button>
         </div>
 

@@ -91,7 +91,7 @@ export default function Navbar() {
             <div className="relative group">
               <Link
                 href={"/category"}
-                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
+                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c] sm:text-xs lg:text-base"
               >
                 Бүх хувцас
               </Link>
@@ -101,7 +101,7 @@ export default function Navbar() {
             <div className="relative group">
               <Link
                 href={"/category"}
-                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
+                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c] sm:text-xs lg:text-base"
               >
                 Шинээр нэмэгдсэн
               </Link>
@@ -111,7 +111,7 @@ export default function Navbar() {
             <div className="relative group">
               <Link
                 href={"/category"}
-                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c]"
+                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c] sm:text-xs lg:text-base"
               >
                 Хувцасны төрлүүд
               </Link>
@@ -142,7 +142,7 @@ export default function Navbar() {
           >
             <SearchBox
               classNames={{
-                root: "flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2",
+                root: "flex items-center gap-3 min-w-[150px] border-b border-gray-500 pb-2 mt-10",
                 input:
                   "w-full h-10 px-3 text-md bg-transparent outline-none placeholder-gray-400 focus:ring-0",
                 submit: "hidden",
@@ -185,7 +185,7 @@ export default function Navbar() {
             href="/profile" 
             className="hidden lg:flex items-center mr-2 hover:text-[#d94f5c] transition-colors"
           >
-            My Profile
+           Профайл
           </Link>
           <div className="relative">
             {

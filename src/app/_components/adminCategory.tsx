@@ -167,7 +167,7 @@ export default function AdminCategoryComp() {
   return (
     <div className="w-full p-6 bg-gray-50">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Categories</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Төрөл</h1>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button 
@@ -177,7 +177,7 @@ export default function AdminCategoryComp() {
                 setDialogOpen(true);
               }}
             >
-              <Plus className="w-4 h-4" /> Add Category
+              <Plus className="w-4 h-4" />Нэмэх
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]">
@@ -192,7 +192,7 @@ export default function AdminCategoryComp() {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
-                  Name*
+                  Нэр*
                 </Label>
                 <Input
                   id="name"
@@ -206,7 +206,7 @@ export default function AdminCategoryComp() {
               </div>
               <div className="grid grid-cols-4 items-start gap-4">
                 <Label htmlFor="description" className="text-right pt-2">
-                  Description
+                  Тайлбар (заавал биш)
                 </Label>
                 <Textarea
                   id="description"
@@ -224,7 +224,7 @@ export default function AdminCategoryComp() {
                 resetForm();
                 setDialogOpen(false);
               }}>
-                Cancel
+                Буцах
               </Button>
               <Button onClick={handleSubmit} disabled={submitting}>
                 {submitting ? (
@@ -233,7 +233,7 @@ export default function AdminCategoryComp() {
                     {editMode ? "Updating..." : "Adding..."}
                   </>
                 ) : (
-                  editMode ? "Update Category" : "Add Category"
+                  editMode ? "Шинэчлэх" : "Add Category"
                 )}
               </Button>
             </DialogFooter>
@@ -288,7 +288,7 @@ export default function AdminCategoryComp() {
                         </span>
                         <Link href={`/admin/products?category=${category.id}`}>
                           <Button variant="link" size="sm" className="h-8 px-2">
-                            View Products
+                            Бүтээгдэхүүнүүд харах
                           </Button>
                         </Link>
                       </div>
@@ -298,7 +298,7 @@ export default function AdminCategoryComp() {
                   {confirmDeleteId === category.id && (
                     <div className="p-4 bg-red-50 border-t border-red-100 flex justify-between items-center">
                       <p className="text-sm text-red-700">
-                        Delete this category?
+                        Устгахдаа итгэлтэй байна уу?
                       </p>
                       <div className="flex gap-2">
                         <Button 
@@ -325,9 +325,9 @@ export default function AdminCategoryComp() {
         ) : (
           <Card>
             <CardContent className="p-6 text-center">
-              <p className="text-gray-500 mb-4">No categories found</p>
+              <p className="text-gray-500 mb-4">Олдсонгүй</p>
               <Button onClick={() => setDialogOpen(true)}>
-                <Plus className="w-4 h-4 mr-2" /> Add Your First Category
+                <Plus className="w-4 h-4 mr-2" /> Нэмэх
               </Button>
             </CardContent>
           </Card>

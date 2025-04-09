@@ -46,7 +46,7 @@ export default function OrdersTable({
           <table className="w-full">
             <thead>
               <tr className="bg-muted/50 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                <th className="px-4 py-3">Order ID</th>
+                <th className="px-4 py-3">Захиалгын ID</th>
                 <th className="px-4 py-3">Хэрэглэгч</th>
                 <th className="px-4 py-3">Бүтээгдэхүүн</th>
                 <th className="px-4 py-3">Дүн</th>
@@ -61,13 +61,13 @@ export default function OrdersTable({
                   <td className="px-4 py-3 text-sm font-medium">#{order.id}</td>
                   <td className="px-4 py-3 text-sm">{order.customer}</td>
                   <td className="px-4 py-3 text-sm">{order.product}</td>
-                  <td className="px-4 py-3 text-sm">₮{(order.amount).toLocaleString()}</td>
+                  <td className="px-4 py-3 text-sm">₮{(order?.amount)?.toLocaleString()}</td>
                   <td className="px-4 py-3 text-sm">
-                    {order.date.toLocaleDateString()} {order.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    {order?.date?.toLocaleDateString()} {order?.date?.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                   </td>
                   <td className="px-4 py-3 text-sm">
                     {readOnly ? (
-                      <StatusBadge status={order.status} />
+                      <StatusBadge status={order.status} /> 
                     ) : (
                       <Select 
                         value={order.status} 
@@ -103,12 +103,12 @@ export default function OrdersTable({
       </CardContent>
       <CardFooter className="flex justify-between border-t p-4">
         <div className="text-sm text-gray-500">
-          Showing {displayOrders.length} orders
+          Нийт {displayOrders.length} захиалга
           {filteredStatus && ` with status "${filteredStatus}"`}
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" disabled={displayOrders.length === 0}>Previous</Button>
-          <Button variant="outline" size="sm" disabled={displayOrders.length === 0}>Next</Button>
+          <Button variant="outline" size="sm" disabled={displayOrders.length === 0}>Буцах</Button>
+          <Button variant="outline" size="sm" disabled={displayOrders.length === 0}>Дараагынх</Button>
         </div>
       </CardFooter>
     </Card>

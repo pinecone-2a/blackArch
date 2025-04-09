@@ -91,7 +91,7 @@ export default function HomePage() {
         {mounted && (
           <button
             onClick={toggleMute}
-            className="absolute top-4 right-4 p-2  text-white rounded-full  w-[50px] h-[50px]"
+            className="absolute top-10 sm:top-2 md:top-4 lg:top-8 right-4 p-2  text-white rounded-full  w-[50px] h-[50px] "
           >
             {typeof window !== "undefined" &&
               (!isMuted ? (
@@ -194,7 +194,7 @@ export default function HomePage() {
                         <Link href={`/productDetail/${product.id}`}>
                           <div
                             style={{ backgroundImage: `url(${product.image})` }}
-                            className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl"
+                            className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl lg:w-[150px] lg:h-[150px]"
                           ></div>
                         </Link>
                         <div className="text-base sm:text-lg font-semibold mt-2">

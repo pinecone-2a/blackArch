@@ -200,20 +200,20 @@ export default function AdminOrdersComp() {
   };
 
   // Update order status
-  const updateOrderStatus = (orderId, newStatus) => {
+  const updateOrderStatus = (orderId:any, newStatus:any) => {
     setOrders(orders.map(order => 
       order.id === orderId ? { ...order, status: newStatus } : order
     ));
   };
 
   // View order details
-  const viewOrderDetails = (order) => {
+  const viewOrderDetails = (order:any) => {
     setSelectedOrder(order);
     setIsViewDialogOpen(true);
   };
 
   // Get status badge variant and color
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status:any) => {
     switch (status) {
       case 'pending':
         return { variant: 'outline', className: 'bg-yellow-100 text-yellow-800 border-yellow-300' };
@@ -229,7 +229,7 @@ export default function AdminOrdersComp() {
   };
 
   // Get payment badge variant and color
-  const getPaymentBadge = (status) => {
+  const getPaymentBadge = (status:any) => {
     switch (status) {
       case 'paid':
         return { variant: 'outline', className: 'bg-green-100 text-green-800 border-green-300' };
@@ -248,12 +248,12 @@ export default function AdminOrdersComp() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Захиалгууд</h1>
-          <p className="text-gray-500">Manage and process customer orders</p>
+          <p className="text-gray-500">Харилцагчийн захиалгыг удирдах ба боловсруулах.</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline">
             <FileText className="mr-2 h-4 w-4" />
-            Export
+            Экспорт
           </Button>
         </div>
       </div>
@@ -264,7 +264,7 @@ export default function AdminOrdersComp() {
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
           <Input
             type="search"
-            placeholder="Search by order ID or customer..."
+            placeholder="Хэрэглэгчийг Id болон нэрээр хайх..."
             className="pl-9"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -327,7 +327,7 @@ export default function AdminOrdersComp() {
                   {statusOptions.find(option => option.value === activeTab)?.label || 'All Orders'}
                 </CardTitle>
                 <span className="text-sm text-muted-foreground">
-                  {filteredOrders.length} orders
+                  {filteredOrders.length} захиалга
                 </span>
               </div>
             </CardHeader>
@@ -407,13 +407,13 @@ export default function AdminOrdersComp() {
                                 onClick={() => viewOrderDetails(order)}
                               >
                                 <Eye className="mr-2 h-4 w-4" />
-                                View Details
+                                Нарийвчилан харах
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 disabled={order.status === 'delivered' || order.status === 'cancelled'}
                               >
                                 <Truck className="mr-2 h-4 w-4" />
-                                Mark as Delivered
+                                Хүргэлтэд гаргах
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
@@ -421,7 +421,7 @@ export default function AdminOrdersComp() {
                                 disabled={order.status === 'delivered' || order.status === 'cancelled'}
                               >
                                 <XCircle className="mr-2 h-4 w-4" />
-                                Cancel Order
+                                Захиалга цуцлах
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -444,7 +444,7 @@ export default function AdminOrdersComp() {
                   disabled={currentPage === 1}
                 >
                   <ChevronLeft className="h-4 w-4" />
-                  Previous
+                  Буцах
                 </Button>
                 <Button 
                   variant="outline" 
@@ -452,7 +452,7 @@ export default function AdminOrdersComp() {
                   onClick={nextPage}
                   disabled={currentPage === totalPages || totalPages === 0}
                 >
-                  Next
+                  Дараагынх
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -500,7 +500,7 @@ export default function AdminOrdersComp() {
               <div className="mb-6">
                 <h4 className="text-sm font-semibold mb-2">Order Items</h4>
                 <div className="bg-gray-50 rounded-md p-3">
-                  {selectedOrder.items.map((item) => (
+                  {selectedOrder.items.map((item:any) => (
                     <div key={item.id} className="flex justify-between py-2 border-b last:border-0">
                       <div>
                         <p className="font-medium">{item.name}</p>
