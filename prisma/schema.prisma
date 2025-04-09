@@ -34,7 +34,8 @@ model Product {
   price       Int
   quantity    Int
   rating      Int
-  image       String
+  image       String   // Main image (keeping for backward compatibility)
+  images      String[] // Array of image URLs
   color       String[]
   size        String[]
   category    Category?   @relation(fields: [categoryId], references: [id])
@@ -51,9 +52,12 @@ model Order {
   totalPrice      Int
   items           String[]
   shippingAddress Address
+  paymentMethod   String @default("cash")
+  paymentStatus   String @default("pending") @map("paymentStatus")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now())
   user            User     @relation(fields: [userId], references: [id])
+  qpayUrl         Json?    @map("qpayUrl")
 }
 
 model Category {

@@ -1,69 +1,97 @@
 import prisma from "@/lib/connect";
 import { NextResponse } from "next/server";
-import {cookies} from 'next/headers'
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-
 export const POST = async (req: Request) => {
-    const body = await req.json();
-    const { email, password} = body
-
-
   try {
-    const cookieStore = await cookies()
-    const bcrypt = require("bcrypt")
+    const body = await req.json();
+    const { email, password } = body;
+
+    // Find user by email
     const user = await prisma.user.findUnique({ where: { email } });
-    if(!user) {
-        return NextResponse.json({ error: "Та нууц үг болон имайлээ дахин шалгана уу!."})
-    }
-    if(user?.password) {
-        const isMatch = bcrypt.compareSync(password, user.password)
-        if(!isMatch) {
-          return NextResponse.json({ error: "Та нууц үг болон имайлээ дахин шалгана уу!."})
-        } else {
-            const userData = await prisma.user.findFirst({
-                where: {email: email },
-                select: {id: true, email: true, role: true}
-            });
-            const refreshToken = jwt.sign(
-                {userData},
-                process.env.REFRESH_TOKEN_SECRET!,
-                { expiresIn: "7d" }
-
-            );
-            const accessToken = jwt.sign(
-                {userData},
-                process.env.ACCESS_TOKEN_SECRET!,
-                {expiresIn: "1h"}
-            );
-
-            cookieStore.set('refreshToken', refreshToken), {
-                httpOnly: true,
-                sameSite: 'Strict'
-            } 
-
-            cookieStore.set('accessToken', accessToken), {
-                httpOnly: true,
-                sameSite: 'Strict'
-            } 
-
-
-            return NextResponse.json({
-                message: "Хэрэглэгч амжилттай нэвтэрлээ.",
-                user: {
-                  id: user.id,
-                  email: user.email
-                },
-                status: 200,
-              });
-        }
+    
+    if (!user) {
+      return NextResponse.json(
+        { error: "Та нууц үг болон имайлээ дахин шалгана уу!." },
+        { status: 401 }
+      );
     }
 
+    // Verify password
+    if (!user.password) {
+      return NextResponse.json(
+        { error: "Нууц үг олдсонгүй." },
+        { status: 401 }
+      );
+    }
 
-    return NextResponse.json({ error: "Нууц үг буруу байна." });
+    const isMatch = await bcrypt.compare(password, user.password);
+    
+    if (!isMatch) {
+      return NextResponse.json(
+        { error: "Та нууц үг болон имайлээ дахин шалгана уу!." },
+        { status: 401 }
+      );
+    }
+
+    // Generate tokens
+    const userData = {
+      id: user.id,
+      email: user.email,
+      role: user.role
+    };
+
+    const refreshToken = jwt.sign(
+      { userData },
+      process.env.REFRESH_TOKEN_SECRET!,
+      { expiresIn: "7d" }
+    );
+
+    const accessToken = jwt.sign(
+      { userData },
+      process.env.ACCESS_TOKEN_SECRET!,
+      { expiresIn: "15m" }
+    );
+
+    // Create response
+    const response = NextResponse.json({
+      message: "Хэрэглэгч амжилттай нэвтэрлээ.",
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role
+      },
+      status: 200,
+    });
+
+    // Set cookies properly
+    response.cookies.set({
+      name: "refreshToken",
+      value: refreshToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/"
+    });
+
+    response.cookies.set({
+      name: "accessToken",
+      value: accessToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 15, // 15 minutes
+      path: "/"
+    });
+
+    return response;
   } catch (error) {
-    console.error("Error fetching products:", error);
-    return NextResponse.json({ error: "Internal Server Error", status: 500 });
+    console.error("Login error:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 };
-

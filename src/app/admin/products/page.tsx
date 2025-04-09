@@ -1,15 +1,12 @@
-import AdminSideBar from "@/app/_components/adminSideBar"
-import AdminProductsComp from "@/app/_components/adminProduct"
-import AdminHeader from "@/app/_components/adminHeader"
-import AdminCategoryComp from "@/app/_components/adminCategory"
-export default function AdminProducts(){
-    return(
- <div className="flex min-h-screen bg-[#4c4c4c]">
-      <AdminSideBar  />
-      <div className="flex flex-col flex-1"> 
-        <AdminHeader  />
-        <AdminProductsComp  />
-      </div>
-    </div>
-    )
+"use client";
+
+import AdminLayout from "@/app/_components/AdminLayout";
+import ProductsMain from "@/app/_components/admin/products/ProductsMain";
+
+export default function AdminProducts() {
+    return (
+        <AdminLayout>
+            <ProductsMain />
+        </AdminLayout>
+    );
 }
