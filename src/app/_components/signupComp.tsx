@@ -159,7 +159,7 @@ export default function SignupComp() {
             onClick={() => setShowPassword((prev) => !prev)}
             disabled={isLoading}
           >
-            {showPassword ? "Нуух" : "Үзүүлэх"}
+            {showPassword ? "Нуух" : "Харах"}
           </button>
         </div>
 
@@ -178,7 +178,7 @@ export default function SignupComp() {
             onClick={() => setShowConfirmPassword((prev) => !prev)}
             disabled={isLoading}
           >
-            {showConfirmPassword ? "Нуух" : "Үзүүлэх"}
+            {showConfirmPassword ? "Нуух" : "Харах"}
           </button>
         </div>
 
@@ -190,7 +190,7 @@ export default function SignupComp() {
           {isLoading ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin" />
-              Уншиж байнөө...
+              Уншиж байна...
             </>
           ) : (
             <>

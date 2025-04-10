@@ -17,7 +17,7 @@ export default function ProfileLayout({ children }: ProfileLayoutProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.1 }}
-        className="flex-1"
+        className="flex-1 pt-16 sm:pt-20 md:pt-24"
       >
         {children}
       </motion.div>

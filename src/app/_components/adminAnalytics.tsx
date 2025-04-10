@@ -250,11 +250,13 @@ interface Product {
 interface Products {
   total: number;
   topCategories: number[];
+  categoryNames?: string[];
   topSelling: Product[];
 }
 
 interface Payments {
   byMethod: number[];
+  methodNames?: string[];
   byStatus: number[];
 }
 
@@ -264,53 +266,46 @@ interface Analytics {
   customers: Customers;
   products: Products;
   payments: Payments;
+  labels?: {
+    months: string[];
+  };
 }
 
-// Sample data for demonstration
-const sampleAnalytics: Analytics = {
-  // Revenue data
+// Create empty initial state instead of sample data
+const emptyAnalytics: Analytics = {
   revenue: {
-    total: 1350000,
-    previousPeriod: 1250000,
-    percentageChange: 8,
-    byMonth: [980000, 1050000, 1200000, 1350000, 1280000, 1350000]
+    total: 0,
+    previousPeriod: 0,
+    percentageChange: 0,
+    byMonth: [0, 0, 0, 0, 0, 0]
   },
-  
-  // Order data
   orders: {
-    total: 256,
-    previousPeriod: 223,
-    percentageChange: 14.8,
-    byStatus: [45, 28, 170, 13], // Pending, Processing, Delivered, Cancelled
-    byMonth: [180, 198, 215, 256, 235, 256]
+    total: 0,
+    previousPeriod: 0,
+    percentageChange: 0,
+    byStatus: [0, 0, 0, 0],
+    byMonth: [0, 0, 0, 0, 0, 0]
   },
-  
-  // Customer data
   customers: {
-    total: 1850,
-    previousPeriod: 1720,
-    percentageChange: 7.5,
-    newByMonth: [120, 135, 150, 165, 140, 190],
-    returningRate: 65
+    total: 0,
+    previousPeriod: 0,
+    percentageChange: 0,
+    newByMonth: [0, 0, 0, 0, 0, 0],
+    returningRate: 0
   },
-  
-  // Product data
   products: {
-    total: 120,
-    topCategories: [35, 25, 20, 40], // Clothing, Accessories, Footwear, Other
-    topSelling: [
-      { name: "Podwolk Streetwear T-shirt", sales: 85, revenue: 2125000 },
-      { name: "Black Casual Hoodie", sales: 72, revenue: 1360800 },
-      { name: "Street Style Jacket", sales: 68, revenue: 1700000 },
-      { name: "Urban Cap", sales: 64, revenue: 800000 },
-      { name: "Premium Streetwear Set", sales: 58, revenue: 2900000 }
-    ]
+    total: 0,
+    topCategories: [],
+    categoryNames: [],
+    topSelling: []
   },
-  
-  // Payment data
   payments: {
-    byMethod: [60, 25, 15], // Credit Card, PayPal, Cash on Delivery
-    byStatus: [85, 10, 5] // Paid, Pending, Failed
+    byMethod: [0, 0, 0],
+    methodNames: ['Credit Card', 'Cash', 'Other'],
+    byStatus: [0, 0, 0]
+  },
+  labels: {
+    months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
   }
 };
 
@@ -332,19 +327,24 @@ const timePeriods: TimePeriod[] = [
 export default function AdminAnalyticsComp() {
   const [timePeriod, setTimePeriod] = useState<string>('month');
   const [activeTab, setActiveTab] = useState<string>('overview');
-  const [analytics, setAnalytics] = useState<Analytics>(sampleAnalytics);
+  const [analytics, setAnalytics] = useState<Analytics>(emptyAnalytics);
   
-  // Replace with real data when API is ready
-  // const { data, loading, error } = useFetchData('/api/analytics');
+  // Use the real API endpoint to fetch analytics data
+  const { data, loading, error, refetch } = useFetchData<Analytics>(`/api/admin/analytics?period=${timePeriod}`);
   
-  // useEffect(() => {
-  //   if (data) {
-  //     setAnalytics(data);
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data) {
+      setAnalytics(data);
+    }
+  }, [data]);
 
-  // Generate month labels for charts
-  const monthLabels: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  // Update data when time period changes
+  useEffect(() => {
+    refetch();
+  }, [timePeriod, refetch]);
+
+  // Generate month labels for charts - use the ones from the API if available
+  const monthLabels: string[] = data?.labels?.months || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
   
   return (
     <div className="flex-1 p-6 bg-gray-50">
@@ -468,11 +468,17 @@ export default function AdminAnalyticsComp() {
                 <CardDescription>Monthly revenue for the past 6 months</CardDescription>
               </CardHeader>
               <CardContent>
-                <LineChart 
-                  data={analytics.revenue.byMonth} 
-                  labels={monthLabels}
-                  title=""
-                />
+                {loading ? (
+                  <div className="flex justify-center items-center h-[200px]">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+                  </div>
+                ) : (
+                  <LineChart 
+                    data={analytics.revenue.byMonth} 
+                    labels={monthLabels}
+                    title=""
+                  />
+                )}
               </CardContent>
             </Card>
             
@@ -482,12 +488,18 @@ export default function AdminAnalyticsComp() {
                 <CardDescription>Order distribution by status</CardDescription>
               </CardHeader>
               <CardContent>
-                <DonutChart 
-                  data={analytics.orders.byStatus} 
-                  labels={['Pending', 'Processing', 'Delivered', 'Cancelled']}
-                  title=""
-                  colors={['#EAB308', '#2563EB', '#16A34A', '#DC2626']}
-                />
+                {loading ? (
+                  <div className="flex justify-center items-center h-[200px]">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+                  </div>
+                ) : (
+                  <DonutChart 
+                    data={analytics.orders.byStatus} 
+                    labels={['Pending', 'Processing', 'Delivered', 'Cancelled']}
+                    title=""
+                    colors={['#EAB308', '#2563EB', '#16A34A', '#DC2626']}
+                  />
+                )}
               </CardContent>
             </Card>
           </div>
@@ -499,26 +511,31 @@ export default function AdminAnalyticsComp() {
               <CardDescription>Products with highest sales volume</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      <th className="px-6 py-3">Product</th>
-                      <th className="px-6 py-3">Sales</th>
-                      <th className="px-6 py-3">Revenue</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {analytics.products.topSelling.map((product, index) => (
-                      <tr key={index} className="bg-white hover:bg-gray-50 transition-colors">
-                        <td className="px-6 py-4 text-sm font-medium">{product.name}</td>
-                        <td className="px-6 py-4 text-sm">{product.sales} units</td>
-                        <td className="px-6 py-4 text-sm">₮{product.revenue.toLocaleString()}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              {loading ? (
+                <div className="flex justify-center items-center h-[200px]">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {analytics.products.topSelling.map((product, i) => (
+                    <div key={i} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">{product.name}</span>
+                        <span className="text-sm text-gray-500">{product.sales} sales</span>
+                      </div>
+                      <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gray-900 rounded-full" 
+                          style={{ width: `${(product.sales / analytics.products.topSelling[0].sales) * 100}%` }}
+                        />
+                      </div>
+                      <div className="text-sm text-right font-medium">
+                        ₮{product.revenue.toLocaleString()}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

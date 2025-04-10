@@ -12,7 +12,8 @@ import {
   Calendar,
   ChevronRight,
   ChevronLeft,
-  FileText
+  FileText,
+  Loader2
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -42,87 +43,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useFetchData from '@/lib/customHooks/useFetch';
+import { useFetchData } from '@/lib/customHooks/useFetch';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
-// Sample data for demonstration
-const sampleOrders = [
-  { 
-    id: '12345', 
-    customer: 'Buyka Bakhytbek', 
-    email: 'buyka@example.com',
-    phone: '+1 (123) 456-7890',
-    address: '123 Main St, New York, NY 10001', 
-    amount: 25000, 
-    date: new Date('2025-03-01T09:31:00'), 
-    items: [
-      { id: 'p1', name: 'Podwolk Streetwear T-shirt', price: 25000, quantity: 1 }
-    ],
-    status: 'pending',
-    paymentMethod: 'credit_card',
-    paymentStatus: 'paid'
-  },
-  { 
-    id: '12344', 
-    customer: 'Arman Kenzhebek', 
-    email: 'arman@example.com',
-    phone: '+1 (234) 567-8901',
-    address: '456 Oak Ave, Los Angeles, CA 90001', 
-    amount: 18900, 
-    date: new Date('2025-03-01T12:15:00'), 
-    items: [
-      { id: 'p2', name: 'Black Casual Hoodie', price: 18900, quantity: 1 }
-    ],
-    status: 'delivered',
-    paymentMethod: 'paypal',
-    paymentStatus: 'paid'
-  },
-  { 
-    id: '12343', 
-    customer: 'Sasha Kim', 
-    email: 'sasha@example.com',
-    phone: '+1 (345) 678-9012',
-    address: '789 Pine Rd, Chicago, IL 60007', 
-    amount: 35000, 
-    date: new Date('2025-02-28T15:45:00'), 
-    items: [
-      { id: 'p3', name: 'Street Style Jacket', price: 25000, quantity: 1 },
-      { id: 'p4', name: 'Urban Cap', price: 10000, quantity: 1 }
-    ],
-    status: 'processing',
-    paymentMethod: 'credit_card',
-    paymentStatus: 'paid'
-  },
-  { 
-    id: '12342', 
-    customer: 'Kaysar Zhiger', 
-    email: 'kaysar@example.com',
-    phone: '+1 (456) 789-0123',
-    address: '321 Cedar Ln, Seattle, WA 98101', 
-    amount: 12500, 
-    date: new Date('2025-02-28T10:20:00'), 
-    items: [
-      { id: 'p4', name: 'Urban Cap', price: 12500, quantity: 1 }
-    ],
-    status: 'cancelled',
-    paymentMethod: 'cash',
-    paymentStatus: 'unpaid'
-  },
-  { 
-    id: '12341', 
-    customer: 'Madina Bekzat', 
-    email: 'madina@example.com',
-    phone: '+1 (567) 890-1234',
-    address: '654 Maple St, Miami, FL 33101', 
-    amount: 50000, 
-    date: new Date('2025-02-27T14:35:00'), 
-    items: [
-      { id: 'p5', name: 'Premium Streetwear Set', price: 50000, quantity: 1 }
-    ],
-    status: 'pending',
-    paymentMethod: 'credit_card',
-    paymentStatus: 'pending'
-  },
-];
+
+interface OrderItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+interface Order {
+  id: string;
+  customer: string;
+  email: string;
+  phone: string;
+  address: string;
+  amount: number;
+  date: Date | string;
+  items: OrderItem[];
+  status: 'pending' | 'processing' | 'delivered' | 'cancelled';
+  paymentMethod: string;
+  paymentStatus: 'paid' | 'pending' | 'unpaid';
+}
 
 const statusOptions = [
   { value: 'all', label: 'All Orders' },
@@ -144,21 +89,30 @@ export default function AdminOrdersComp() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [paymentFilter, setPaymentFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
-  const [orders, setOrders] = useState(sampleOrders);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('all');
+  const [updating, setUpdating] = useState(false);
   const ordersPerPage = 5;
   
-  // Replace with real data when API is ready
-  // const { data, loading, error } = useFetchData('/api/orders');
+
+  const { data, loading, error, refetch } = useFetchData<Order[]>('/api/admin/orders');
   
-  // useEffect(() => {
-  //   if (data) {
-  //     setOrders(data);
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data && Array.isArray(data)) {
+      // Convert string dates to Date objects
+      const processedOrders = data.map(order => ({
+        ...order,
+        date: new Date(order.date)
+      }));
+      setOrders(processedOrders);
+    } else if (error) {
+      toast.error("Failed to fetch orders");
+      console.error("API Error:", error);
+    }
+  }, [data, error]);
 
   // Apply filters
   const filteredOrders = orders.filter(order => {
@@ -200,45 +154,89 @@ export default function AdminOrdersComp() {
   };
 
   // Update order status
-  const updateOrderStatus = (orderId:any, newStatus:any) => {
-    setOrders(orders.map(order => 
-      order.id === orderId ? { ...order, status: newStatus } : order
-    ));
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    setUpdating(true);
+    
+    try {
+      const response = await fetch(`/api/admin/orders/${orderId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update order status');
+      }
+      
+      const updatedOrder = await response.json();
+      
+      // Update the orders list with the new status
+      setOrders(prevOrders => 
+        prevOrders.map(order => 
+          order.id === orderId 
+            ? { 
+                ...order, 
+                status: updatedOrder.status as Order['status'],
+                paymentStatus: updatedOrder.paymentStatus as Order['paymentStatus']
+              } 
+            : order
+        )
+      );
+      
+      // Also update the selected order if viewing details
+      if (selectedOrder && selectedOrder.id === orderId) {
+        setSelectedOrder(prev => 
+          prev ? { 
+            ...prev, 
+            status: updatedOrder.status as Order['status'],
+            paymentStatus: updatedOrder.paymentStatus as Order['paymentStatus']
+          } : null
+        );
+      }
+      
+      toast.success(`Order status updated to ${newStatus}`);
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to update order status');
+    } finally {
+      setUpdating(false);
+    }
   };
 
   // View order details
-  const viewOrderDetails = (order:any) => {
+  const viewOrderDetails = (order: Order) => {
     setSelectedOrder(order);
     setIsViewDialogOpen(true);
   };
 
-  // Get status badge variant and color
-  const getStatusBadge = (status:any) => {
+  // Updated implementation of getStatusBadge and getPaymentBadge to return just a className
+  const getStatusBadge = (status: 'pending' | 'processing' | 'delivered' | 'cancelled' | string): string => {
     switch (status) {
       case 'pending':
-        return { variant: 'outline', className: 'bg-yellow-100 text-yellow-800 border-yellow-300' };
+        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
       case 'processing':
-        return { variant: 'outline', className: 'bg-blue-100 text-blue-800 border-blue-300' };
+        return 'bg-blue-100 text-blue-800 border-blue-300';
       case 'delivered':
-        return { variant: 'outline', className: 'bg-green-100 text-green-800 border-green-300' };
+        return 'bg-green-100 text-green-800 border-green-300';
       case 'cancelled':
-        return { variant: 'outline', className: 'bg-red-100 text-red-800 border-red-300' };
+        return 'bg-red-100 text-red-800 border-red-300';
       default:
-        return { variant: 'outline', className: '' };
+        return '';
     }
   };
 
   // Get payment badge variant and color
-  const getPaymentBadge = (status:any) => {
+  const getPaymentBadge = (status: 'paid' | 'pending' | 'unpaid' | string): string => {
     switch (status) {
       case 'paid':
-        return { variant: 'outline', className: 'bg-green-100 text-green-800 border-green-300' };
+        return 'bg-green-100 text-green-800 border-green-300';
       case 'pending':
-        return { variant: 'outline', className: 'bg-yellow-100 text-yellow-800 border-yellow-300' };
+        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
       case 'unpaid':
-        return { variant: 'outline', className: 'bg-red-100 text-red-800 border-red-300' };
+        return 'bg-red-100 text-red-800 border-red-300';
       default:
-        return { variant: 'outline', className: '' };
+        return '';
     }
   };
 
@@ -248,7 +246,7 @@ export default function AdminOrdersComp() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Захиалгууд</h1>
-          <p className="text-gray-500">Харилцагчийн захиалгыг удирдах ба боловсруулах.</p>
+          <p className="text-gray-500">Хэрэглэгчдын захиалгуудыг удирдах</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline">
@@ -257,6 +255,16 @@ export default function AdminOrdersComp() {
           </Button>
         </div>
       </div>
+
+      {/* Error message if API fails */}
+      {error && (
+        <div className="mb-6 p-4 border border-red-300 bg-red-50 rounded-md">
+          <p className="text-red-800">Error loading orders: {typeof error === 'string' ? error : 'Unknown error occurred'}</p>
+          <Button variant="outline" size="sm" className="mt-2" onClick={() => refetch()}>
+            Try Again
+          </Button>
+        </div>
+      )}
 
       {/* Filters and search */}
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -301,7 +309,7 @@ export default function AdminOrdersComp() {
             <Calendar className="h-4 w-4" />
           </Button>
           
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" onClick={() => refetch()}>
             <Download className="h-4 w-4" />
           </Button>
         </div>
@@ -346,88 +354,109 @@ export default function AdminOrdersComp() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {currentOrders.map((order) => (
-                      <tr key={order.id} className="bg-white hover:bg-gray-50 transition-colors">
-                        <td className="px-6 py-4 text-sm font-medium">#{order.id}</td>
-                        <td className="px-6 py-4 text-sm">
-                          <div className="font-medium">{order.customer}</div>
-                          <div className="text-gray-500 text-xs">{order.email}</div>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {order.date.toLocaleDateString()} 
-                          <div className="text-xs">
-                            {order.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    {loading && filteredOrders.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                          <div className="flex justify-center items-center">
+                            <Loader2 className="h-6 w-6 animate-spin mr-2" /> 
+                            Loading orders...
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-sm font-medium">
-                          ₮{order.amount.toLocaleString()}
-                        </td>
-                        <td className="px-6 py-4 text-sm">
-                          <Select 
-                            value={order.status} 
-                            onValueChange={(value) => updateOrderStatus(order.id, value)}
-                          >
-                            <SelectTrigger className="h-8 w-[130px]">
-                              <div className="flex items-center">
-                                <div className={`w-2 h-2 rounded-full mr-2 ${
-                                  order.status === 'pending' ? 'bg-yellow-500' : 
-                                  order.status === 'processing' ? 'bg-blue-500' : 
-                                  order.status === 'delivered' ? 'bg-green-500' : 
-                                  'bg-red-500'
-                                }`}></div>
-                                <SelectValue />
-                              </div>
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="pending">Хүлээгдэж</SelectItem>
-                              <SelectItem value="processing">Хүргэлтэд</SelectItem>
-                              <SelectItem value="delivered">Хүргэгдсэн</SelectItem>
-                              <SelectItem value="cancelled">Цуцлагдсан</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </td>
-                        <td className="px-6 py-4 text-sm">
-                          <Badge 
-                            {...getPaymentBadge(order.paymentStatus)}
-                          >
-                            {order.paymentStatus === 'paid' ? 'Paid' : 
-                            order.paymentStatus === 'pending' ? 'Pending' : 'Unpaid'}
-                          </Badge>
-                        </td>
-                        <td className="px-6 py-4 text-sm">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreHorizontal size={16} />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem 
-                                onClick={() => viewOrderDetails(order)}
-                              >
-                                <Eye className="mr-2 h-4 w-4" />
-                                Нарийвчилан харах
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                disabled={order.status === 'delivered' || order.status === 'cancelled'}
-                              >
-                                <Truck className="mr-2 h-4 w-4" />
-                                Хүргэлтэд гаргах
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                className="text-red-600"
-                                disabled={order.status === 'delivered' || order.status === 'cancelled'}
-                              >
-                                <XCircle className="mr-2 h-4 w-4" />
-                                Захиалга цуцлах
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                      </tr>
+                    ) : filteredOrders.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                          No orders found matching your filters
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      currentOrders.map((order) => (
+                        <tr key={order.id} className="bg-white hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4 text-sm font-medium">#{order.id}</td>
+                          <td className="px-6 py-4 text-sm">
+                            <div className="font-medium">{order.customer}</div>
+                            <div className="text-gray-500 text-xs">{order.email}</div>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {order.date instanceof Date ? order.date.toLocaleDateString() : new Date(order.date).toLocaleDateString()} 
+                            <div className="text-xs">
+                              {order.date instanceof Date ? order.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : new Date(order.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-sm font-medium">
+                            ₮{order.amount.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4 text-sm">
+                            <Select 
+                              value={order.status} 
+                              onValueChange={(value) => updateOrderStatus(order.id, value)}
+                              disabled={updating}
+                            >
+                              <SelectTrigger className="h-8 w-[130px]">
+                                <div className="flex items-center">
+                                  <div className={`w-2 h-2 rounded-full mr-2 ${
+                                    order.status === 'pending' ? 'bg-yellow-500' : 
+                                    order.status === 'processing' ? 'bg-blue-500' : 
+                                    order.status === 'delivered' ? 'bg-green-500' : 
+                                    'bg-red-500'
+                                  }`}></div>
+                                  <SelectValue />
+                                </div>
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Хүлээгдэж</SelectItem>
+                                <SelectItem value="processing">Хүргэлтэд</SelectItem>
+                                <SelectItem value="delivered">Хүргэгдсэн</SelectItem>
+                                <SelectItem value="cancelled">Цуцлагдсан</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </td>
+                          <td className="px-6 py-4 text-sm">
+                            <Badge 
+                              variant="outline"
+                              className={cn(getPaymentBadge(order.paymentStatus))}
+                            >
+                              {order.paymentStatus === 'paid' ? 'Paid' : 
+                              order.paymentStatus === 'pending' ? 'Pending' : 'Unpaid'}
+                            </Badge>
+                          </td>
+                          <td className="px-6 py-4 text-sm">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                  <MoreHorizontal size={16} />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem 
+                                  onClick={() => viewOrderDetails(order)}
+                                >
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  View Details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  disabled={order.status === 'delivered' || order.status === 'cancelled' || updating}
+                                  onClick={() => updateOrderStatus(order.id, 'delivered')}
+                                >
+                                  <Truck className="mr-2 h-4 w-4" />
+                                  Mark as Delivered
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  className="text-red-600"
+                                  disabled={order.status === 'delivered' || order.status === 'cancelled' || updating}
+                                  onClick={() => updateOrderStatus(order.id, 'cancelled')}
+                                >
+                                  <XCircle className="mr-2 h-4 w-4" />
+                                  Cancel Order
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -465,40 +494,49 @@ export default function AdminOrdersComp() {
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle>Order Details</DialogTitle>
+            <DialogTitle>Захиалгын дэлгэрэнгүй</DialogTitle>
             <DialogDescription>
-              Full information about this order.
+              Тухайн захиалгын дэлгэрэнгүй мэдээлэл.
             </DialogDescription>
           </DialogHeader>
           {selectedOrder && (
             <div className="py-4">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="font-semibold">Order #{selectedOrder.id}</h3>
+                  <h3 className="font-semibold">Захиалга #{selectedOrder.id}</h3>
                   <p className="text-sm text-gray-500">
-                    {selectedOrder.date.toLocaleDateString()} at {selectedOrder.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    {selectedOrder.date instanceof Date ? 
+                      selectedOrder.date.toLocaleDateString() : 
+                      new Date(selectedOrder.date).toLocaleDateString()} at {
+                      selectedOrder.date instanceof Date ? 
+                      selectedOrder.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 
+                      new Date(selectedOrder.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                    }
                   </p>
                 </div>
-                <Badge {...getStatusBadge(selectedOrder.status)}>
+                <Badge 
+                  variant="outline"
+                  className={cn(getStatusBadge(selectedOrder.status))}
+                >
                   {selectedOrder.status.charAt(0).toUpperCase() + selectedOrder.status.slice(1)}
                 </Badge>
               </div>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div>
-                  <h4 className="text-sm font-semibold mb-2">Customer Information</h4>
+                  <h4 className="text-sm font-semibold mb-2">Хэрэглэгчын Мэдээлэл</h4>
                   <p className="text-sm">{selectedOrder.customer}</p>
                   <p className="text-sm">{selectedOrder.email}</p>
                   <p className="text-sm">{selectedOrder.phone}</p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold mb-2">Shipping Address</h4>
+                  <h4 className="text-sm font-semibold mb-2">Хүргэх Хаяг</h4>
                   <p className="text-sm">{selectedOrder.address}</p>
                 </div>
               </div>
 
               <div className="mb-6">
-                <h4 className="text-sm font-semibold mb-2">Order Items</h4>
+                <h4 className="text-sm font-semibold mb-2">Захиалгын Бүтээгдэхүүнүүд</h4>
                 <div className="bg-gray-50 rounded-md p-3">
                   {selectedOrder.items.map((item:any) => (
                     <div key={item.id} className="flex justify-between py-2 border-b last:border-0">
@@ -510,7 +548,7 @@ export default function AdminOrdersComp() {
                     </div>
                   ))}
                   <div className="flex justify-between py-2 mt-2 border-t border-gray-300">
-                    <p className="font-semibold">Total</p>
+                    <p className="font-semibold">Нийт Дүн</p>
                     <p className="font-semibold">₮{selectedOrder.amount.toLocaleString()}</p>
                   </div>
                 </div>
@@ -518,28 +556,47 @@ export default function AdminOrdersComp() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <h4 className="text-sm font-semibold mb-2">Payment Information</h4>
+                  <h4 className="text-sm font-semibold mb-2">Төлбөрын Мэдээлэл</h4>
                   <p className="text-sm"><strong>Method:</strong> {selectedOrder.paymentMethod.replace('_', ' ').charAt(0).toUpperCase() + selectedOrder.paymentMethod.replace('_', ' ').slice(1)}</p>
-                  <p className="text-sm"><strong>Status:</strong> <Badge {...getPaymentBadge(selectedOrder.paymentStatus)}>{selectedOrder.paymentStatus.charAt(0).toUpperCase() + selectedOrder.paymentStatus.slice(1)}</Badge></p>
+                  <p className="text-sm"><strong>Status:</strong> <Badge 
+                    variant="outline"
+                    className={cn(getPaymentBadge(selectedOrder.paymentStatus))}
+                  >{selectedOrder.paymentStatus.charAt(0).toUpperCase() + selectedOrder.paymentStatus.slice(1)}</Badge></p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold mb-2">Delivery Information</h4>
-                  <p className="text-sm"><strong>Status:</strong> <Badge {...getStatusBadge(selectedOrder.status)}>{selectedOrder.status.charAt(0).toUpperCase() + selectedOrder.status.slice(1)}</Badge></p>
+                  <h4 className="text-sm font-semibold mb-2">Хүргэлтийн Мэдээлэл</h4>
+                  <p className="text-sm"><strong>Төлөв:</strong> <Badge 
+                    variant="outline"
+                    className={cn(getStatusBadge(selectedOrder.status))}
+                  >{selectedOrder.status.charAt(0).toUpperCase() + selectedOrder.status.slice(1)}</Badge></p>
                 </div>
               </div>
             </div>
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>
-              Close
+              Хаах
             </Button>
             {selectedOrder && selectedOrder.status !== 'delivered' && selectedOrder.status !== 'cancelled' && (
-              <Button variant="default" onClick={() => {
-                updateOrderStatus(selectedOrder.id, 'delivered');
-                setIsViewDialogOpen(false);
-              }}>
-                <Check className="mr-2 h-4 w-4" />
-                Mark as Delivered
+              <Button 
+                variant="default" 
+                onClick={() => {
+                  updateOrderStatus(selectedOrder.id, 'delivered');
+                  setIsViewDialogOpen(false);
+                }}
+                disabled={updating}
+              >
+                {updating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Уншиж байна...
+                  </>
+                ) : (
+                  <>
+                    <Check className="mr-2 h-4 w-4" />
+                    Хүргэгдсэнээр Тооцох
+                  </>
+                )}
               </Button>
             )}
           </DialogFooter>

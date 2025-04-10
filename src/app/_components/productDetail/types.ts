@@ -9,6 +9,8 @@ export type Product = {
   rating: number;
   categoryId?: string;
   categoryName?: string;
+  color?: string[];
+  size?: string[];
 };
 
 export type SimilarProduct = {
@@ -19,6 +21,7 @@ export type SimilarProduct = {
   rating: number;
 };
 
+// Use NextJS compatible type for page props
 export type ProductDetailProps = {
   params: {
     id: string;

@@ -75,8 +75,8 @@ export default function Navbar() {
 
   const cartCount = cartData?.length || 0;
   return (
-    <div className="sticky z-20 w-full mx-auto flex px-10  top-0 bg-white  pb-4">
-      <nav className="bg-red w-full p-4 xsm:px-6 md:px-24 pb-0 py-4 flex items-center gap-12 justify-between">
+    <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+      <nav className="container mx-auto p-4 flex items-center gap-12 justify-between">
         <span>
           <Link
             href={"/"}

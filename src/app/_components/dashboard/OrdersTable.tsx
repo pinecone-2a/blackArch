@@ -17,7 +17,7 @@ interface Order {
   customer: string;
   address: string;
   amount: number;
-  date: Date;
+  date: Date | string | null;
   product: string;
   status: string;
 }
@@ -63,7 +63,15 @@ export default function OrdersTable({
                   <td className="px-4 py-3 text-sm">{order.product}</td>
                   <td className="px-4 py-3 text-sm">₮{(order?.amount)?.toLocaleString()}</td>
                   <td className="px-4 py-3 text-sm">
-                    {order?.date?.toLocaleDateString()} {order?.date?.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    {order.date ? (
+                      typeof order.date === 'object' && order.date instanceof Date ?
+                      `${order.date.toLocaleDateString()} ${order.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}` :
+                      typeof order.date === 'string' ? 
+                      new Date(order.date).toLocaleDateString() + ' ' + new Date(order.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) :
+                      "N/A"
+                    ) : (
+                      "N/A"
+                    )}
                   </td>
                   <td className="px-4 py-3 text-sm">
                     {readOnly ? (

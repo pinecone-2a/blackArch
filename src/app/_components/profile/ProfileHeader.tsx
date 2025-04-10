@@ -24,7 +24,7 @@ export default function ProfileHeader({ user, ordersCount, formatDate }: Profile
     null;
 
   const getInitials = (email: string | undefined) => {
-    if (!email) return "U";
+    if (!email) return "Х";
     const parts = email.split("@")[0].split(/[.-_]/);
     if (parts.length === 1) {
       return email.substring(0, 2).toUpperCase();
@@ -47,7 +47,7 @@ export default function ProfileHeader({ user, ordersCount, formatDate }: Profile
   };
 
   return (
-    <div className="bg-gradient-to-b from-gray-900 to-gray-800 text-white py-12 px-6">
+    <div className="bg-gradient-to-b from-gray-900 to-gray-800 text-white py-12 px-6 relative z-10">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <div className="flex items-center gap-4 mb-4">
@@ -55,18 +55,18 @@ export default function ProfileHeader({ user, ordersCount, formatDate }: Profile
               <AvatarFallback className="bg-gray-700 text-white text-xl">{getInitials(user.email)}</AvatarFallback>
             </Avatar>
             <div>
-              <h1 className="text-3xl font-bold">{user.email ? user.email.split('@')[0] : 'User'}</h1>
-              <p className="text-gray-300 text-sm">{user.email || 'No email available'}</p>
+              <h1 className="text-3xl font-bold">{user.email ? user.email.split('@')[0] : 'Хэрэглэгч'}</h1>
+              <p className="text-gray-300 text-sm">{user.email || 'И-мэйл хаяг байхгүй'}</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-3 mt-2">
             <Badge variant="outline" className="bg-white/10 text-white border-transparent px-3 py-1 flex items-center gap-1">
               <User className="h-3 w-3" />
-              Member since {userCreatedAt ? formatDate(userCreatedAt) : "N/A"}
+              Бүртгүүлсэн огноо: {userCreatedAt ? formatDate(userCreatedAt) : "Тодорхойгүй"}
             </Badge>
             <Badge variant="outline" className="bg-white/10 text-white border-transparent px-3 py-1 flex items-center gap-1">
               <ShoppingBag className="h-3 w-3" />
-              {ordersCount} {ordersCount === 1 ? "order" : "orders"}
+              Нийт захиалга: {ordersCount}
             </Badge>
           </div>
         </div>
@@ -78,7 +78,7 @@ export default function ProfileHeader({ user, ordersCount, formatDate }: Profile
             onClick={() => router.push("/forgotpassword")}
           >
             <Settings className="h-4 w-4 mr-2" />
-            Change Password
+            Нууц үг солих
           </Button>
           <Button 
             variant="destructive" 
@@ -87,7 +87,7 @@ export default function ProfileHeader({ user, ordersCount, formatDate }: Profile
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4 mr-2" />
-            Sign Out
+            Гарах
           </Button>
         </div>
       </div>

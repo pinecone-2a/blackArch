@@ -35,19 +35,31 @@ export default function ProductImageUploader({
   const uploadToCloudinary = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'unsigned_pineshop');
+    formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'unsigned_pineshop');
     
-    const response = await fetch('https://api.cloudinary.com/v1_1/dkfnzxaid/image/upload', {
-      method: 'POST',
-      body: formData,
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to upload to Cloudinary');
+    try {
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dkfnzxaid';
+      const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+      
+      console.log('Uploading to Cloudinary:', uploadUrl);
+      const response = await fetch(uploadUrl, {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Cloudinary upload error:", errorData);
+        throw new Error('Failed to upload to Cloudinary');
+      }
+      
+      const data = await response.json();
+      console.log('Cloudinary upload success:', data.secure_url);
+      return data.secure_url;
+    } catch (error) {
+      console.error('Error uploading to Cloudinary:', error);
+      throw new Error('Failed to upload image to Cloudinary');
     }
-    
-    const data = await response.json();
-    return data.secure_url;
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,79 +110,92 @@ export default function ProductImageUploader({
   };
 
   const cropImage = async () => {
-    if (!completedCrop || !imageRef.current || !currentFile) return;
-
-    const image = imageRef.current;
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-    if (!ctx) {
+    if (!completedCrop || !imageRef.current || !currentFile) {
+      console.error("Missing required data for crop:", {
+        hasCrop: !!completedCrop,
+        hasImageRef: !!imageRef.current,
+        hasFile: !!currentFile
+      });
       return;
     }
 
-    // Calculate pixel values from percentage values
-    const scaleX = image.naturalWidth / 100;
-    const scaleY = image.naturalHeight / 100;
-    
-    const cropX = completedCrop.x * scaleX;
-    const cropY = completedCrop.y * scaleY;
-    const cropWidth = completedCrop.width * scaleX;
-    const cropHeight = completedCrop.height * scaleY;
+    setUploading(true);
+    setError(null);
 
-    // Set canvas size to the cropped size
-    canvas.width = cropWidth;
-    canvas.height = cropHeight;
+    try {
+      const image = imageRef.current;
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
 
-    // Draw the cropped image
-    ctx.drawImage(
-      image,
-      cropX, cropY, cropWidth, cropHeight,
-      0, 0, cropWidth, cropHeight
-    );
+      if (!ctx) {
+        throw new Error("Could not get canvas context");
+      }
 
-    // Convert canvas to blob
-    canvas.toBlob(async (blob) => {
-      if (!blob) return;
+      // Calculate pixel values from percentage values
+      const scaleX = image.naturalWidth / 100;
+      const scaleY = image.naturalHeight / 100;
+      
+      const cropX = completedCrop.x * scaleX;
+      const cropY = completedCrop.y * scaleY;
+      const cropWidth = completedCrop.width * scaleX;
+      const cropHeight = completedCrop.height * scaleY;
 
+      // Set canvas size to the cropped size
+      canvas.width = cropWidth;
+      canvas.height = cropHeight;
+
+      // Draw the cropped image
+      ctx.drawImage(
+        image,
+        cropX, cropY, cropWidth, cropHeight,
+        0, 0, cropWidth, cropHeight
+      );
+
+      // Instead of using toBlob which can cause issues, use toDataURL
       try {
-        // Create a new file from the blob with same type as original
-        const croppedFile = new File([blob], currentFile.name, { 
-          type: currentFile.type
+        const base64Data = canvas.toDataURL('image/jpeg', 0.8);
+        
+        // Convert base64 to blob
+        const response = await fetch(base64Data);
+        const blob = await response.blob();
+        
+        console.log("Generated blob:", blob.type, Math.round(blob.size / 1024), "KB");
+        
+        // Create a new file from the blob
+        const fileName = currentFile.name.split('.')[0] + ".jpg";
+        const croppedFile = new File([blob], fileName, { 
+          type: 'image/jpeg'
         });
+        
+        console.log("Uploading cropped file to Cloudinary...");
         
         // Upload directly to Cloudinary
         const uploadedUrl = await uploadToCloudinary(croppedFile);
+        console.log("Received URL from Cloudinary:", uploadedUrl);
+        
         const newImages = [...images, uploadedUrl];
         
         setImages(newImages);
         onImagesChange(newImages);
 
-        // If there are more files to process, move to the next one
-        if (currentFileIndex < currentFiles.length - 1) {
-          const nextIndex = currentFileIndex + 1;
-          setCurrentFileIndex(nextIndex);
-          setCurrentFile(currentFiles[nextIndex]);
-          
-          const reader = new FileReader();
-          reader.addEventListener('load', () => {
-            setImgSrc(reader.result?.toString() || '');
-            setCompletedCrop(null);
-          });
-          reader.readAsDataURL(currentFiles[nextIndex]);
-        } else {
-          // All files processed, close the dialog
-          setCropDialogOpen(false);
-          setCurrentFile(null);
-          setImgSrc('');
-          setCurrentFiles([]);
-          setCurrentFileIndex(0);
-        }
-      } catch (error) {
-        console.error('Error uploading cropped image:', error);
-        setError('Failed to upload image. Please try again.');
+        // All files processed, close the dialog
         setCropDialogOpen(false);
+        setCurrentFile(null);
+        setImgSrc('');
+        setCurrentFiles([]);
+        setCurrentFileIndex(0);
+        
+      } catch (error) {
+        console.error('Error in image upload process:', error);
+        setError('Failed to upload image. Please try again.');
+      } finally {
+        setUploading(false);
       }
-    }, currentFile.type);
+    } catch (error) {
+      console.error('Error during image crop:', error);
+      setError('Failed to process image. Please try again.');
+      setUploading(false);
+    }
   };
 
   const cancelCrop = () => {
@@ -298,49 +323,35 @@ export default function ProductImageUploader({
                     />
                   </ReactCrop>
                 </div>
-                
-                {completedCrop && imageRef.current && (
-                  <div className="mt-6 text-center">
-                    <div className="flex items-center justify-center mb-3">
-                      <div className="h-px bg-gray-200 flex-grow"></div>
-                      <p className="text-sm font-medium text-gray-700 mx-2">Final Result Preview</p>
-                      <div className="h-px bg-gray-200 flex-grow"></div>
-                    </div>
-                    <div className="bg-white border rounded-lg p-4 shadow-md">
-                      <div className="relative w-full h-[450px] mx-auto overflow-hidden rounded-md border-2 border-gray-200">
-                        <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
-                          <img
-                            src={imgSrc}
-                            alt="Crop preview"
-                            className="max-w-none"
-                            style={{
-                              width: `${100 / (completedCrop.width / 100)}%`,
-                              height: `${100 / (completedCrop.height / 100)}%`,
-                              objectFit: 'cover',
-                              transform: `translate(${-completedCrop.x * (100 / completedCrop.width)}%, ${-completedCrop.y * (100 / completedCrop.height)}%)`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="mt-3 flex items-center justify-between">
-                        <p className="text-xs text-gray-500">This is exactly how your product image will appear after cropping</p>
-                        <span className="text-xs font-medium bg-green-100 text-green-800 px-2 py-1 rounded">1:1 Ratio</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             )}
           </div>
           
           <DialogFooter>
-            <Button variant="outline" onClick={cancelCrop}>
-              <XCircle className="h-4 w-4 mr-2" />
+            <Button
+              type="button" 
+              variant="outline" 
+              onClick={cancelCrop}
+              disabled={uploading}
+            >
               Cancel
             </Button>
-            <Button onClick={cropImage} disabled={!completedCrop}>
-              <Check className="h-4 w-4 mr-2" />
-              {currentFileIndex < currentFiles.length - 1 ? 'Apply & Next Image' : 'Apply Crop'}
+            <Button
+              type="button"
+              onClick={cropImage}
+              disabled={!completedCrop || uploading}
+            >
+              {uploading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <Check className="mr-2 h-4 w-4" />
+                  Crop & Upload
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

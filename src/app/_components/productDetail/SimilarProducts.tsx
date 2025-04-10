@@ -1,23 +1,16 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronRight } from 'lucide-react';
-
-type SimilarProduct = {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  rating: number;
-};
+import axios from 'axios';
+import { Product } from './types';
 
 type SimilarProductsProps = {
-  isLoading: boolean;
-  products: SimilarProduct[];
-  formatPrice: (price: number) => string;
+  productId: string;
+  categoryId?: string;
 };
 
 // RatingStars component
@@ -52,63 +45,70 @@ const RatingStars: React.FC<{ rating: number }> = ({ rating }) => {
   );
 };
 
-const SimilarProducts: React.FC<SimilarProductsProps> = ({ 
-  isLoading, 
-  products, 
-  formatPrice 
-}) => {
+const SimilarProducts: React.FC<SimilarProductsProps> = ({ productId, categoryId }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    if (productId) {
+      setIsLoading(true);
+      axios.get(`/api/products/similar?id=${productId}&category=${categoryId || ''}`)
+        .then(response => {
+          setProducts(response.data.slice(0, 5));
+          setIsLoading(false);
+        })
+        .catch(error => {
+          console.error("Error loading similar products:", error);
+          setIsLoading(false);
+        });
+    }
+  }, [productId, categoryId]);
+
   return (
-    <section className="mt-16">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className='text-2xl font-bold text-gray-900'>You Might Also Like</h2>
-        <Button variant="ghost" className="gap-1" asChild>
-          <Link href="/category">
-            View all <ChevronRight className="w-4 h-4" />
-          </Link>
-        </Button>
-      </div>
+    <div className="py-8">
+      <h2 className="text-2xl font-bold text-center mb-6">Төстэй бараанууд</h2>
       
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-        {isLoading ? (
-          Array(5).fill(0).map((_, i) => (
-            <div key={i} className="flex flex-col space-y-2">
-              <Skeleton className="aspect-square rounded-lg" />
-              <Skeleton className="h-5 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-4 w-1/4" />
-            </div>
-          ))
-        ) : (
-          products.map((product) => (
-            <Link 
-              key={product.id}
-              href={`/productDetail/${product.id}`}
-              className="group flex flex-col"
-            >
-              <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-3">
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+      <div className="w-full overflow-x-auto pb-2">
+        <div className="flex gap-6 pl-4">
+          {isLoading ? (
+            Array(5).fill(0).map((_, i) => (
+              <div key={i} className="flex-shrink-0 min-w-[220px] sm:min-w-[250px]">
+                <Skeleton className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] rounded-xl" />
+                <Skeleton className="h-5 w-3/4 mt-2" />
+                <Skeleton className="h-4 w-1/2 mt-1" />
+                <Skeleton className="h-4 w-1/4 mt-1" />
               </div>
-              <h3 className="font-medium text-gray-900 group-hover:underline line-clamp-1">
-                {product.name}
-              </h3>
-              <div className="flex items-center mt-1">
-                <RatingStars rating={product.rating} />
-                <span className="text-xs text-gray-500 ml-1">
-                  {product.rating}
-                </span>
-              </div>
-              <p className="font-semibold mt-1">
-                {formatPrice(product.price)}₮
-              </p>
-            </Link>
-          ))
-        )}
+            ))
+          ) : products.length > 0 ? (
+            products.map((product) => (
+              <Link 
+                key={product.id} 
+                href={`/productDetail/${product.id}`}
+                className="flex-shrink-0 min-w-[220px] sm:min-w-[250px] transition-transform hover:scale-105"
+              >
+                <div className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] rounded-xl overflow-hidden">
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-base sm:text-lg font-semibold mt-2">
+                  {product.name}
+                </p>
+                <div className="flex items-center gap-1 mt-1">
+                  <span className="text-yellow-500">★★★★☆</span>
+                  <span className="text-sm sm:text-base">{product.rating}/5</span>
+                </div>
+                <p className="text-sm sm:text-lg font-bold">{product.price}₮</p>
+              </Link>
+            ))
+          ) : (
+            <p className="text-center text-gray-500 w-full py-8">Төстэй бараа олдсонгүй</p>
+          )}
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 

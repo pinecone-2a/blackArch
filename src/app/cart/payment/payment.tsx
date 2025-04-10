@@ -7,8 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Home, Plus, CreditCard, MapPin } from "lucide-react";
+import { ArrowLeft, Home, Plus, CreditCard, MapPin, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+import QPAY from "@togtokh.dev/qpay"
+
+import { Toaster, toast } from "sonner";
+
 
 interface CartItem {
   productId: string;
@@ -35,6 +41,26 @@ export default function Payment() {
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [showAddAddress, setShowAddAddress] = useState<boolean>(false);
   const [paymentMethod, setPaymentMethod] = useState<string>("card");
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+
+//   async function fetchQPay() {
+
+//   const res = await fetch("/api/qpay", {
+//     method: "POST",
+//   });
+  
+//   const data = await res.json();
+//   console.log(data);
+// }
+
+
+  
+
+
+
+
   
   // New address form state
   const [newAddress, setNewAddress] = useState<Omit<Address, "id" | "isDefault">>({
@@ -49,40 +75,84 @@ export default function Payment() {
   const [discount, setDiscount] = useState<number>(0);
   const deliveryFee = 5000;
 
+  // Check user login status - client-side only
   useEffect(() => {
+    const storedUserId = typeof window !== 'undefined' ? localStorage.getItem("userId") : null;
+    console.log("User ID from localStorage:", storedUserId);
+    setUserId(storedUserId);
+    // Fix login detection logic - only consider null, undefined, "undefined", or empty string as not logged in
+    const loggedIn = !!storedUserId && storedUserId !== "undefined" && storedUserId !== "";
+    console.log("Login status determined as:", loggedIn);
+    setIsLoggedIn(loggedIn);
+    
     // Load cart from localStorage
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
+    try {
+      const storedCart = typeof window !== 'undefined' ? localStorage.getItem("cart") : null;
+      if (storedCart) {
+        const parsedCart = JSON.parse(storedCart);
+        if (Array.isArray(parsedCart)) {
+          setCart(parsedCart);
+        } else {
+          console.error("Stored cart is not an array:", parsedCart);
+          setCart([]);
+        }
+      } else {
+        setCart([]);
+      }
+    } catch (error) {
+      console.error("Error parsing cart from localStorage:", error);
+      setCart([]);
     }
 
     // Load addresses from localStorage
-    const storedAddresses = localStorage.getItem("addresses");
-    if (storedAddresses) {
-      const parsedAddresses = JSON.parse(storedAddresses);
-      setAddresses(parsedAddresses);
-      
-      // Set the default address as selected if it exists
-      const defaultAddress = parsedAddresses.find((addr: Address) => addr.isDefault);
-      if (defaultAddress) {
-        setSelectedAddressId(defaultAddress.id);
-      } else if (parsedAddresses.length > 0) {
-        setSelectedAddressId(parsedAddresses[0].id);
+    try {
+      const storedAddresses = typeof window !== 'undefined' ? localStorage.getItem("addresses") : null;
+      if (storedAddresses) {
+        const parsedAddresses = JSON.parse(storedAddresses);
+        if (Array.isArray(parsedAddresses)) {
+          setAddresses(parsedAddresses);
+          
+          // Set the default address as selected if it exists
+          const defaultAddress = parsedAddresses.find((addr: Address) => addr.isDefault);
+          if (defaultAddress) {
+            setSelectedAddressId(defaultAddress.id);
+          } else if (parsedAddresses.length > 0) {
+            setSelectedAddressId(parsedAddresses[0].id);
+          }
+        } else {
+          console.error("Stored addresses is not an array:", parsedAddresses);
+          setAddresses([]);
+        }
+      } else {
+        setAddresses([]);
       }
+    } catch (error) {
+      console.error("Error parsing addresses from localStorage:", error);
+      setAddresses([]);
     }
 
     // Load promo code and discount if they exist
-    const storedPromoCode = localStorage.getItem("promoCode");
-    if (storedPromoCode) {
-      setPromoCode(storedPromoCode);
-      setDiscount(storedPromoCode === "Pineshop" ? 0.05 : 0);
+    try {
+      const storedPromoCode = typeof window !== 'undefined' ? localStorage.getItem("promoCode") : null;
+      if (storedPromoCode) {
+        setPromoCode(storedPromoCode);
+        setDiscount(storedPromoCode === "Pineshop" ? 0.05 : 0);
+      } else {
+        setPromoCode("");
+        setDiscount(0);
+      }
+    } catch (error) {
+      console.error("Error handling promo code:", error);
+      setPromoCode("");
+      setDiscount(0);
     }
   }, []);
 
-  const subtotal = cart.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+  const subtotal = Array.isArray(cart) ? cart.reduce(
+    (acc, item) => acc + ((item?.price || 0) * (item?.quantity || 1)), 
     0
-  );
+  ) : 0;
+  
   const discountAmount = subtotal * discount;
   const total = subtotal - discountAmount + deliveryFee;
 
@@ -98,8 +168,10 @@ export default function Payment() {
     setSelectedAddressId(newAddressItem.id);
     setShowAddAddress(false);
     
-    // Save to localStorage
-    localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
+    // Save to localStorage - client-side only
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
+    }
     
     // Reset form
     setNewAddress({
@@ -116,17 +188,116 @@ export default function Payment() {
       isDefault: addr.id === id
     }));
     setAddresses(updatedAddresses);
-    localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
+    
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
+    }
   };
 
-  const handleSubmitOrder = () => {
-    // Here you would typically send the order to your backend
-    // For now, we'll simulate completion and clear the cart
-    alert("Захиалга амжилттай хийгдлээ!");
-    localStorage.removeItem("cart");
-    localStorage.removeItem("promoCode");
-    // Redirect to a confirmation page or home
-    window.location.href = "/order-confirmation";
+  const handleSubmitOrder = async () => {
+
+    if (!selectedAddressId) {
+      toast("Хүргэлтийн хаяг сонгоно уу!");
+      return;
+    }
+
+  
+    if (!isLoggedIn) {
+      toast.warning("Захиалга хийхийн тулд та нэвтэрсэн байх шаардлагатай!");
+      if (typeof window !== 'undefined') {
+  
+        // window.location.href = "/login?redirect=/cart/payment";
+      }
+      return;
+    }
+
+    try {
+    
+      const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
+      
+      if (!selectedAddress) {
+        throw new Error("Selected address not found");
+      }
+
+ 
+      const shippingAddress = {
+        street: selectedAddress.address,
+        city: selectedAddress.city,
+        state: "Mongolia", // Default value
+        zip: "00000" // Default value since not collected
+      };
+
+      // Prepare the order data
+      const orderData = {
+        userId,
+        totalPrice: Math.round(total), // Ensure we send an integer value
+        shippingAddress,
+        items: cart.map(item => item.productId), // Send just the product IDs
+        paymentMethod
+      };
+
+      // Send the order to the backend
+      const response = await fetch("/api/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Order creation failed");
+      }
+
+      const data = await response.json();
+      console.log("Full order creation response:", JSON.stringify(data, null, 2));
+      
+      // Check both new and old response structures
+      const orderId = data.order?.id || data.orderId || (data.message && data.message.id);
+      
+      console.log("Extracted order ID:", orderId);
+      
+      if (!orderId) {
+        console.error("No order ID received from server:", data);
+        // Still show success to user but provide fallback
+        toast.success("Захиалга амжилттай хийгдлээ!");
+        
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem("cart");
+          localStorage.removeItem("promoCode");
+          // Redirect to home instead since we don't have an order ID
+          window.location.href = "/";
+        }
+        return;
+      }
+      
+      // Show success message and clear cart
+      toast.success("Захиалга амжилттай хийгдлээ!");
+      
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem("cart");
+        localStorage.removeItem("promoCode");
+        
+        // Add order details to localStorage to help with troubleshooting
+        try {
+          localStorage.setItem("lastOrderDetails", JSON.stringify({
+            orderId,
+            orderData: data.message,
+            timestamp: new Date().toISOString()
+          }));
+        } catch (e) {
+          console.error("Could not save order details to localStorage:", e);
+        }
+        
+        // Redirect to order confirmation page with the order ID
+        window.location.href = `/order-confirmation?orderId=${orderId}`;
+      }
+    } catch (error) {
+      console.error("Error creating order:", error);
+      toast.error("Захиалга үүсгэхэд алдаа гарлаа. Дахин оролдоно уу.");
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -139,9 +310,26 @@ export default function Payment() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 mt-24">
+      <Toaster position="top-center"/>
       <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
         Хүргэлт ба төлбөр
       </h2>
+
+      {!isLoggedIn && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Анхааруулга</AlertTitle>
+          <AlertDescription>
+            Захиалга хийхийн тулд та нэвтэрсэн байх шаардлагатай.{" "}
+            <Link href="/login?redirect=/cart/payment" className="font-bold underline">
+              Энд дарж нэвтрэнэ үү
+            </Link>
+            <div className="mt-2 text-xs">
+              {userId && <span>Системийн алдаа: Таны ID ({userId}) зөв байна, гэвч нэвтрээгүй хэмээн таних ийн байна. Дахин нэвтэрнэ үү.</span>}
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left column - Address Selection */}
@@ -369,19 +557,19 @@ export default function Payment() {
                   <div className="flex items-center">
                     <div className="bg-gray-50 rounded p-1 mr-3">
                       <img 
-                        src={item.image} 
-                        alt={item.name} 
+                        src={item.image || ''} 
+                        alt={item.name || 'Product'} 
                         className="w-12 h-12 object-contain"
                       />
                     </div>
                     <div>
-                      <p className="font-medium">{item.name}</p>
+                      <p className="font-medium">{item.name || 'Unknown Product'}</p>
                       <p className="text-sm text-gray-500">
-                        {item.quantity} x ₮{item.price.toFixed(2)}
+                        {item.quantity || 0} x ₮{(item.price || 0).toLocaleString()}
                       </p>
                     </div>
                   </div>
-                  <p className="font-medium">₮{(item.price * item.quantity).toFixed(2)}</p>
+                  <p className="font-medium">₮{((item.price || 0) * (item.quantity || 1)).toLocaleString()}</p>
                 </div>
               ))}
             </div>
@@ -391,22 +579,22 @@ export default function Payment() {
             <div className="space-y-3 text-gray-600">
               <div className="flex justify-between items-center">
                 <span>Дүн: ({cart.length})</span>
-                <span className="font-medium">₮{subtotal.toFixed(2)}</span>
+                <span className="font-medium">₮{(subtotal || 0).toLocaleString()}</span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between items-center text-green-600">
                   <span>Хөнгөлөлт ({discount * 100}%)</span>
-                  <span>- ₮{discountAmount.toFixed(2)}</span>
+                  <span>- ₮{(discountAmount || 0).toLocaleString()}</span>
                 </div>
               )}
               <div className="flex justify-between items-center">
                 <span>Хүргэлтийн төлбөр</span>
-                <span className="font-medium">₮{deliveryFee.toFixed(2)}</span>
+                <span className="font-medium">₮{(deliveryFee || 0).toLocaleString()}</span>
               </div>
               <div className="border-t my-3 pt-3"></div>
               <div className="flex justify-between text-lg font-bold">
                 <span>Нийт төлбөр</span>
-                <span>₮{total.toFixed(2)}</span>
+                <span>₮{(total || 0).toLocaleString()}</span>
               </div>
             </div>
 

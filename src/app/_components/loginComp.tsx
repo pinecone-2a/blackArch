@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import TransitionLink from "./TransitionLink";
 import { Toaster, toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { syncUserIdToLocalStorage } from "@/lib/auth/tokenService";
 
  
 export default function LoginComp() {
@@ -79,6 +80,13 @@ export default function LoginComp() {
         if (data.error) {
           toast.error(data.error);
         } else {
+          // Save user ID to localStorage
+          if (data.user && data.user.id) {
+            localStorage.setItem("userId", data.user.id);
+            // Use the sync function as a backup
+            syncUserIdToLocalStorage(data.user);
+          }
+          
           toast.success(data.message);
           router.push("/")
         }
@@ -138,7 +146,7 @@ export default function LoginComp() {
             onClick={() => setShowPassword((prev) => !prev)}
             disabled={isLoading}
           >
-            {showPassword ? "Нуух" : "Үзүүлэх"}
+            {showPassword ? "Нуух" : "Харах"}
           </button>
         </div>
  
@@ -156,7 +164,7 @@ export default function LoginComp() {
           {isLoading ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin" />
-              Уншиж байнөө...
+              Уншиж байна...
             </>
           ) : (
             <>

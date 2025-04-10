@@ -62,7 +62,7 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
       {/* Main product image - with larger size and consistent aspect ratio */}
       <div className="relative rounded-lg overflow-hidden bg-white aspect-square w-full max-w-[100%] h-auto">
         {isLoading ? (
-          <Skeleton className="absolute inset-0" />
+          <Skeleton className="w-full h-full rounded-lg" />
         ) : (
           <>
             <div className="w-full h-full flex items-center justify-center bg-white">
@@ -166,18 +166,26 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
       {/* Dot indicators for mobile - shown only when there are multiple images */}
       {productImages.length > 1 && (
         <div className="flex items-center justify-center space-x-2 md:hidden">
-          {productImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handleImageChange(index)}
-              className={`w-2.5 h-2.5 rounded-full transition-all ${
-                currentImageIndex === index 
-                  ? 'bg-black w-3.5 h-3.5' 
-                  : 'bg-gray-300'
-              }`}
-              aria-label={`Go to image ${index + 1}`}
-            />
-          ))}
+          {isLoading ? (
+            <div className="flex justify-center space-x-2">
+              {Array(5).fill(0).map((_, index) => (
+                <Skeleton key={index} className="w-2.5 h-2.5 rounded-full" />
+              ))}
+            </div>
+          ) : (
+            productImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handleImageChange(index)}
+                className={`w-2.5 h-2.5 rounded-full transition-all ${
+                  currentImageIndex === index 
+                    ? 'bg-black w-3.5 h-3.5' 
+                    : 'bg-gray-300'
+                }`}
+                aria-label={`Go to image ${index + 1}`}
+              />
+            ))
+          )}
         </div>
       )}
     </div>
