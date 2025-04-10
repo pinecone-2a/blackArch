@@ -1,39 +1,75 @@
-
 import { NextResponse } from "next/server";
-import type { NextResponse as NextResponseType } from "next/server";
 import QPAY from "@togtokh.dev/qpay";
-
-
+import prisma from "@/lib/connect";
 const username = process.env.QPAY_USERNAME || "AZJARGAL_B";
 const password = process.env.QPAY_PASSWORD || "wxDGviN5";
 const invoice_code = process.env.QPAY_INVOICE_CODE || "AZJARGAL_B_INVOICE";
 
-export async function POST(req: Request
-    
-) {
-    
+export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { orderId } = body;
+    const { orderId, invoiceId } = body;
 
-    await QPAY.auth.TOKEN({
-      username,
-      password,
-      invoice_code,
-    });
+    if (!invoiceId) {
+      console.error("Missing invoiceId parameter");
+      return NextResponse.json(
+        { success: false, error: "Missing invoiceId parameter" },
+        { status: 400 }
+      );
+    }
 
-    console.log("Authentication successful.");
+    try {
+      await QPAY.auth.TOKEN({
+        username,
+        password,
+        invoice_code,
+      });
 
- 
-    await QPAY.auth.REFRESH();
-    console.log("Authentication refreshed successfully.");
+      console.log("Authentication successful.");
 
-    const checkPayment = await QPAY.payment.CHECK(orderId);
+      await QPAY.auth.REFRESH();
+      console.log("Authentication refreshed successfully.");
 
-    return NextResponse.json({ success: true, checkPayment });
+      const checkPayment = await QPAY.payment.CHECK(invoiceId);
+      console.log("Payment check response:", checkPayment);
 
+      if (checkPayment && checkPayment.success === true && orderId) {
+        try {
+          await prisma.order.update({
+            where: { id: orderId },
+            data: { paymentStatus: "Paid" },
+          });
+          console.log(`Order ${orderId} marked as paid`);
+        } catch (dbError) {
+          console.error("Database update error:", dbError);
+        }
+      }
+
+      return NextResponse.json({ 
+        success: true, 
+        paid: checkPayment && checkPayment.success === true, 
+        checkPayment 
+      });
+    } catch (qpayError) {
+      console.error("QPAY service error:", qpayError);
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: "QPay service error", 
+          details: qpayError instanceof Error ? qpayError.message : String(qpayError) 
+        },
+        { status: 502 }
+      );
+    }
   } catch (error) {
-    console.error("QPAY error:", error);
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    console.error("Request processing error:", error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: "Internal server error", 
+        details: error instanceof Error ? error.message : String(error) 
+      },
+      { status: 500 }
+    );
   }
 }

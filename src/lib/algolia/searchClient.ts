@@ -13,4 +13,19 @@ if(!appId || !apiKey){
     throw new Error('algolia app id or api key is missing...');
 }
 
-export const searchClient = algoliasearch(appId, apiKey);
+// Create the search client
+const searchClient = algoliasearch(appId, apiKey);
+
+// Setup the client for faceting
+const defaultSettings = {
+  attributesForFaceting: [
+    'searchable(price)',
+    'searchable(categoryId)',
+    'searchable(size)',
+    'searchable(color)',
+    'searchable(type)'
+  ]
+};
+
+// Export the configured client
+export { searchClient };

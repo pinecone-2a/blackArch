@@ -9,11 +9,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, RefreshCcw, ShoppingBag, PackageOpen, Calendar } from "lucide-react";
 import Link from "next/link";
 
-interface Order {
+type Order ={
   id: string;
   createdAt: string;
   status: string;
   totalPrice: number;
+  paymentStatus?: string;
+  paymentMethod?: string;
   shippingAddress?: {
     street?: string;
     city?: string;
@@ -21,24 +23,95 @@ interface Order {
     zip?: string;
   };
   items?: Array<any>;
+  productDetails?: Array<{
+    name: string;
+    quantity: number;
+    price: string;
+    image?: string;
+  }>;
 }
 
 interface OrdersListProps {
   orders: Order[];
   loading: boolean;
+  ordersLoading?: boolean;
   error: string | null;
   refreshUserData: () => void;
   formatDate: (dateString: string) => string;
 }
 
-export default function OrdersList({
-  orders,
-  loading,
-  error,
-  refreshUserData,
-  formatDate
-}: OrdersListProps) {
-  
+export default function OrdersList({ orders, loading, ordersLoading, error, refreshUserData, formatDate }: OrdersListProps) {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await refreshUserData();
+    setTimeout(() => setIsRefreshing(false), 500);
+  };
+
+  if (loading) {
+    return <OrdersLoadingSkeleton />;
+  }
+
+  if (ordersLoading || isRefreshing) {
+    return (
+      <div className="relative">
+        <div className="absolute inset-0 bg-white/80 z-10 flex flex-col items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-700" />
+          <p className="mt-2 text-sm text-gray-600">Захиалгуудыг шинэчилж байна...</p>
+        </div>
+        {orders.length > 0 ? (
+          <div className="opacity-50">
+            <OrdersList 
+              orders={orders} 
+              loading={false} 
+              error={null} 
+              refreshUserData={() => {}} 
+              formatDate={formatDate} 
+            />
+          </div>
+        ) : (
+          <OrdersLoadingSkeleton />
+        )}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <div className="bg-red-50 text-red-700 p-4 rounded-lg inline-flex items-center mb-4">
+          <span className="mr-2">⚠️</span> {error}
+        </div>
+        <Button variant="outline" onClick={handleRefresh} className="mt-2">
+          <RefreshCcw className="h-4 w-4 mr-2" />
+          Дахин оролдох
+        </Button>
+      </div>
+    );
+  }
+
+  if (orders.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="bg-gray-100 inline-flex p-4 rounded-full mb-4">
+          <ShoppingBag className="h-6 w-6 text-gray-500" />
+        </div>
+        <h3 className="text-lg font-medium mb-2">Танд одоогоор захиалга байхгүй байна</h3>
+        <p className="text-gray-500 mb-4">Танд ямар нэгэн захиалга байхгүй байна.</p>
+        <div className="flex justify-center gap-4">
+          <Button asChild variant="outline">
+            <Link href="/category">Дэлгүүр рүү очих</Link>
+          </Button>
+          <Button variant="ghost" onClick={handleRefresh} className="gap-2">
+            <RefreshCcw className="h-4 w-4" />
+            Шинэчлэх
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 mt-0">
       <div className="flex items-center justify-between mb-6">
@@ -46,7 +119,7 @@ export default function OrdersList({
         <Button 
           variant="outline" 
           size="sm" 
-          onClick={refreshUserData}
+          onClick={handleRefresh}
           disabled={loading}
           className="flex items-center gap-2"
         >
@@ -63,18 +136,10 @@ export default function OrdersList({
         </Button>
       </div>
       
-      {loading ? (
-        <OrdersLoadingSkeleton />
-      ) : error ? (
-        <ErrorDisplay error={error} onRetry={refreshUserData} />
-      ) : orders.length === 0 ? (
-        <EmptyOrdersState />
-      ) : (
-        <OrdersGrid 
-          orders={orders} 
-          formatDate={formatDate}
-        />
-      )}
+      <OrdersGrid 
+        orders={orders} 
+        formatDate={formatDate}
+      />
     </div>
   );
 }
@@ -114,55 +179,6 @@ function OrdersLoadingSkeleton() {
   );
 }
 
-function ErrorDisplay({ error, onRetry }: { error: string, onRetry: () => void }) {
-  return (
-    <Card className="border-red-200">
-      <CardContent className="pt-6">
-        <div className="text-red-500 flex items-center">
-          <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"></path>
-          </svg>
-          {error}
-        </div>
-        <div className="mt-4">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={onRetry}
-          >
-            <RefreshCcw className="h-4 w-4 mr-2" />
-            Дахин оролдох
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function EmptyOrdersState() {
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="rounded-lg border shadow-sm overflow-hidden"
-    >
-      <div className="p-12 flex flex-col items-center justify-center bg-white">
-        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-          <ShoppingBag className="w-8 h-8 text-gray-400" />
-        </div>
-        <h3 className="text-lg font-medium mb-2">Захиалга байхгүй байна</h3>
-        <p className="text-gray-500 mb-6 text-center max-w-sm">Таны захиалгын түүх энд харагдах болно. Та одоогоор захиалга хийгээгүй байна.</p>
-        <Button asChild className="gap-2">
-          <Link href="/category">
-            <ShoppingBag className="h-4 w-4" />
-            Худалдан авалт хийх
-          </Link>
-        </Button>
-      </div>
-    </motion.div>
-  );
-}
-
 function OrdersGrid({ 
   orders, 
   formatDate
@@ -179,7 +195,16 @@ function OrdersGrid({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Card className="overflow-hidden hover:shadow-md transition-shadow duration-300 border">
+          <Card className="overflow-hidden hover:shadow-md transition-shadow duration-300 border relative">
+            {/* Watermark for paid orders */}
+            {order.paymentStatus === "Paid" && (
+              <div className="absolute top-2 left-2 z-10">
+                <div className="bg-green-500 text-white text-xs font-medium px-2 py-1 rounded">
+                  Захиалга баталгаажсан
+                </div>
+              </div>
+            )}
+            
             <CardHeader className="pb-0 pt-4">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
                 <div className="flex items-center gap-2">
@@ -192,7 +217,7 @@ function OrdersGrid({
                     {formatDate(order.createdAt)}
                   </span>
                 </div>
-                <div>
+                <div className="flex gap-2 items-center">
                   <Badge className={`${
                     order.status === "completed" || order.status === "delivered" 
                       ? "bg-green-100 text-green-800 hover:bg-green-100" 
@@ -206,6 +231,17 @@ function OrdersGrid({
                      order.status === "cancelled" ? "Цуцлагдсан" :
                      order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                   </Badge>
+                  
+                  {/* Payment status badge */}
+                  {order.paymentStatus && (
+                    <Badge className={`${
+                      order.paymentStatus === "Paid" 
+                        ? "bg-green-100 text-green-800 hover:bg-green-100" 
+                        : "bg-red-100 text-red-800 hover:bg-red-100"
+                    } border-0`}>
+                      {order.paymentStatus === "Paid" ? "Төлөгдсөн" : "Төлөгдөөгүй"}
+                    </Badge>
+                  )}
                 </div>
               </div>
             </CardHeader>
@@ -225,27 +261,76 @@ function OrdersGrid({
                   </p>
                 </div>
               </div>
+              
+              {/* Products section */}
+              {order.productDetails && order.productDetails.length > 0 ? (
+                <div className="mt-4 border-t pt-4">
+                  <h4 className="text-sm font-medium text-gray-500 mb-3">Захиалсан бүтээгдэхүүнүүд</h4>
+                  <div className="space-y-3">
+                    {order.productDetails.map((product, idx) => (
+                      <div key={`${order.id}-product-${idx}`} className="flex items-center">
+                        {product.image && (
+                          <div className="w-12 h-12 rounded bg-gray-100 overflow-hidden mr-3 flex-shrink-0">
+                            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">{product.name}</p>
+                          <div className="flex justify-between">
+                            <p className="text-gray-600 text-xs">Тоо ширхэг: {product.quantity || 1}</p>
+                            <p className="text-gray-800 text-sm font-medium">₮{Number(product.price || 0).toLocaleString()}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : order.items && Array.isArray(order.items) && order.items.length > 0 ? (
+                <div className="mt-4 border-t pt-4">
+                  <h4 className="text-sm font-medium text-gray-500 mb-2">Захиалсан бүтээгдэхүүнүүд</h4>
+                  <div className="flex items-center">
+                    <ShoppingBag className="h-4 w-4 mr-2 text-gray-400" />
+                    <p className="text-sm text-gray-600">{order.items.length} бүтээгдэхүүн</p>
+                  </div>
+                </div>
+              ) : null}
             </CardContent>
               
             <CardFooter className="border-t bg-gray-50 py-3 px-6">
-              <div className="flex justify-between items-center w-full">
-                <div className="flex items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-center w-full gap-2">
+                <div className="text-sm text-gray-600 hidden sm:block">
                   {order.items && (
-                    <span className="text-sm">
+                    <span>
                       {order.items.length} бүтээгдэхүүн
                     </span>
                   )}
                 </div>
-                <Button size="sm" variant="outline" className="gap-1">
-                  <Link href={`/order-confirmation?${order.id}`} className="flex items-center gap-1">
-                    <ShoppingBag className="h-3.5 w-3.5" />
-                    Захиалга харах
-                  </Link>
-                </Button>
-                <Button size="sm" variant="outline" className="gap-1">
-                  <PackageOpen className="h-3.5 w-3.5" />
-                  Дэлгэрэнгүй
-                </Button>
+                <div className="flex flex-wrap sm:flex-nowrap gap-2 w-full sm:w-auto justify-end">
+                  {/* Show payment button for unpaid orders */}
+                  {!order.paymentStatus || order.paymentStatus !== "Paid" ? (
+                    <Button size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white gap-1 w-full sm:w-auto">
+                      <Link href={`/order-confirmation?orderId=${order.id}`} className="flex items-center justify-center gap-1 w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+                          <path d="M12 18V6"></path>
+                        </svg>
+                        Төлбөр төлөх
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button size="sm" variant="outline" className="gap-1 w-full sm:w-auto">
+                      <Link href={`/order-confirmation?orderId=${order.id}`} className="flex items-center justify-center gap-1 w-full">
+                        <ShoppingBag className="h-3.5 w-3.5" />
+                        Захиалга харах
+                      </Link>
+                    </Button>
+                  )}
+                  <Button size="sm" variant="outline" className="gap-1 w-full sm:w-auto">
+                    <PackageOpen className="h-3.5 w-3.5" />
+                    Дэлгэрэнгүй
+                  </Button>
+                </div>
               </div>
             </CardFooter>
           </Card>

@@ -19,6 +19,7 @@ import CustomPagination from "@/components/algolia/CustomPagination";
 import { SearchBox } from "react-instantsearch";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { User } from "lucide-react";
 
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -185,7 +186,10 @@ export default function Navbar() {
             href="/profile" 
             className="hidden lg:flex items-center mr-2 hover:text-[#d94f5c] transition-colors"
           >
-           Профайл
+
+            <User className="mr-1" size={18} />
+            Профайл
+
           </Link>
           <div className="relative">
             {
