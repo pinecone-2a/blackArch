@@ -72,11 +72,10 @@ const SimilarProducts: React.FC<SimilarProductsProps> = ({ productId, categoryId
         <div className="flex gap-6 pl-4">
           {isLoading ? (
             Array(5).fill(0).map((_, i) => (
-              <div key={i} className="flex-shrink-0 min-w-[220px] sm:min-w-[250px]">
-                <Skeleton className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] rounded-xl" />
-                <Skeleton className="h-5 w-3/4 mt-2" />
-                <Skeleton className="h-4 w-1/2 mt-1" />
-                <Skeleton className="h-4 w-1/4 mt-1" />
+              <div key={i} className="flex-shrink-0 min-w-[250px] sm:min-w-[280px]">
+                <Skeleton className="w-[250px] h-[260px] sm:w-[280px] sm:h-[300px] rounded-xl" />
+                <Skeleton className="h-6 w-3/4 mt-3" />
+                <Skeleton className="h-7 w-1/2 mt-2" />
               </div>
             ))
           ) : products.length > 0 ? (
@@ -84,23 +83,21 @@ const SimilarProducts: React.FC<SimilarProductsProps> = ({ productId, categoryId
               <Link 
                 key={product.id} 
                 href={`/productDetail/${product.id}`}
-                className="flex-shrink-0 min-w-[220px] sm:min-w-[250px] transition-transform hover:scale-105"
+                className="flex-shrink-0 min-w-[250px] sm:min-w-[280px] transition-transform hover:scale-105"
               >
-                <div className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] rounded-xl overflow-hidden">
+                <div className="w-[250px] h-[260px] sm:w-[280px] sm:h-[300px] rounded-xl overflow-hidden">
                   <img 
                     src={product.image} 
                     alt={product.name} 
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-base sm:text-lg font-semibold mt-2">
+                <p className="text-base sm:text-lg font-semibold mt-3 truncate">
                   {product.name}
                 </p>
-                <div className="flex items-center gap-1 mt-1">
-                  <span className="text-yellow-500">★★★★☆</span>
-                  <span className="text-sm sm:text-base">{product.rating}/5</span>
-                </div>
-                <p className="text-sm sm:text-lg font-bold">{product.price}₮</p>
+                <p className="text-lg sm:text-xl font-bold mt-2">
+                  ₮{Number(product.price).toLocaleString()}
+                </p>
               </Link>
             ))
           ) : (

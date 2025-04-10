@@ -13,7 +13,17 @@ import AccountInfo from "../_components/profile/AccountInfo";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, orders, address, loading, error, updateAddress, refreshUserData } = useProfile();
+  const { 
+    user, 
+    orders, 
+    address, 
+    loading, 
+    ordersLoading,
+    addressLoading, 
+    error, 
+    updateAddress, 
+    refreshUserData 
+  } = useProfile();
   
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -29,6 +39,22 @@ export default function ProfilePage() {
     return `${date.getFullYear()} оны ${months[date.getMonth()]} ${date.getDate()}`;
   };
 
+  // Show loading state while checking user authentication
+  if (loading) {
+    return (
+      <ProfileLayout>
+        <div className="flex flex-col items-center justify-center w-full h-[50vh]">
+          <div className="bg-white p-8 rounded-xl shadow-sm flex flex-col items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mb-4"></div>
+            <h2 className="text-xl font-medium mb-2">Хэрэглэгчийн мэдээлэл ачааллаж байна</h2>
+            <p className="text-gray-600">Түр хүлээнэ үү...</p>
+          </div>
+        </div>
+      </ProfileLayout>
+    );
+  }
+
+  // If not logged in, show login prompt
   if (!user) {
     return (
       <ProfileLayout>
@@ -37,6 +63,7 @@ export default function ProfilePage() {
     );
   }
 
+  // Return the profile content once loading is complete and user is logged in
   return (
     <ProfileLayout>
       <div className="flex flex-col w-full">
@@ -54,6 +81,7 @@ export default function ProfilePage() {
               <OrdersList
                 orders={orders}
                 loading={loading}
+                ordersLoading={ordersLoading}
                 error={error}
                 refreshUserData={refreshUserData}
                 formatDate={formatDate}
@@ -62,7 +90,7 @@ export default function ProfilePage() {
             addressesTab={
               <AddressForm
                 address={address}
-                loading={loading}
+                loading={addressLoading}
                 refreshUserData={refreshUserData}
                 updateAddress={updateAddress}
               />

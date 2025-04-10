@@ -123,7 +123,7 @@ function QuickActionsCard() {
             <Button asChild variant="outline" className="justify-start gap-2 h-10">
               <Link href="/category">
                 <ShoppingBag className="h-4 w-4" />
-                Дэлгүүрлэлтээ үргэлжлүүлэх
+                Худалдан авалтаа үргэлжлүүлэх
               </Link>
             </Button>
             

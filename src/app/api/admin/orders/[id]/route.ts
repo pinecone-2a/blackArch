@@ -8,7 +8,6 @@ interface OrderItem {
     quantity: number;
 }
 
-// Get a single order by ID
 export async function GET(request: Request, { params }: { params: { id: string } }) {
     try {
         const orderId = params.id;
@@ -23,7 +22,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
             return NextResponse.json({ error: "Order not found" }, { status: 404 });
         }
         
-        // Fetch product details for items
         let orderItems: OrderItem[] = [];
         if (order.items && order.items.length > 0) {
             try {
@@ -47,7 +45,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
             }
         }
         
-        // Format order for response
         const formattedOrder = {
             id: order.id,
             customer: order.user.username,
@@ -70,7 +67,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
     }
 }
 
-// Update an order's status
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
     try {
         const orderId = params.id;
@@ -81,7 +77,6 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             return NextResponse.json({ error: "Status is required" }, { status: 400 });
         }
         
-        // Check if order exists
         const existingOrder = await prisma.order.findUnique({
             where: { id: orderId }
         });
@@ -90,7 +85,6 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             return NextResponse.json({ error: "Order not found" }, { status: 404 });
         }
         
-        // Update order status
         const updatedOrder = await prisma.order.update({
             where: { id: orderId },
             data: { status },
@@ -100,8 +94,10 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         return NextResponse.json({
             id: updatedOrder.id,
             status: updatedOrder.status,
-            paymentStatus: updatedOrder.status === 'delivered' ? 'paid' : 
-                         updatedOrder.status === 'cancelled' ? 'unpaid' : 'pending'
+            paymentStatus: updatedOrder.paymentStatus === "Paid" ? "paid" :
+                           updatedOrder.paymentStatus === "Pending" ? "pending" :
+                           updatedOrder.status === 'delivered' ? 'paid' : 
+                           updatedOrder.status === 'cancelled' ? 'unpaid' : 'pending'
         }, { status: 200 });
     } catch (error) {
         console.error("Error updating order:", error);

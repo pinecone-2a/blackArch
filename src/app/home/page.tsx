@@ -35,8 +35,8 @@ export default function HomePage() {
   const user = useContext(UserContext);
   console.log("hereglegch", user);
   const [newArrival, setNewArrival] = useState<Product[]>([]);
-  const { data, loading } = useFetchData("products/new");
-  console.log(data);
+  const { data, loading, error } = useFetchData("products/new");
+  console.log("New arrivals data:", data);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -44,22 +44,26 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    if (Array.isArray(data)) {
+    if (Array.isArray(data) && data.length > 0) {
       setNewArrival(data);
+    } else if (data && typeof data === 'object' && 'message' in data && Array.isArray(data.message)) {
+      setNewArrival(data.message);
     } else {
+      console.log("No new arrival products found or unexpected data format", data);
+  
     }
   }, [data]);
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const nextSlide = () => {
+    if (newArrival.length === 0) return;
     setCurrentIndex((prevIndex) => (prevIndex + 1) % newArrival.length);
   };
 
   const prevSlide = () => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + newArrival.length) % newArrival.length
-    );
+    if (newArrival.length === 0) return;
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + newArrival.length) % newArrival.length);
   };
 
   const [isMuted, setIsMuted] = useState(true);
@@ -91,7 +95,7 @@ export default function HomePage() {
         {mounted && (
           <button
             onClick={toggleMute}
-            className="absolute top-4 right-4 p-2  text-white rounded-full  w-[50px] h-[50px]"
+            className="absolute top-4 right-4 p-2 text-white rounded-full w-[50px] h-[50px]"
           >
             {typeof window !== "undefined" &&
               (!isMuted ? (
@@ -143,97 +147,82 @@ export default function HomePage() {
 
       <div className="bg-[#ffffff] w-full my-24 flex items-center justify-center">
         <div className="flex flex-col w-full max-w-7xl px-4 items-center">
-          <div className="mt-6">
+          <div className="mt-6 mb-10">
             <p className="text-[#000000] text-[32px] sm:text-6xl font-bold text-center">
               ШИНЭЭР ИРСЭН
             </p>
           </div>
 
-          <div className="relative">
-            <div className="flex overflow-hidden w-full h-full">
-              <div
-                className="relative flex transition-transform duration-1000"
-                style={{
-                  transform: `rotateY(${currentIndex * -90}deg)`,
-                  transformStyle: "preserve-3d",
-                }}
-              >
-                {loading
-                  ? // Skeleton loading for products
-                    Array(4)
-                      .fill(0)
-                      .map((_, index) => (
-                        <div
-                          key={`skeleton-${index}`}
-                          className="min-w-[220px] sm:min-w-[250px] relative flex flex-col"
-                          style={{
-                            transform: `rotateY(${
-                              index * 90
-                            }deg) translateZ(400px)`,
-                            backfaceVisibility: "hidden",
-                          }}
-                        >
-                          <Skeleton className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] rounded-xl" />
-                          <Skeleton className="h-6 w-3/4 mt-2" />
-                          <Skeleton className="h-4 w-1/2 mt-1" />
-                          <Skeleton className="h-5 w-1/4 mt-1" />
-                        </div>
-                      ))
-                  : // Actual products
-                    newArrival.map((product: Product, index) => (
-                      <div
-                        key={product.id}
-                        className="min-w-[220px] sm:min-w-[250px] relative flex flex-col"
-                        style={{
-                          transform: `rotateY(${
-                            index * 90
-                          }deg) translateZ(400px)`,
-                          backfaceVisibility: "hidden",
-                        }}
-                      >
-                        <Link href={`/productDetail/${product.id}`}>
-                          <div
-                            style={{ backgroundImage: `url(${product.image})` }}
-                            className="w-[220px] h-[230px] sm:w-[250px] sm:h-[260px] bg-cover bg-center rounded-xl"
-                          ></div>
-                        </Link>
-                        <div className="text-base sm:text-lg font-semibold mt-2">
-                          {product.name}
-                        </div>
-                        <div className="flex items-center gap-1 mt-1">
-                          <div className="flex gap-1 text-yellow-500">★★★★</div>
-                          <div className="text-sm sm:text-base">
-                            5/{product.rating}
-                          </div>
-                        </div>
-                        <div className="text-sm sm:text-lg font-bold">
-                          ₮{product.price}
+          <div className="w-full">
+            {loading ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 p-4">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className="group bg-white h-[320px] rounded-xl border shadow-sm p-3 flex flex-col items-center relative overflow-hidden"
+                  >
+                    <div className="w-full h-[200px] bg-gray-100 animate-pulse rounded-lg mb-3"></div>
+                    <div className="w-3/4 h-6 bg-gray-100 animate-pulse rounded mb-2"></div>
+                    <div className="w-1/2 h-7 bg-gray-100 animate-pulse rounded"></div>
+                    <div className="absolute bottom-0 w-full">
+                      <div className="w-full h-10 bg-gray-100 animate-pulse rounded-b-xl"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : newArrival.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 p-4">
+                {newArrival.slice(0, 5).map((product: Product) => (
+                  <Link
+                    href={`/productDetail/${product.id}`}
+                    key={product.id}
+                    className="transform transition-transform hover:scale-[1.03]"
+                  >
+                    <div className="group bg-gray-50 h-[320px] rounded-xl border shadow-sm p-3 flex flex-col items-center relative overflow-hidden transition-all duration-300 ease-in-out">
+                      <div className="absolute top-2 right-2 z-10">
+                        <div className="bg-black text-white text-xs px-2 py-1 rounded-full">
+                          Шинэ
                         </div>
                       </div>
-                    ))}
+                      <div className="w-full h-[200px] flex items-center justify-center overflow-hidden rounded-lg">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="object-contain h-full w-full p-2 transition-transform duration-700 ease-in-out group-hover:scale-110"
+                        />
+                      </div>
+                      <div className="mt-3 w-full text-center">
+                        <h3 className="font-semibold text-gray-800 text-sm md:text-base lg:text-lg truncate">
+                          {product.name}
+                        </h3>
+                        <p className="mt-2 text-lg md:text-xl font-bold text-gray-900">
+                          ₮{Number(product.price).toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="absolute bottom-0 w-full">
+                        <Button className="opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-in-out w-full rounded-t-none rounded-b-xl h-10 shadow-lg bg-black text-white hover:bg-gray-800">
+                          Дэлгэрэнгүй
+                        </Button>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            </div>
-
-            {!loading && (
-              <>
-                <button
-                  className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
-                  onClick={prevSlide}
-                >
-                  &#10094;
-                </button>
-                <button
-                  className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black text-white p-2 rounded-full"
-                  onClick={nextSlide}
-                >
-                  &#10095;
-                </button>
-              </>
+            ) : (
+              <div className="text-gray-500 text-center p-4">
+                <p className="mb-2">Одоогоор шинэ бүтээгдэхүүн байхгүй байна</p>
+                <Link href="/category" className="text-black underline">
+                  Бүх бүтээгдэхүүн харах
+                </Link>
+              </div>
             )}
           </div>
-          <div className="rounded-2xl bg-white h-12 w-full sm:w-[70%] md:w-[50%] border flex items-center justify-center mt-8 cursor-pointer text-lg font-semibold hover:bg-gray-100 transition">
-            {loading ? <Skeleton className="h-6 w-20" /> : "View all"}
-          </div>
+          
+          <Link href="/category" className="mt-8">
+            <Button className="bg-white text-black border border-black px-8 py-6 rounded-xl hover:bg-gray-100 transition-colors">
+              Бүх бүтээгдэхүүн харах
+            </Button>
+          </Link>
         </div>
       </div>
       <div className="w-[80%] mx-auto overflow-x-auto flex gap-4 my-20 px-4 sm:justify-between sm:overflow-visible">

@@ -109,10 +109,16 @@ export default function AdminOrdersComp() {
       }));
       setOrders(processedOrders);
     } else if (error) {
-      toast.error("Failed to fetch orders");
+      toast.error(`Error loading orders: ${error}`);
       console.error("API Error:", error);
     }
   }, [data, error]);
+
+  // Add a function to retry fetching orders
+  const retryFetch = () => {
+    toast.info("Trying to fetch orders again...");
+    refetch();
+  };
 
   // Apply filters
   const filteredOrders = orders.filter(order => {
@@ -248,22 +254,41 @@ export default function AdminOrdersComp() {
           <h1 className="text-2xl font-bold text-gray-800">Захиалгууд</h1>
           <p className="text-gray-500">Хэрэглэгчдын захиалгуудыг удирдах</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline">
-            <FileText className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-        </div>
-      </div>
-
-      {/* Error message if API fails */}
-      {error && (
-        <div className="mb-6 p-4 border border-red-300 bg-red-50 rounded-md">
-          <p className="text-red-800">Error loading orders: {typeof error === 'string' ? error : 'Unknown error occurred'}</p>
-          <Button variant="outline" size="sm" className="mt-2" onClick={() => refetch()}>
+        
+        {/* Add a retry button */}
+        {error && (
+          <Button 
+            variant="outline" 
+            onClick={retryFetch} 
+            className="flex items-center gap-2"
+          >
+            <Loader2 className="h-4 w-4" />
             Try Again
           </Button>
-        </div>
+        )}
+      </div>
+
+      {/* Error message */}
+      {error && (
+        <Card className="mb-6 border-red-200 bg-red-50">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 text-red-600">
+              <XCircle className="h-5 w-5" />
+              <p>Error loading orders: {error}</p>
+            </div>
+            <p className="mt-2 text-sm text-gray-600">
+              There was a problem retrieving the orders. Please try again or contact support if the problem persists.
+            </p>
+            <Button 
+              variant="outline" 
+              onClick={retryFetch} 
+              className="mt-4 flex items-center gap-2"
+            >
+              <Loader2 className="h-4 w-4" />
+              Try Again
+            </Button>
+          </CardContent>
+        </Card>
       )}
 
       {/* Filters and search */}

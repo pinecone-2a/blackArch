@@ -9,25 +9,19 @@ interface FetchResult<T> {
   refetch: () => Promise<void>;
 }
 
-/**
- * Helper function to get the correct API URL based on environment
- */
+
 const getApiUrl = (path: string): string => {
-  // Check if we're in a browser environment
   if (typeof window !== 'undefined') {
     const isLocalhost = window.location.hostname === 'localhost' || 
                         window.location.hostname === '127.0.0.1';
     
     if (isLocalhost) {
-      // Use environment variable in local development
       return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
     } else {
-      // In production, use absolute URL to API
       const origin = window.location.origin;
       return `${origin}/api/${path.replace(/^\//, '')}`;
     }
   } else {
-    // Server-side rendering - use the environment variable
     return `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
   }
 };
@@ -52,47 +46,54 @@ export function useFetchData<T>(
     setError(null);
 
     try {
-      // Check if access token is expired
-      if (isAccessTokenExpired()) {
-        // Try to refresh the token
+      // Skip token check for public routes
+      const isPublicRoute = path && (
+        path.includes('products/new') || 
+        path.includes('products/categories') ||
+        path.includes('products/featured') ||
+        path.startsWith('products/') ||
+        path.startsWith('/products/')
+      );
+      
+      // Only check token expiration for non-public routes
+      if (!isPublicRoute && isAccessTokenExpired()) {
         const refreshed = await refreshAccessToken();
         if (!refreshed) {
+          // Only throw for non-public routes that require auth
           throw new Error("Session expired. Please log in again.");
         }
       }
 
-      // Create an absolute URL that works on all devices
       let apiUrl;
       
-      // Always use absolute URL with origin for both development and production
+      if (!path) {
+        setLoading(false);
+        return;
+      }
+      
       if (typeof window !== 'undefined') {
         const origin = window.location.origin;
         
-        // Handle the special case for admin dashboard
         if (path === '/admin') {
           apiUrl = `${origin}/api/admin`;
         } 
-        // Handle API paths with or without leading slashes
         else if (path.startsWith('/api/') || path.startsWith('api/')) {
           apiUrl = `${origin}/${path.startsWith('/') ? path.slice(1) : path}`;
         } 
-        // Add /api/ prefix if not present
         else {
           apiUrl = `${origin}/api/${path.replace(/^\//, '')}`;
         }
       } else {
-        // Server-side rendering fallback
         apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL || ""}${path}`;
       }
 
       console.log("Fetching from URL:", apiUrl);
 
-      // Make the API request
       const response = await axios({
         url: apiUrl,
         method: "GET",
         ...options,
-        // Add timestamp to prevent caching
+        
         params: {
           ...(options?.params || {}),
           _t: new Date().getTime()
@@ -109,6 +110,22 @@ export function useFetchData<T>(
       
       if (axiosError.response?.status === 401) {
         setError("Unauthorized. Please log in again.");
+      } else if (axiosError.response?.data) {
+        // Try to extract error message from response data
+        try {
+          const errorData = axiosError.response.data as any;
+          if (errorData.error) {
+            setError(errorData.error);
+          } else if (errorData.message) {
+            setError(errorData.message);
+          } else if (errorData.details) {
+            setError(errorData.details);
+          } else {
+            setError(`Request failed with status code ${axiosError.response.status}`);
+          }
+        } catch (parseError) {
+          setError(axiosError.message || "An error occurred fetching the data.");
+        }
       } else {
         setError(
           axiosError.message || "An error occurred fetching the data."

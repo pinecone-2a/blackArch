@@ -41,6 +41,7 @@ export default function Payment() {
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [showAddAddress, setShowAddAddress] = useState<boolean>(false);
   const [paymentMethod, setPaymentMethod] = useState<string>("card");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -73,7 +74,7 @@ export default function Payment() {
   // Delivery fee and promo code state from the cart page
   const [promoCode, setPromoCode] = useState<string>("");
   const [discount, setDiscount] = useState<number>(0);
-  const deliveryFee = 5000;
+  const deliveryFee = 0;
 
   // Check user login status - client-side only
   useEffect(() => {
@@ -196,31 +197,28 @@ export default function Payment() {
   };
 
   const handleSubmitOrder = async () => {
-
     if (!selectedAddressId) {
       toast("Хүргэлтийн хаяг сонгоно уу!");
       return;
     }
 
-  
     if (!isLoggedIn) {
       toast.warning("Захиалга хийхийн тулд та нэвтэрсэн байх шаардлагатай!");
       if (typeof window !== 'undefined') {
-  
         // window.location.href = "/login?redirect=/cart/payment";
       }
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
-    
       const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
       
       if (!selectedAddress) {
         throw new Error("Selected address not found");
       }
 
- 
       const shippingAddress = {
         street: selectedAddress.address,
         city: selectedAddress.city,
@@ -237,6 +235,8 @@ export default function Payment() {
         paymentMethod
       };
 
+      console.log("🚀 Creating order with data:", JSON.stringify(orderData, null, 2));
+
       // Send the order to the backend
       const response = await fetch("/api/order", {
         method: "POST",
@@ -246,57 +246,57 @@ export default function Payment() {
         body: JSON.stringify(orderData),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Order creation failed");
+      const responseText = await response.text();
+      console.log("📦 Raw API response:", responseText);
+      
+      let data;
+      try {
+        data = JSON.parse(responseText);
+        console.log("📦 Parsed API response:", data);
+      } catch (parseError) {
+        console.error("Error parsing API response:", parseError);
+        throw new Error("Invalid response from server");
       }
 
-      const data = await response.json();
-      console.log("Full order creation response:", JSON.stringify(data, null, 2));
+      if (!response.ok) {
+        const errorMessage = data?.error || "Failed to create order";
+        console.error("❌ Order creation failed:", errorMessage, data);
+        throw new Error(errorMessage);
+      }
+
+      // Clear cart from localStorage
+      localStorage.removeItem("cart");
+      localStorage.removeItem("promoCode");
+
+      // Redirect to order confirmation page with the order ID
+      let orderId = null;
       
-      // Check both new and old response structures
-      const orderId = data.order?.id || data.orderId || (data.message && data.message.id);
-      
-      console.log("Extracted order ID:", orderId);
-      
-      if (!orderId) {
-        console.error("No order ID received from server:", data);
-        // Still show success to user but provide fallback
-        toast.success("Захиалга амжилттай хийгдлээ!");
-        
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem("cart");
-          localStorage.removeItem("promoCode");
-          // Redirect to home instead since we don't have an order ID
-          window.location.href = "/";
-        }
-        return;
+      // Try different paths to find the order ID
+      if (data?.message?.id) {
+        console.log("✅ Found order ID in data.message.id:", data.message.id);
+        orderId = data.message.id;
+      } else if (data?.order?.id) {
+        console.log("✅ Found order ID in data.order.id:", data.order.id);
+        orderId = data.order.id;
+      } else if (data?.id) {
+        console.log("✅ Found order ID in data.id:", data.id);
+        orderId = data.id;
       }
       
-      // Show success message and clear cart
-      toast.success("Захиалга амжилттай хийгдлээ!");
-      
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem("cart");
-        localStorage.removeItem("promoCode");
-        
-        // Add order details to localStorage to help with troubleshooting
-        try {
-          localStorage.setItem("lastOrderDetails", JSON.stringify({
-            orderId,
-            orderData: data.message,
-            timestamp: new Date().toISOString()
-          }));
-        } catch (e) {
-          console.error("Could not save order details to localStorage:", e);
-        }
-        
-        // Redirect to order confirmation page with the order ID
+      if (orderId) {
+        // Store the order ID in localStorage as a backup
+        localStorage.setItem("lastOrderId", orderId);
+        console.log("✅ Redirecting to order confirmation with ID:", orderId);
         window.location.href = `/order-confirmation?orderId=${orderId}`;
+      } else {
+        console.error("❌ Order ID not found in the response:", data);
+        toast.error("Захиалга амжилттай үүсгэгдсэн ч захиалгын дугаар буцаагдсангүй. Та дахин оролдоно уу.");
+        window.location.href = "/order-confirmation";
       }
     } catch (error) {
-      console.error("Error creating order:", error);
-      toast.error("Захиалга үүсгэхэд алдаа гарлаа. Дахин оролдоно уу.");
+      console.error("❌ Error creating order:", error);
+      toast.error(error instanceof Error ? error.message : "Захиалга үүсгэхэд алдаа гарлаа. Дахин оролдоно уу.");
+      setIsSubmitting(false);
     }
   };
 
@@ -600,10 +600,17 @@ export default function Payment() {
 
             <Button 
               onClick={handleSubmitOrder}
-              disabled={!selectedAddressId}
+              disabled={!selectedAddressId || isSubmitting}
               className="w-full mt-6 py-6 bg-black hover:bg-gray-800 rounded-xl text-lg"
             >
-              Захиалга баталгаажуулах
+              {isSubmitting ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
+                  <span>Түр хүлээнэ үү...</span>
+                </div>
+              ) : (
+                "Захиалга баталгаажуулах"
+              )}
             </Button>
             
             {!selectedAddressId && (
