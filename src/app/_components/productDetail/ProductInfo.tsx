@@ -22,21 +22,15 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ isLoading, product }) => {
             ) : (
                 <>
                     <h1 className='text-5xl font-bold'>{product?.name}</h1>
-                    <div className='flex items-center mt-2 text-3xl'>
-                        <span className='text-yellow-500'>★★★★☆</span>
-                        <span className='ml-2 text-gray-500 text-sm'>
-                            {product?.rating || 4.5}/5
-                        </span>
-                    </div>
-                    <div className='flex items-center gap-2 mt-3 text-4xl'>
-                        <h2 className='font-bold'>{product?.price}₮</h2>
+                    <div className='flex items-center gap-2 mt-5 text-4xl'>
+                        <h2 className='font-bold'>₮{Number(product?.price || 0).toLocaleString()}</h2>
                         {product?.discount && product.discount > 0 && (
                             <span className='text-gray-500 line-through text-2xl'>
-                                {Math.round(product.price / (1 - product.discount / 100))}₮
+                                ₮{Math.round(product.price / (1 - product.discount / 100)).toLocaleString()}
                             </span>
                         )}
                     </div>
-                    <p className='mt-3 text-gray-700 text-xl'>
+                    <p className='mt-5 text-gray-700 text-xl'>
                         {product?.description}
                     </p>
                 </>

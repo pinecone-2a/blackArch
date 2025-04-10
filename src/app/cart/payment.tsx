@@ -37,6 +37,7 @@ export default function Payment() {
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [showAddAddress, setShowAddAddress] = useState<boolean>(false);
   const [paymentMethod, setPaymentMethod] = useState<string>("card");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   
   // New address form state
   const [newAddress, setNewAddress] = useState<Omit<Address, "id" | "isDefault">>({
@@ -49,7 +50,7 @@ export default function Payment() {
   // Delivery fee and promo code state from the cart page
   const [promoCode, setPromoCode] = useState<string>("");
   const [discount, setDiscount] = useState<number>(0);
-  const deliveryFee = 5000;
+  const deliveryFee = 0;
 
   useEffect(() => {
     // Load cart from localStorage
@@ -121,14 +122,30 @@ export default function Payment() {
     localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
   };
 
-  const handleSubmitOrder = () => {
-    // Here you would typically send the order to your backend
-    // For now, we'll simulate completion and clear the cart
-    toast.success("Захиалга амжилттай хийгдлээ!");
-    localStorage.removeItem("cart");
-    localStorage.removeItem("promoCode");
-    // Redirect to a confirmation page or home
-    window.location.href = "/order-confirmation";
+  const handleSubmitOrder = async () => {
+    if (!selectedAddressId) {
+      toast.error("Хүргэлтийн хаяг сонгоно уу!");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast.success("Захиалга амжилттай хийгдлээ!");
+      localStorage.removeItem("cart");
+      localStorage.removeItem("promoCode");
+      
+      // Redirect to a confirmation page or home
+      window.location.href = "/order-confirmation";
+    } catch (error) {
+      console.error("Order submission error:", error);
+      toast.error("Захиалга үүсгэхэд алдаа гарлаа. Дахин оролдоно уу.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -414,10 +431,17 @@ export default function Payment() {
 
             <Button 
               onClick={handleSubmitOrder}
-              disabled={!selectedAddressId}
+              disabled={!selectedAddressId || isSubmitting}
               className="w-full mt-6 py-6 bg-black hover:bg-gray-800 rounded-xl text-lg"
             >
-              Захиалга баталгаажуулах
+              {isSubmitting ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
+                  <span>Түр хүлээнэ үү...</span>
+                </div>
+              ) : (
+                "Захиалга баталгаажуулах"
+              )}
             </Button>
             
             {!selectedAddressId && (

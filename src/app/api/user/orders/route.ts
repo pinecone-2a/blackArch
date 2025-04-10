@@ -16,11 +16,20 @@ type Order = {
     zip: string;
   };
   paymentMethod: string;
+  paymentStatus?: string;
+  qpayUrl?: any;
   createdAt: Date;
   updatedAt: Date;
   user?: {
     email: string;
   };
+  productDetails?: Array<{
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    image?: string;
+  }>;
 };
 
 export async function GET(req: NextRequest) {
@@ -97,7 +106,71 @@ export async function GET(req: NextRequest) {
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
 
-    return NextResponse.json({ orders: allOrders }, { status: 200 });
+    // Process orders to ensure paymentStatus is included and fetch product details
+    const processedOrders = await Promise.all(allOrders.map(async (order) => {
+      let paymentStatus = order.paymentStatus;
+      
+      // If paymentStatus isn't explicitly set, determine it based on status and payment method
+      if (!paymentStatus) {
+        if (order.status === 'delivered' || order.status === 'completed') {
+          paymentStatus = 'Paid';
+        } else if (order.status === 'cancelled') {
+          paymentStatus = 'Unpaid';
+        } else if (order.paymentMethod === 'cod') {
+          paymentStatus = 'Pending';
+        } else if (order.qpayUrl) {
+          // For QPay orders that are pending, check if it has been paid
+          paymentStatus = 'Pending';
+        } else {
+          paymentStatus = 'Pending';
+        }
+      }
+      
+      // Fetch product details for each order item
+      let productDetails: Array<{
+        id: string;
+        name: string;
+        price: number;
+        quantity: number;
+        image?: string | null;
+      }> = [];
+      
+      if (order.items && Array.isArray(order.items) && order.items.length > 0) {
+        try {
+          const products = await prisma.product.findMany({
+            where: {
+              id: {
+                in: order.items
+              }
+            },
+            select: {
+              id: true,
+              name: true,
+              price: true,
+              image: true
+            }
+          });
+          
+          productDetails = products.map(product => ({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1, // Default quantity since we don't store it per item
+            image: product.image
+          }));
+        } catch (error) {
+          console.error(`Error fetching product details for order ${order.id}:`, error);
+        }
+      }
+      
+      return {
+        ...order,
+        paymentStatus,
+        productDetails
+      };
+    }));
+
+    return NextResponse.json({ orders: processedOrders }, { status: 200 });
   } catch (error) {
     console.error("Error fetching user orders:", error);
     return NextResponse.json(

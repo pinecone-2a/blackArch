@@ -15,9 +15,18 @@ type Order = {
   items: string[];
   shippingAddress: Address;
   createdAt: string;
+  paymentMethod?: string;
+  paymentStatus?: string;
   user?: {
     email: string;
   };
+  productDetails?: Array<{
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    image?: string | null;
+  }>;
 };
 
 export const useProfile = () => {
@@ -25,6 +34,8 @@ export const useProfile = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [address, setAddress] = useState<Address | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [ordersLoading, setOrdersLoading] = useState<boolean>(false);
+  const [addressLoading, setAddressLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserContextType>(userContext);
 
@@ -33,7 +44,7 @@ export const useProfile = () => {
     if (!userContext) return;
     
     try {
-      setLoading(true);
+      setOrdersLoading(true);
       const res = await fetch('/api/user/orders');
       
       if (!res.ok) {
@@ -46,7 +57,7 @@ export const useProfile = () => {
       setError('Error loading orders');
       console.error(err);
     } finally {
-      setLoading(false);
+      setOrdersLoading(false);
     }
   };
 
@@ -55,7 +66,7 @@ export const useProfile = () => {
     if (!userContext) return;
     
     try {
-      setLoading(true);
+      setAddressLoading(true);
       const res = await fetch('/api/user/address');
       
       if (!res.ok) {
@@ -68,7 +79,7 @@ export const useProfile = () => {
       setError('Error loading address');
       console.error(err);
     } finally {
-      setLoading(false);
+      setAddressLoading(false);
     }
   };
 
@@ -105,28 +116,50 @@ export const useProfile = () => {
   // Refresh all user data
   const refreshUserData = async () => {
     try {
-      setLoading(true);
+      setOrdersLoading(true);
+      setAddressLoading(true);
       await Promise.all([fetchOrders(), fetchAddress()]);
     } catch (err) {
       console.error("Error refreshing user data:", err);
       setError("Failed to refresh user data");
     } finally {
-      setLoading(false);
+      setOrdersLoading(false);
+      setAddressLoading(false);
     }
   };
 
   // Load data when user context is available
   useEffect(() => {
-    setUserData(userContext);
+    let isMounted = true;
     
-    if (userContext) {
-      refreshUserData();
-    } else {
-      // Reset data if user is not logged in
-      setOrders([]);
-      setAddress(null);
-      setLoading(false);
-    }
+    const initializeUserData = async () => {
+      setUserData(userContext);
+      
+      if (userContext) {
+        try {
+          setLoading(true);
+          await Promise.all([fetchOrders(), fetchAddress()]);
+        } catch (error) {
+          console.error("Error initializing user data:", error);
+        } finally {
+          if (isMounted) {
+            setLoading(false);
+          }
+        }
+      } else {
+        // Reset data if user is not logged in
+        setOrders([]);
+        setAddress(null);
+        setLoading(false);
+      }
+    };
+
+    initializeUserData();
+    
+    // Cleanup function
+    return () => {
+      isMounted = false;
+    };
   }, [userContext]);
 
   return {
@@ -134,6 +167,8 @@ export const useProfile = () => {
     orders,
     address,
     loading,
+    ordersLoading,
+    addressLoading,
     error,
     updateAddress,
     refetchOrders: fetchOrders,
