@@ -36,9 +36,9 @@ export default function ActionCard({ title, description, items }: ActionCardProp
             <Link href={item.link}>
               <Button size="sm" variant={item.actionType === 'view' ? "ghost" : "default"}>
                 {item.actionType === 'view' ? (
-                  <>Manage <ChevronRight size={16} /></>
+                  <>Засах <ChevronRight size={16} /></>
                 ) : (
-                  <>Add <Plus size={16} /></>
+                  <>Нэмэх <Plus size={16} /></>
                 )}
               </Button>
             </Link>

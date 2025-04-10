@@ -254,6 +254,7 @@ export default function AdminOrdersComp() {
           <h1 className="text-2xl font-bold text-gray-800">Захиалгууд</h1>
           <p className="text-gray-500">Хэрэглэгчдын захиалгуудыг удирдах</p>
         </div>
+
         
         {/* Add a retry button */}
         {error && (
@@ -264,6 +265,7 @@ export default function AdminOrdersComp() {
           >
             <Loader2 className="h-4 w-4" />
             Try Again
+
           </Button>
         )}
       </div>
@@ -297,7 +299,7 @@ export default function AdminOrdersComp() {
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
           <Input
             type="search"
-            placeholder="Search by order ID or customer..."
+            placeholder="Хэрэглэгчийг Id болон нэрээр хайх..."
             className="pl-9"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -360,7 +362,7 @@ export default function AdminOrdersComp() {
                   {statusOptions.find(option => option.value === activeTab)?.label || 'All Orders'}
                 </CardTitle>
                 <span className="text-sm text-muted-foreground">
-                  {filteredOrders.length} orders {loading && "(refreshing...)"}
+                  {filteredOrders.length} захиалга
                 </span>
               </div>
             </CardHeader>
@@ -498,7 +500,7 @@ export default function AdminOrdersComp() {
                   disabled={currentPage === 1}
                 >
                   <ChevronLeft className="h-4 w-4" />
-                  Previous
+                  Буцах
                 </Button>
                 <Button 
                   variant="outline" 
@@ -506,7 +508,7 @@ export default function AdminOrdersComp() {
                   onClick={nextPage}
                   disabled={currentPage === totalPages || totalPages === 0}
                 >
-                  Next
+                  Дараагынх
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -563,7 +565,7 @@ export default function AdminOrdersComp() {
               <div className="mb-6">
                 <h4 className="text-sm font-semibold mb-2">Захиалгын Бүтээгдэхүүнүүд</h4>
                 <div className="bg-gray-50 rounded-md p-3">
-                  {selectedOrder.items.map((item) => (
+                  {selectedOrder.items.map((item:any) => (
                     <div key={item.id} className="flex justify-between py-2 border-b last:border-0">
                       <div>
                         <p className="font-medium">{item.name}</p>

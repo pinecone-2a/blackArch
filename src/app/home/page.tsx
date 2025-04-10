@@ -95,7 +95,11 @@ export default function HomePage() {
         {mounted && (
           <button
             onClick={toggleMute}
+
+            
             className="absolute top-4 right-4 p-2 text-white rounded-full w-[50px] h-[50px]"
+
+            
           >
             {typeof window !== "undefined" &&
               (!isMuted ? (
@@ -183,6 +187,8 @@ export default function HomePage() {
                         <div className="bg-black text-white text-xs px-2 py-1 rounded-full">
                           Шинэ
                         </div>
+
+                        
                       </div>
                       <div className="w-full h-[200px] flex items-center justify-center overflow-hidden rounded-lg">
                         <img
@@ -193,6 +199,8 @@ export default function HomePage() {
                       </div>
                       <div className="mt-3 w-full text-center">
                         <h3 className="font-semibold text-gray-800 text-sm md:text-base lg:text-lg truncate">
+
+                          
                           {product.name}
                         </h3>
                         <p className="mt-2 text-lg md:text-xl font-bold text-gray-900">

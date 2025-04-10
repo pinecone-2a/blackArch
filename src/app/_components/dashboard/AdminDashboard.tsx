@@ -127,7 +127,7 @@ export default function AdminDashboard() {
       {/* Header section */}
       <DashboardHeader 
         title="Самбар" 
-        subtitle="Эргэн тавтай морилно уу, Admin User"
+        subtitle="Эргэн тавтай морилно уу, Admin!"
         timePeriod={timePeriod}
         onTimePeriodChange={setTimePeriod}
       />
@@ -178,13 +178,13 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <ActionCard
           title="Бүтээгдэхүүн Менежмент"
-          description="Бүтээгдэхүүндыг Хянах"
+          description="Бүтээгдэхүүндыг хянах"
           items={productActions}
         />
         
         <ActionCard
           title="Ангилал Менежмент"
-          description="Дэлгүүрийн ангилалыг зохион байгуулах"
+          description="Бүтээгдэхүүндыг хянах"
           items={categoryActions}
         />
       </div>
@@ -196,13 +196,13 @@ export default function AdminDashboard() {
           <div className="flex items-center">
             <TabsList>
               <TabsTrigger value="all">Бүгд</TabsTrigger>
-              <TabsTrigger value="pending">Хүлээгдэж Буй</TabsTrigger>
-              <TabsTrigger value="processing">Хүргэлтэд Гарсан</TabsTrigger>
+              <TabsTrigger value="pending">Хүлээгдэж буй</TabsTrigger>
+              <TabsTrigger value="processing">Хүргэлтэд гарсан</TabsTrigger>
               <TabsTrigger value="completed">Дууссан</TabsTrigger>
             </TabsList>
             <Link href="/admin/orders" className="ml-4">
               <Button variant="outline" size="sm" className="gap-1">
-                Бүгдийг Харах <ChevronRight size={16} />
+                Бүгдийг харах <ChevronRight size={16} />
               </Button>
             </Link>
           </div>

@@ -88,7 +88,7 @@ export default function AdminHeader() {
           <SheetContent className="w-[380px] sm:w-[380px] p-0">
             <SheetHeader className="px-6 py-4 border-b">
               <div className="flex items-center justify-between">
-                <SheetTitle className="text-lg font-semibold">Notifications</SheetTitle>
+                <SheetTitle className="text-lg font-semibold">Мэдэгдлүүд</SheetTitle>
                 {unreadCount > 0 && (
                   <button 
                     onClick={markAllAsRead}
@@ -103,7 +103,7 @@ export default function AdminHeader() {
               {notifications.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12">
                   <Bell size={40} className="text-gray-300 mb-3" />
-                  <p className="text-gray-500">No notifications yet</p>
+                  <p className="text-gray-500">Мэдэгдэл байхгүй байна</p>
                 </div>
               ) : (
                 notifications.map((notification) => (

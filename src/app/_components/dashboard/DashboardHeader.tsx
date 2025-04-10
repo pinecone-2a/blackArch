@@ -29,10 +29,10 @@ export default function DashboardHeader({
   subtitle, 
   timePeriod,
   timePeriods = [
-    { value: 'today', label: 'Today' },
-    { value: 'week', label: 'This Week' },
-    { value: 'month', label: 'This Month' },
-    { value: 'year', label: 'This Year' }
+    { value: 'today', label: 'Өнөөдөр' },
+    { value: 'week', label: 'Долоо хоног' },
+    { value: 'month', label: 'Сар' },
+    { value: 'year', label: 'Жил' }
   ],
   onTimePeriodChange,
   actions 
