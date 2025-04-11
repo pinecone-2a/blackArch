@@ -116,38 +116,60 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Product ID is required", status: 400 });
     }
 
+    console.log(`Attempting to delete product with ID: ${id}`);
+
+    // First delete the product from Algolia to ensure it's removed even if DB deletion fails
+    let algoliaResult = false;
+    try {
+      console.log(`Deleting product ${id} from Algolia index...`);
+      algoliaResult = await deleteProduct(id);
+      console.log(`Algolia deletion result: ${algoliaResult ? 'Success' : 'Failed'}`);
+    } catch (algoliaError) {
+      console.error(`Error deleting product ${id} from Algolia:`, algoliaError);
+    }
+
     // Delete the product from the database
     try {
+      console.log(`Deleting product ${id} from database...`);
       await prisma.product.delete({
         where: { id },
       });
+      console.log(`Successfully deleted product ${id} from database`);
     } catch (dbError) {
       console.error(`Error deleting product ${id} from database:`, dbError);
+      
+      // If Algolia deletion succeeded but DB deletion failed, we need to inform the user
+      if (algoliaResult) {
+        return NextResponse.json({ 
+          error: "Failed to delete product from database, but removed from search index", 
+          details: dbError instanceof Error ? dbError.message : String(dbError),
+          algoliaSuccess: true,
+          status: 500 
+        });
+      }
+      
       return NextResponse.json({ 
         error: "Failed to delete product from database", 
         details: dbError instanceof Error ? dbError.message : String(dbError),
         status: 500 
       });
     }
-
-    // Delete product from Algolia
-    let algoliaResult = false;
-    try {
-      algoliaResult = await deleteProduct(id);
-    } catch (algoliaError) {
-      console.error(`Error deleting product ${id} from Algolia:`, algoliaError);
-    }
     
+    // If we reached here, the database deletion was successful
+    // Return appropriate response based on Algolia result
     if (!algoliaResult) {
+      console.warn(`Warning: Product ${id} was deleted from database but may still appear in search results`);
       return NextResponse.json({ 
-        message: `Product ${id} deleted from database, but Algolia deletion may have failed`, 
+        message: `Product ${id} deleted from database, but might still appear in search results`, 
+        warning: "The product was deleted from your database but failed to be removed from the search index. It may still appear in search results.",
         algoliaSuccess: false,
         status: 207  // 207 Multi-Status
       });
     }
 
+    console.log(`Product ${id} successfully deleted from both database and Algolia`);
     return NextResponse.json({ 
-      message: `Product ${id} deleted successfully from database and Algolia`, 
+      message: `Product ${id} deleted successfully`, 
       algoliaSuccess: true,
       status: 200 
     });

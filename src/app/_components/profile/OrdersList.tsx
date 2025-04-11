@@ -111,7 +111,7 @@ export default function OrdersList({ orders, loading, ordersLoading, error, refr
       </div>
     );
   }
-
+  
   return (
     <div className="space-y-6 mt-0">
       <div className="flex items-center justify-between mb-6">
@@ -136,10 +136,10 @@ export default function OrdersList({ orders, loading, ordersLoading, error, refr
         </Button>
       </div>
       
-      <OrdersGrid 
+        <OrdersGrid 
         orders={orders} 
-        formatDate={formatDate}
-      />
+          formatDate={formatDate} 
+        />
     </div>
   );
 }
@@ -327,9 +327,9 @@ function OrdersGrid({
                     </Button>
                   )}
                   <Button size="sm" variant="outline" className="gap-1 w-full sm:w-auto">
-                    <PackageOpen className="h-3.5 w-3.5" />
+                  <PackageOpen className="h-3.5 w-3.5" />
                     Дэлгэрэнгүй
-                  </Button>
+                </Button>
                 </div>
               </div>
             </CardFooter>

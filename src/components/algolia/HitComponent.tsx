@@ -7,26 +7,31 @@ interface Hit {
   name: string;
   description: string;
   image: string;
-  objectId: string;
-  id: string;
+  objectID?: string;
+  id?: string;
   price?: number;
   rating?: number;
   discount?: number;
   category?: string;
+  categoryId?: string;
+  categoryName?: string;
 }
 
 const HitComponent = ({ hit }: { hit: Hit }) => {
-  // Calculate discount percentage if available
   const discountPercent = hit.discount ? Math.round(hit.discount) : null;
-
-  // Format price with currency
   const formattedPrice = hit.price ? `${hit.price}₮` : "";
-  
-  // Calculate original price if there's a discount
   const originalPrice = hit.price && hit.discount ? 
     Math.round(hit.price / (1 - hit.discount / 100)) : null;
+  
+  // Make sure we have a valid ID to link to
+  const productId = hit.id || hit.objectID;
+  
+  // Don't render if no valid ID found
+  if (!productId) {
+    console.error('Product missing ID', hit);
+    return null;
+  }
 
-  // Render stars based on rating
   const renderStars = (rating: number = 4) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -47,7 +52,7 @@ const HitComponent = ({ hit }: { hit: Hit }) => {
   };
 
   return (
-    <Link href={`/productDetail/${hit.id}`} className="block"> 
+    <Link href={`/productDetail/${productId}`} className="block"> 
       <div className="flex items-start p-4 bg-white hover:bg-gray-50 transition-colors duration-200 border-b border-gray-200 gap-4">
         <div className="shrink-0 relative">
           <img 
@@ -67,9 +72,9 @@ const HitComponent = ({ hit }: { hit: Hit }) => {
             {hit.name}
           </h3>
           
-          {hit.category && (
+          {(hit.categoryName || hit.category) && (
             <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full inline-block mb-1.5">
-              {hit.category}
+              {hit.categoryName || hit.category}
             </span>
           )}
           
@@ -79,8 +84,7 @@ const HitComponent = ({ hit }: { hit: Hit }) => {
           
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
-              {hit.rating && renderStars(hit.rating)}
-              {hit.rating && <span className="text-xs text-gray-500">{hit.rating}/5</span>}
+         
             </div>
             
             <div className="flex items-center gap-2">

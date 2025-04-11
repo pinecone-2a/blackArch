@@ -87,7 +87,6 @@ const ProductDetail = ({ params }: PageProps) => {
                 <div className="border-t border-gray-200 pt-12">
                     <SimilarProducts
                         productId={productId}
-                        categoryId={product?.categoryId}
                     />
                 </div>
             </main>
