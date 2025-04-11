@@ -65,6 +65,7 @@ const ProductOptions: React.FC<ProductOptionsProps> = ({
                 isLoading={isLoading}
                 selectedSize={selectedSize}
                 onSizeSelect={handleSizeSelect}
+                sizeOptions={product?.size}
             />
             
             <div className='flex items-center justify-between mt-6'>

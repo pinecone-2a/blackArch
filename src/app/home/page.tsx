@@ -95,11 +95,7 @@ export default function HomePage() {
         {mounted && (
           <button
             onClick={toggleMute}
-
-            
-            className="absolute top-4 right-4 p-2 text-white rounded-full w-[50px] h-[50px]"
-
-            
+            className="absolute top-[80px] right-4 md:top-[80px] md:right-4 p-2 text-white rounded-full w-[50px] h-[50px] z-40"
           >
             {typeof window !== "undefined" &&
               (!isMuted ? (

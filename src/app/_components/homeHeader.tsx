@@ -92,7 +92,7 @@ export default function Navbar() {
             <div className="relative group">
               <Link
                 href={"/category"}
-                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c] sm:text-xs lg:text-base"
+                className="text-black text-lg transition-all duration-500 ease-in-out group-hover:text-[#d94f5c] sm:text-base lg:text-xl"
               >
                 Бүх хувцас
               </Link>
@@ -102,7 +102,7 @@ export default function Navbar() {
             <div className="relative group">
               <Link
                 href={"/category"}
-                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c] sm:text-xs lg:text-base"
+                className="text-black text-lg transition-all duration-500 ease-in-out group-hover:text-[#d94f5c] sm:text-base lg:text-xl"
               >
                 Шинээр нэмэгдсэн
               </Link>
@@ -112,7 +112,7 @@ export default function Navbar() {
             <div className="relative group">
               <Link
                 href={"/category"}
-                className="text-black text-xl transition-all duration-500 ease-in-out group-hover:text-[#d94f5c] sm:text-xs lg:text-base"
+                className="text-black text-lg transition-all duration-500 ease-in-out group-hover:text-[#d94f5c] sm:text-base lg:text-xl"
               >
                 Хувцасны төрлүүд
               </Link>

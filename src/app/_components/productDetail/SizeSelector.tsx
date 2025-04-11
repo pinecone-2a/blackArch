@@ -9,7 +9,7 @@ type SizeSelectorProps = {
     sizeOptions?: string[];
 };
 
-const DEFAULT_SIZES = ['Small', 'Medium', 'Large', 'X-Large'];
+const DEFAULT_SIZES = ['S', 'M', 'L', 'XL'];
 
 const SizeSelector: React.FC<SizeSelectorProps> = ({
     isLoading,
@@ -17,6 +17,9 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
     onSizeSelect,
     sizeOptions = DEFAULT_SIZES
 }) => {
+    // Use provided size options or default if empty array
+    const sizes = (sizeOptions && sizeOptions.length > 0) ? sizeOptions : DEFAULT_SIZES;
+    
     return (
         <div>
             <p className='text-lg font-bold mt-18'>Хэмжээ</p>
@@ -28,8 +31,8 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
                     ))}
                 </div>
             ) : (
-                <div className='flex gap-5 mt-2'>
-                    {sizeOptions.map((size) => (
+                <div className='flex flex-wrap gap-5 mt-2'>
+                    {sizes.map((size) => (
                         <button
                             key={size}
                             className={`px-4 py-2 border rounded-lg transition-all duration-300 ease-out cursor-grab
